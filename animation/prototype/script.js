@@ -211,6 +211,9 @@ $(document).ready(function() {
   $("#stage").append(nwaySetAssociative(model));
 
 
+  for (var i = 0; i < sizingAdjustments.length; i++) {
+    sizingAdjustments[i]();
+  }
 
   $(".associative-set").css("left", "+=150");
   $(".associative-set").css("top", "+=20");
@@ -220,6 +223,13 @@ $(document).ready(function() {
   idxp.top
 
   
+  $(".cache-line").hover(function() {
+  }, function() {
+  });
+  
+
+
+
   $(".associative-set .cache-set-container").each(function() {
     var csp = $(this).offset();
     var targetY = csp.top + $(this).outerHeight() / 2;
@@ -234,23 +244,13 @@ $(document).ready(function() {
           y:targetY
         },
         [
-        {
-          x:idxp.left,
-          y:targetY
-        }
+          {
+            x:idxp.left,
+            y:targetY
+          }
         ]
     );
   });
 
-  $(".cache-line").hover(function() {
-  }, function() {
-  });
-  
-
-
-
-  for (var i = 0; i < sizingAdjustments.length; i++) {
-    sizingAdjustments[i]();
-  }
   
 });
