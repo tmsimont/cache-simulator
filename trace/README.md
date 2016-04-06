@@ -2,12 +2,13 @@
 
 This folder will contain all of the files necessary for working with the actual simulation side, which is going to be C++ source files?
 
+Please see the [UML](https://github.com/tmsimont/cache-simulator/tree/master/uml)
 
 ### Major classes
 
 * Trace generation
-* Trace parsing
 * Trace simulation
+    * Trace parsing
     * read parameters
     * apply metrics for trace events
     * record trace events on a timeline
