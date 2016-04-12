@@ -2,3 +2,5 @@
 !.gitignore
 !*.png
 !*.xml
+!*.xmi
+!*.zargo
