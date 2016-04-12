@@ -53,6 +53,12 @@ html, body {
       &.valid-bit { 
         background:#efefef;
       }
+      &.flash-search {
+        background:#8ff;
+      }
+      &.flash-hit {
+        background:#83f;
+      }
     }
     &:hover {
       .cache-bit {
@@ -72,5 +78,43 @@ html, body {
     position:absolute;
     left:0px;
     top:0px;
+  }
+}
+
+
+#timeline {
+  width:100%;
+  height:200px;
+}
+
+.timeline-target {
+  position:relative;
+  .timeline-container {
+    border:1px solid #ccc;
+    height:100%;
+  }
+  .needle {
+    width:1px;
+    height:100%;
+    position:absolute;
+    left:0px;
+    top:0px;
+    background:#c33;
+  }
+  .axis-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow:hidden;
+    .axis {
+      height:100%;
+      border-left:1px solid #ddd;
+      position:absolute;
+      left:0px;
+      top:0px;
+      &.axis-major {
+        border-left:1px solid #999;
+      }  
+    }
   }
 }

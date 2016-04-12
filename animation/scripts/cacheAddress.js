@@ -3,6 +3,9 @@ function CacheAddress() {
   this.getIndexBits = function() {
     return this.bits.slice(9,10);
   }
+  this.getIndex = function() {
+    return 1;
+  }
   this.getTagBits = function() {
     return this.bits.slice(0, 8);
   }
