@@ -102,7 +102,7 @@ html, body {
     background:#c33;
   }
   .axis-container {
-    position: relative;
+    position: absolute;
     width: 100%;
     height: 100%;
     overflow:hidden;
@@ -115,6 +115,19 @@ html, body {
       &.axis-major {
         border-left:1px solid #999;
       }  
+    }
+  }
+  .event-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    .event-element {
+      position:absolute;
+      height:20px;
+      background:#aae;
+      &.active-event {
+        background:#ee3;
+      }
     }
   }
 }
