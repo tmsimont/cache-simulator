@@ -18,7 +18,7 @@ $(document).ready(function() {
   events.push(new CacheEvent(ca, {
     title : "L1 hit",
     start : 0,
-    end : 10,
+    end : 9,
     type : CACHE_EVENT_HIT,
     address : "10100101011011101011010101",
     cacheID: 0,
@@ -27,8 +27,8 @@ $(document).ready(function() {
   }));
   events.push(new CacheEvent(ca, {
     title : "L1 hit",
-    start : 11,
-    end : 21,
+    start : 9,
+    end : 19,
     type : CACHE_EVENT_HIT,
     address : "10100101011011101011010101",
     cacheID: 1,
@@ -37,8 +37,8 @@ $(document).ready(function() {
   }));
   events.push(new CacheEvent(ca, {
     title : "L1 hit",
-    start : 22,
-    end : 32,
+    start : 19,
+    end : 29,
     type : CACHE_EVENT_HIT,
     address : "10100101011011101011010101",
     cacheID: 1,

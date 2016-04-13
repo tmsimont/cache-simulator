@@ -27,9 +27,13 @@ function EventTimeline(target) {
   ET.viewportEnd = ET.viewportUnits;
   ET.viewportNeedleOffset = 0;
   ET.drawnUnits = {};
+  ET.drawnAxes = {};
+  ET.elementsInView = [];
+  ET.elementsAtTimeUnit = {};
   ET.drawnMin = 0;
   ET.drawnMax = 0;
   ET.events = {};
+  ET.immediate = false;
 
   
   // build timeline dom elements ------------------------
@@ -62,120 +66,78 @@ EventTimeline.prototype.init = function() {
 EventTimeline.prototype.setViewportSize = function(units) {
   var ET = this;
 
-  if (units < 0) return;
+
+  // impose limits on timeline size
+  if (units < 2) return;
   if (units > 500) return;
 
-  $(".velocity-animating").velocity("stop", true);
-  ET.viewportUnits = units;
-  ET.viewportStart = Math.floor(ET.currentTime - units/2);
+  ET.immediateAction(function() {
+      // reset values
+      ET.viewportUnits = units;
+      ET.viewportStart = Math.floor(ET.currentTime - units/2);
 
-  if (ET.viewportStart < 0) ET.viewportStart = 0;
+      // min is 0
+      if (ET.viewportStart < 0) ET.viewportStart = 0;
 
-  // set values senstive to rendered width/height in pixels
-  ET.calculateViewportSize();
-  ET.positionNeedle(true);
-  ET.drawCurrentViewport(true);
+      // max is timeEnd - viewportStart
+      if (ET.viewportStart + ET.viewportUnits > ET.timeEnd) {
+      ET.viewportStart = ET.timeEnd - Et.viewportUnits;
+      }
+
+      // calculate time unit to pixel ratio
+      ET.viewportUnitPX = $(ET.container).width() / ET.viewportUnits;
+
+      // immediately reposition needle
+      ET.positionNeedle();
+      ET.drawCurrentViewport();
+      });
 }
 
-/**
- * Calculate pixel sizes of axes and viewport window
- * based on timeline container and viewport relative size
- */
-EventTimeline.prototype.calculateViewportSize = function() {
+EventTimeline.prototype.drawCurrentViewport = function() {
   var ET = this;
 
-  // relative sizing viewport relative size
-  ET.viewportUnitPX = $(ET.container).width() / ET.viewportUnits;
-}
-
-EventTimeline.prototype.drawCurrentViewport = function(immediate) {
-  var ET = this;
-
+  // buffer for time range outside of window to load in events
   var buffer = ET.minorAxisUnits;
   
-  // make buffer large enough for longest event
-  ET.eventContainer.find(".event-element").each(function() {
-    var unitWidth = parseInt($(this).data("unitWidth"));
-    if (unitWidth > buffer) buffer = unitWidth;
-  });
-  
-  // draw units for time window in viewport
-  
+  // draw new units for time window in (viewport + buffer)
   for (var i = 0 - buffer; i < ET.viewportUnits + buffer; i++) {
-    var timeHere = ET.viewportStart + i;
+    ET.drawUnits(ET.viewportStart + i);
+  }
 
-    // don't redraw drawn units
-    // todo: support dynamic adding of events?
-    if (!ET.drawnUnits[timeHere]) {
-      ET.drawUnits(timeHere);
-    }
+  // update existing units between drawnMin and drawnMax
+  for (var i = ET.drawnMin; i <= ET.drawnMax; i++) {
+    ET.updateUnits(ET.viewportStart + i);
+  }
 
-    // some drawn units might need adjustment
-    else {
-      for (var j = 0; j < ET.drawnUnits[timeHere].length; j++) { 
-        var originalVPU = $(ET.drawnUnits[timeHere][j]).data("originalVPU");
-        var originalVPX = $(ET.drawnUnits[timeHere][j]).data("originalVPX");
-
-        // resize if needed
-        if (ET.viewportUnitPX != originalVPX) {
-          var unitWidth = $(ET.drawnUnits[timeHere][j]).data("unitWidth");
-
-          $(ET.drawnUnits[timeHere][j]).velocity("stop");
-          $(ET.drawnUnits[timeHere][j]).width(ET.viewportUnitPX * unitWidth);
-          $(ET.drawnUnits[timeHere][j]).css(
-            "left",
-            originalVPU * ET.viewportUnitPX
-          );
+  // clear out drawn units before buffer
+  for (var i = ET.drawnMin; i < ET.viewportStart - buffer; i++) {
+    if (ET.drawnUnits[i]) {
+      for (var j = 0; j < ET.drawnUnits[i].length; j++) {
+        if (ET.drawnUnits[i][j].end < ET.viewportStart - buffer) {
+          ET.drawnUnits[i][j].destroy();
         }
-
-        // shift drawn units if we have movement of viewport
-        var offset = originalVPU - i;
-        if (offset != 0) {
-          if (immediate) {
-            $(ET.drawnUnits[timeHere][j]).css({
-              left : "-=" + (offset * ET.viewportUnitPX)
-            });
-          }
-          else {
-            $(ET.drawnUnits[timeHere][j]).velocity({
-              left : "-=" + (offset * ET.viewportUnitPX)
-            },{
-              easing: "linear",
-              queue : false,
-              duration: ET.timeUnitMS,
-            });
+        else {
+          if (ET.drawnMin > ET.drawnUnits[i][j].start) {
+            ET.drawnMin = ET.drawnUnits[i][j].start;
           }
         }
-
-        $(ET.drawnUnits[timeHere][j]).data("originalVPU", i);
-        $(ET.drawnUnits[timeHere][j]).data("originalVPX", ET.viewportUnitPX);
       }
     }
   }
 
-  // keep pointers to time range we have drawn
-  ET.drawnMin = ET.viewportStart;
-  ET.drawnMax = ET.viewportStart + ET.viewportUnits - 1;
-
-  // clear out drawn elements outside of time range + buffer
-  for (var i = 0; i < ET.drawnMin - buffer; i++) {
+  // clear out drawn units after buffer
+  for (var i = ET.viewportStart + ET.viewportUnits + buffer; i <= ET.drawnMax; i++) {
     if (ET.drawnUnits[i]) {
       for (var j = 0; j < ET.drawnUnits[i].length; j++) {
-        var e = ET.drawnUnits[i][j].data("event");
-        if (e) e.drawn = false;
-        ET.drawnUnits[i][j].remove();
+        if (ET.drawnUnits[i][j].start > ET.viewportStart + ET.viewportUnits + buffer) {
+          ET.drawnUnits[i][j].destroy();
+        }
+        else {
+          if (ET.drawnMax < ET.drawnUnits[i][j].end) {
+            ET.drawnMax = ET.drawnUnits[i][j].end;
+          }
+        }
       }
-      ET.drawnUnits[i] = false;
-    }
-  }
-  for (var i = 1 + ET.drawnMax + buffer; i <= ET.timeEnd; i++) {
-    if (ET.drawnUnits[i]) {
-      for (var j = 0; j < ET.drawnUnits[i].length; j++) {
-        var e = ET.drawnUnits[i][j].data("event");
-        if (e) e.drawn = false;
-        ET.drawnUnits[i][j].remove();
-      }
-      ET.drawnUnits[i] = false;
     }
   }
 
@@ -184,21 +146,43 @@ EventTimeline.prototype.drawCurrentViewport = function(immediate) {
 EventTimeline.prototype.drawUnits = function(time) {
   var ET = this;
   
-  if (!ET.drawnUnits[time]) {
-    ET.drawnUnits[time] = [];
-  }
-
   // get events at this time and draw
-  // todo
   if (ET.events[time]) {
     for (var i = 0; i < ET.events[time].length; i++) {
       ET.addTimelineElement(time, ET.events[time][i]);
     }
   }
 
-  // get axis at this time and draw
-  if (time % ET.minorAxisUnits == 0)
-    ET.addAxis(time);
+  // might need to add an axis element
+  if (!ET.drawnAxes[time]) {
+    if (time % ET.minorAxisUnits == 0)
+      ET.addAxis(time);
+  }
+
+  // keep a range of drawn elements
+  if (time < ET.drawnMin) ET.drawnMin = time;
+  if (time > ET.drawnMax) ET.drawnMax = time;
+}
+
+EventTimeline.prototype.updateUnits = function(timeAtI) {
+  var ET = this;
+
+  if (ET.drawnUnits[timeAtI]) {
+    for (var j = 0; j < ET.drawnUnits[timeAtI].length; j++) { 
+      var te = ET.drawnUnits[timeAtI][j];
+
+      // immediately update size on viewport resize
+      if (ET.viewportUnitPX != te.drawnViewportUnitPX) {
+        te.updateToViewport();
+      }
+
+      // animate viewport motion if viewport has moved
+      else if (te.drawnViewportUnit != (te.start - ET.viewportStart)) {
+        te.animateMotion();
+      }
+    }
+  }
+
 }
 
 EventTimeline.prototype.moveViewport = function(offsetUnits) {
@@ -207,59 +191,134 @@ EventTimeline.prototype.moveViewport = function(offsetUnits) {
   ET.drawCurrentViewport();
 }
 
-/**
- * Add a dom element at a set time that is a set number of time units wide.
- */
-EventTimeline.prototype.addElement = function(time, unitWidth, element) {
-  var ET = this;
-
-  // viewport-sensitive positioning and sizing
-  var viewportUnit = time - ET.viewportStart;
-  element.css("left", viewportUnit * ET.viewportUnitPX);
-  element.data("originalVPU", viewportUnit);
-  element.data("originalVPX", ET.viewportUnitPX);
-  element.data("unitWidth", unitWidth);
-  element.width(ET.viewportUnitPX * unitWidth);
-  
-  // keep track of the element
-  ET.drawnUnits[time].push(element);
-}
-
 EventTimeline.prototype.addTimelineElement = function(time, e) {
   var ET = this;
 
   if (e.drawn) {
+    if (!ET.drawnUnits[time]) {
+      ET.drawnUnits[time] = [];
+    }
+    ET.drawnUnits[time].push(e.timelineElement);
   }
   else {
     var element = e.timelineRendering();
-    var width = e.getUnitWidth();
-    ET.addElement(time, width, element);
-    ET.eventContainer.append(element);
     element.addClass("event-element");
-    element.data("event", e);
+    var width = e.getUnitWidth();
+
+    var timelineElement = ET.getTimelineElement(e.start, width, element);
+    e.timelineElement = timelineElement;
+
+    // override destructor
+    timelineElement.destroy = function() {
+      timelineElement.element.remove();
+      e.drawn = false;
+    }
+
+    // add to dom
+    ET.eventContainer.append(element);
+
+    // update event object
     e.element = element;
     e.drawn = true;
   }
 }
 
-EventTimeline.prototype.addAxis = function(axisUnit) {
+EventTimeline.prototype.addAxis = function(time) {
   var ET = this;
 
   // axis is a div
   var line = $("<div>");
-
-
   line.addClass("axis");
-  if (axisUnit % ET.majorAxisUnits == 0) {
+
+  // determin major vs. minor
+  if (time % ET.majorAxisUnits == 0) {
     line.addClass("axis-major");
   }
   else {
     line.addClass("axis-minor");
   }
 
-  ET.addElement(axisUnit, ET.minorAxisUnits, line);
+  var timelineElement = ET.getTimelineElement(time, ET.minorAxisUnits, line);
+
+  // override destructor
+  timelineElement.destroy = function() {
+    timelineElement.element.remove();
+    ET.drawnAxes[time] = false;
+  }
+
+  timelineElement.end = timelineElement.start;
+
+  // track globally 
+  ET.drawnAxes[time] = timelineElement;
+  
+  // add to DOM
   ET.axisContainer.append(line);
 }
+
+EventTimeline.prototype.getTimelineElement = function(time, unitWidth, element) {
+  var ET = this;
+
+  function TimelineElement() {
+    var self = this;
+    self.drawnViewportUnit = time - ET.viewportStart;
+    self.drawnViewportUnitPX = ET.viewportUnitPX;
+    self.element = element;
+    self.unitWidth = unitWidth;
+    self.start = time;
+    self.end = time + unitWidth;
+
+    // viewport-sensitive positioning and sizing
+    self.fixElementView = function() {
+      element.css("left", self.drawnViewportUnit * self.drawnViewportUnitPX);
+      element.width(self.drawnViewportUnitPX * self.unitWidth);
+    }
+
+    self.updateToViewport = function() {
+      $(self.element).velocity("stop");
+      self.drawnViewportUnit = self.start - ET.viewportStart;
+      self.drawnViewportUnitPX = ET.viewportUnitPX;
+      self.fixElementView();
+    }
+
+    self.animateMotion = function() {
+      var newVPUnit = self.start - ET.viewportStart;
+      var offset = self.drawnViewportUnit - newVPUnit;
+      self.drawnViewportUnit = self.start - ET.viewportStart;
+      if (!ET.immediate) {
+        $(self.element).velocity({
+          left : "-=" + (offset * ET.viewportUnitPX)
+        },{
+          easing: "linear",
+          queue : false,
+          duration: ET.timeUnitMS,
+        });
+      }
+      else {
+        self.fixElementView();
+      }
+    }
+
+    self.destroy = function() {
+      self.element.remove();
+    }
+  }
+
+  var timelineElement = new TimelineElement();
+  timelineElement.updateToViewport();
+
+  if (!ET.drawnUnits[time]) {
+    ET.drawnUnits[time] = [];
+  }
+  ET.drawnUnits[time].push(timelineElement);
+
+  return timelineElement;
+}
+
+
+
+
+
+
 
 EventTimeline.prototype.play = function() {
   var ET = this;
@@ -271,7 +330,16 @@ EventTimeline.prototype.play = function() {
 
 EventTimeline.prototype.pause = function() {
   var ET = this;
+
   ET.playing = false;
+  if(ET.timeoutPending) {
+    clearTimeout(ET.timeoutPending);
+    ET.timeoutPending = false;
+  }
+
+  // stop any active velocity.js animations
+  $(".velocity-animating").velocity("stop", true);
+
 }
 
 
@@ -279,17 +347,31 @@ EventTimeline.prototype.eventLoop = function() {
   var ET = this;
 
   // nothing more to do at the end of time...
-  if (ET.currentTime >= ET.timeEnd)
+  if (ET.currentTime > ET.timeEnd) {
     ET.playing = false;
-
-  if (ET.playing) {
-    ET.activateEvents();
-    ET.currentTime++;
-    ET.positionNeedle();
-    setTimeout(function() {
-      ET.eventLoop();
-    }, ET.timeUnitMS);
+    return;
   }
+
+  ET.activateEvents();
+  ET.currentTime++;
+  ET.positionNeedle();
+  ET.timeoutPending = setTimeout(function() {
+    ET.timeoutPending = false;
+    if (ET.playing) {
+      ET.eventLoop();
+    }
+  }, ET.timeUnitMS);
+}
+
+EventTimeline.prototype.immediateAction = function(action) {
+  var ET = this;
+  if(ET.timeoutPending) clearTimeout(ET.timeoutPending);
+  // stop any active velocity.js animations
+  $(".velocity-animating").velocity("stop", true);
+  ET.immediate = true;
+  action();
+  ET.immediate = false;
+  if (ET.playing) ET.eventLoop();
 }
 
 EventTimeline.prototype.activateEvents = function() {
@@ -304,17 +386,16 @@ EventTimeline.prototype.activateEvents = function() {
 }
 
 
-EventTimeline.prototype.positionNeedle = function(immediate) {
+EventTimeline.prototype.positionNeedle = function() {
   var ET = this;
   ET.viewportNeedleUnit = ET.currentTime - ET.viewportStart;
 
-  if (immediate) {
+  if (ET.immediate) {
     $(ET.needle).css({
       left : ET.viewportNeedleUnit * ET.viewportUnitPX
     });
     return;
   }
-
   // have to move viewport
   if (ET.viewportNeedleUnit >= ET.viewportUnits / 2) {
     ET.moveViewport(+1)
@@ -334,15 +415,17 @@ EventTimeline.prototype.positionNeedle = function(immediate) {
 
 EventTimeline.prototype.gotoTime = function(unit) {
   var ET = this;
-  ET.currentTime = unit;
-  ET.positionNeedle(true);
-  if (unit > ET.viewportStart + (ET.viewportUnits / 2)) {
-    ET.setViewportSize(ET.viewportUnits);
-  }
-  if (unit < ET.viewportStart) {
-    ET.viewportStart = unit;
-    ET.setViewportSize(ET.viewportUnits);
-  }
+  ET.immediateAction(function() {
+    ET.currentTime = unit;
+    ET.positionNeedle();
+    if (unit > ET.viewportStart + (ET.viewportUnits / 2)) {
+      ET.setViewportSize(ET.viewportUnits);
+    }
+    if (unit < ET.viewportStart) {
+      ET.viewportStart = unit;
+      ET.setViewportSize(ET.viewportUnits);
+    }
+  });
 }
 
 
@@ -360,6 +443,7 @@ EventTimeline.prototype.addControls = function(target) {
     var clickedTime = ET.viewportStart + clickedViewportUnit;
     var unit = Math.floor(clickedTime);
     ET.gotoTime(clickedTime);
+    ET.play();
   });
 
   var speedUp = $("<button>");
