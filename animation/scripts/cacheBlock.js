@@ -1,6 +1,6 @@
 function CacheBlock(validBits, tagBits, contentBits) {
   this.dom = $("<div>");
-  this.dom.addClass("cache-line");
+  this.dom.addClass("cache-block");
   this.valid = new BitGroup(validBits.length, "valid")
   this.dom.append(this.valid.dom);
   this.tag = new BitGroup(tagBits.length, "tag");

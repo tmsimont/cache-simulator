@@ -72,5 +72,8 @@ function drawArrow(from, to, stops) {
 
   document.getElementById(target).appendChild(svg);
 
+  this.remove = function() {
+    svg.remove();
+  }
 
 }

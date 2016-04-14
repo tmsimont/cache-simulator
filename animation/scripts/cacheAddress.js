@@ -1,20 +1,9 @@
 function CacheAddress() {
   this.bits = [1,0,1,0,1,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,0,1];
-  this.getIndexBits = function() {
-    return this.bits.slice(9,10);
-  }
-  this.getIndex = function() {
-    return 1;
-  }
-  this.getTagBits = function() {
-    return this.bits.slice(0, 8);
-  }
-  this.getOffsetBits = function() {
-    return this.bits.slice(11,24);
-  }
 }
 
-function addressView(address) {
+CacheAddress.prototype.getViewForCache = function(cache) {
+  var address = this;
   var dom = $("<div>");
   dom.addClass("address");
 
@@ -33,7 +22,7 @@ function addressView(address) {
   labels.append(lblTag);
   var valTag = $("<div>");
   valTag.addClass("tag");
-  var tagBits = address.getTagBits();
+  var tagBits = cache.getTagBits(address);
   var tagString = "";
   for (var i = 0; i < tagBits.length; i++) {
     tagString = tagString + tagBits[i];
@@ -48,7 +37,7 @@ function addressView(address) {
   labels.append(lblIdx);
   var valIdx = $("<div>");
   valIdx.addClass("idx");
-  var idxBits = address.getIndexBits();
+  var idxBits = cache.getIndexBits(address);
   var idxString = "";
   for (var i = 0; i < idxBits.length; i++) {
     idxString = idxString + idxBits[i];
@@ -63,16 +52,15 @@ function addressView(address) {
   labels.append(lblOffset);
   var valOffset = $("<div>");
   valOffset.addClass("offset");
-  var offsetBits = address.getOffsetBits();
+  var offsetBits = cache.getOffsetBits(address);
   var offsetString = "";
   for (var i = 0; i < offsetBits.length; i++) {
     offsetString = offsetString + offsetBits[i];
   }
   valOffset.text(offsetString);
   values.append(valOffset);
-
+  
   return dom;
-
 }
 
 

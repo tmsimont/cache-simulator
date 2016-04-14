@@ -2,6 +2,11 @@ function CacheArchitecture() {
   this.caches = [];
   this.dom = $("<div>");
   this.dom.addClass("cache-architecture");
+
+  this.label = $("<div>");
+  this.label.addClass("cache-architecture-label");
+  this.label.text("Cache Architecture");
+  this.dom.prepend(this.label);
 }
 CacheArchitecture.prototype.addCache = function(parameters) {
   var cache = new Cache(parameters);
@@ -34,9 +39,14 @@ CacheArchitecture.prototype.adjustSizing = function() {
   for (var i = 0; i < this.caches.length; i++) {
     var dom = this.caches[i].dom;
     var width = 0;
-    width += dom.find(".valid-bits").outerWidth(true);
-    width += dom.find(".tag-bits").outerWidth(true);
-    width += dom.find(".data-bits").outerWidth(true);
+    width += dom.find(".valid-bits:first").outerWidth(true);
+    width += dom.find(".tag-bits:first").outerWidth(true);
+    width += dom.find(".data-bits:first").outerWidth(true);
     $(dom).width(width);
   }
+}
+
+
+CacheArchitecture.prototype.init = function() {
+  // show initial state of elements
 }

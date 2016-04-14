@@ -34,6 +34,7 @@ function EventTimeline(target) {
   ET.drawnMax = 0;
   ET.events = {};
   ET.immediate = false;
+  ET.lastActivation = -1;
 
   
   // build timeline dom elements ------------------------
@@ -57,10 +58,13 @@ function EventTimeline(target) {
 
 }
 
-EventTimeline.prototype.init = function() {
+EventTimeline.prototype.init = function(onready) {
   var ET = this;
   // call setter to initialize viewport
   ET.setViewportSize(ET.viewportUnits);
+  if (typeof onready == "function") {
+    onready();
+  }  
 }
 
 EventTimeline.prototype.setViewportSize = function(units) {
@@ -125,10 +129,11 @@ EventTimeline.prototype.drawCurrentViewport = function() {
   }
 
   // clear out drawn units after buffer
-  for (var i = ET.viewportStart + ET.viewportUnits + buffer; i <= ET.drawnMax; i++) {
+  var start = ET.viewportStart + ET.viewportUnits + buffer;
+  for (var i = start; i <= ET.drawnMax; i++) {
     if (ET.drawnUnits[i]) {
       for (var j = 0; j < ET.drawnUnits[i].length; j++) {
-        if (ET.drawnUnits[i][j].start > ET.viewportStart + ET.viewportUnits + buffer) {
+        if (ET.drawnUnits[i][j].start > start) {
           ET.drawnUnits[i][j].destroy();
         }
         else {
@@ -147,7 +152,7 @@ EventTimeline.prototype.drawUnits = function(time) {
   // get events at this time and draw
   if (ET.events[time]) {
     for (var i = 0; i < ET.events[time].length; i++) {
-      ET.addTimelineElement(time, ET.events[time][i]);
+      ET.drawEvent(time, ET.events[time][i]);
     }
   }
 
@@ -188,36 +193,13 @@ EventTimeline.prototype.moveViewport = function(offsetUnits) {
   ET.drawCurrentViewport();
 }
 
-EventTimeline.prototype.addTimelineElement = function(time, e) {
+EventTimeline.prototype.drawEvent = function(time, e) {
   var ET = this;
-
   if (e.drawn) {
-    // todo: have property that says "am i in drawnUnits at this time"
-    if (!ET.drawnUnits[time]) {
-      ET.drawnUnits[time] = [];
-    }
-    ET.drawnUnits[time].push(e.timelineElement);
+    e.includeInstanceAtTime(time);
   }
   else {
-    var element = e.timelineRendering();
-    element.addClass("event-element");
-    var width = e.getUnitWidth();
-
-    var timelineElement = ET.getTimelineElement(e.start, width, element);
-    e.timelineElement = timelineElement;
-
-    // override destructor
-    timelineElement.destroy = function() {
-      timelineElement.element.remove();
-      e.drawn = false;
-    }
-
-    // add to dom
-    ET.eventContainer.append(element);
-
-    // update event object
-    e.element = element;
-    e.drawn = true;
+    ET.eventContainer.append(e.newViewportInstance());
   }
 }
 
@@ -228,7 +210,7 @@ EventTimeline.prototype.addAxis = function(time) {
   var line = $("<div>");
   line.addClass("axis");
 
-  // determin major vs. minor
+  // determine major vs. minor
   if (time % ET.majorAxisUnits == 0) {
     line.addClass("axis-major");
   }
@@ -236,43 +218,49 @@ EventTimeline.prototype.addAxis = function(time) {
     line.addClass("axis-minor");
   }
 
-  var timelineElement = ET.getTimelineElement(time, ET.minorAxisUnits, line);
+  // generate viewport instance
+  var viewportInstance = ET.drawToViewport(
+    time, ET.minorAxisUnits, line
+  );
 
   // override destructor
-  timelineElement.destroy = function() {
-    timelineElement.element.remove();
+  viewportInstance.destroy = function() {
+    line.remove();
     ET.drawnAxes[time] = false;
   }
 
-  timelineElement.end = timelineElement.start;
+  // axis is only 1 time unit
+  viewportInstance.end = viewportInstance.start;
 
   // track globally 
-  ET.drawnAxes[time] = timelineElement;
+  ET.drawnAxes[time] = viewportInstance;
   
   // add to DOM
   ET.axisContainer.append(line);
 }
 
-EventTimeline.prototype.getTimelineElement = function(time, unitWidth, element) {
+EventTimeline.prototype.drawToViewport = function(time, unitWidth, render) {
   var ET = this;
 
-  function TimelineElement() {
+  function ViewportInstance() {
     var self = this;
     self.drawnViewportUnit = time - ET.viewportStart;
     self.drawnViewportUnitPX = ET.viewportUnitPX;
-    self.element = element;
+    self.render = render;
     self.unitWidth = unitWidth;
     self.start = time;
     self.end = time + unitWidth;
 
     // viewport-sensitive positioning and sizing
     self.fixElementView = function() {
-      element.css("left", self.drawnViewportUnit * self.drawnViewportUnitPX);
-      element.width(self.drawnViewportUnitPX * self.unitWidth);
+      render.css(
+        "left", self.drawnViewportUnit * self.drawnViewportUnitPX
+      );
+      render.width(self.drawnViewportUnitPX * self.unitWidth);
     }
 
     self.updateToViewport = function() {
-      $(self.element).velocity("stop");
+      $(self.render).velocity("stop");
       self.drawnViewportUnit = self.start - ET.viewportStart;
       self.drawnViewportUnitPX = ET.viewportUnitPX;
       self.fixElementView();
@@ -283,7 +271,7 @@ EventTimeline.prototype.getTimelineElement = function(time, unitWidth, element) 
       var offset = self.drawnViewportUnit - newVPUnit;
       self.drawnViewportUnit = self.start - ET.viewportStart;
       if (!ET.immediate) {
-        $(self.element).velocity({
+        $(self.render).velocity({
           left : "-=" + (offset * ET.viewportUnitPX)
         },{
           easing: "linear",
@@ -297,19 +285,18 @@ EventTimeline.prototype.getTimelineElement = function(time, unitWidth, element) 
     }
 
     self.destroy = function() {
-      self.element.remove();
+      self.render.remove();
     }
   }
 
-  var timelineElement = new TimelineElement();
-  timelineElement.updateToViewport();
-
+  // create closure and append to global table
+  var viewportInstance = new ViewportInstance();
+  viewportInstance.updateToViewport();
   if (!ET.drawnUnits[time]) {
     ET.drawnUnits[time] = [];
   }
-  ET.drawnUnits[time].push(timelineElement);
-
-  return timelineElement;
+  ET.drawnUnits[time].push(viewportInstance);
+  return viewportInstance;
 }
 
 EventTimeline.prototype.play = function() {
@@ -356,24 +343,29 @@ EventTimeline.prototype.eventLoop = function() {
 
 EventTimeline.prototype.immediateAction = function(action) {
   var ET = this;
-  if(ET.timeoutPending) clearTimeout(ET.timeoutPending);
-  // stop any active velocity.js animations
-  $(".velocity-animating").velocity("stop", true);
+  var resume = ET.playing;
+  ET.pause();
   ET.immediate = true;
   action();
   ET.immediate = false;
-  if (ET.playing) ET.eventLoop();
+  if (resume) ET.play();
 }
 
 EventTimeline.prototype.activateEvents = function() {
   var ET = this;
+  if (ET.events[ET.lastActivation]) {
+    for (var i = 0; i < ET.events[ET.lastActivation].length; i++) {
+      var e = ET.events[ET.lastActivation][i];
+      e.deactivate();
+    }
+  }
   if (ET.events[ET.currentTime]) {
     for (var i = 0; i < ET.events[ET.currentTime].length; i++) {
       var e = ET.events[ET.currentTime][i];
-      e.activate(ET.currentTime, ET);
+      e.activate();
     }
-  // todo
   }
+  ET.lastActivation = ET.currentTime;
 }
 
 EventTimeline.prototype.positionNeedle = function() {
@@ -426,24 +418,28 @@ EventTimeline.prototype.addControls = function(target) {
   });
 
   $(ET.container).on("click", function(event) {
-    //ET.viewportUnitPX = $(ET.container).width() / ET.viewportUnits;
     var clickedViewportUnit = event.clientX / ET.viewportUnitPX;
     var clickedTime = ET.viewportStart + clickedViewportUnit;
     var unit = Math.floor(clickedTime);
-    ET.gotoTime(clickedTime);
-    ET.play();
+    ET.gotoTime(unit);
   });
+
+  
+  var buttons = $("<div>");
+  buttons.addClass("timeline-buttons");
+  target.append(buttons)
+
 
   var speedUp = $("<button>");
   speedUp.text("+");
-  $(target).append(speedUp);
+  $(buttons).append(speedUp);
   speedUp.click(function() {
     ET.timeUnitMS -= 10;
   });
 
   var speedDown = $("<button>");
   speedDown.text("-");
-  $(target).append(speedDown);
+  $(buttons).append(speedDown);
   speedDown.click(function() {
     ET.timeUnitMS += 10;
   });
@@ -451,92 +447,136 @@ EventTimeline.prototype.addControls = function(target) {
 
   var pause = $("<button>");
   pause.text("||");
-  $(target).append(pause);
+  $(buttons).append(pause);
   pause.click(function() {
     ET.pause();
   });
 
   var play = $("<button>");
   play.text(">");
-  $(target).append(play);
+  $(buttons).append(play);
   play.click(function() {
     ET.play();
   });
 
   var rewind = $("<button>");
   rewind.text("<<");
-  $(target).append(rewind);
+  $(buttons).append(rewind);
   rewind.click(function() {
     ET.gotoTime(0);
   });
 
   var zoomIn = $("<button>");
   zoomIn.text("in");
-  $(target).append(zoomIn);
+  $(buttons).append(zoomIn);
   zoomIn.click(function() {
     ET.setViewportSize(ET.viewportUnits - 10);
   });
 
   var zoomOut = $("<button>");
   zoomOut.text("out");
-  $(target).append(zoomOut);
+  $(buttons).append(zoomOut);
   zoomOut.click(function() {
     ET.setViewportSize(ET.viewportUnits + 10);
   });
 }
 
 
-EventTimeline.prototype.addEvent = function(eventType) {
+/**
+ * @param: handler
+ * handler is any object that has the following 
+ * properties:
+ *   start            : start time unit of event
+ *   end              : end time unit of event
+ *   title            : visible title on timeline
+ *   activate(time)   : activation function at time
+ *   deactivate(time) : deactivation function at time
+ *   finish           : no longer in active time range
+ *
+ */
+EventTimeline.prototype.addEvent = function(handler) {
   var ET = this;
 
-  function Event(activation, deactivation) {
+  function Event() {
     var E = this;
-    this.start = 0;
-    this.end = 0;
-    this.title = "event"
+
+    // set object properties from passed handler
+    this.start = handler.start;
+    this.end = handler.end;
+    this.title = handler.title;
+
     this.drawn = false;
-    this.element = {};
+    this.render = {};
+    this.drawnAt = [];
 
     this.getUnitWidth = function() {
-      return this.end - this.start;
+      return this.end - this.start + 1;
     }
 
-    this.timelineRendering = function() {
-      var render = $("<div>");
-      render.text(E.title);
-      return render;
+    this.newViewportInstance = function() {
+
+      // set up dom element
+      E.render = $("<div>");
+      E.render.addClass("event-element");
+      E.render.text(E.title);
+
+      // create viewport instance
+      var width = E.getUnitWidth();
+      var viewportInstance = ET.drawToViewport(E.start, width, E.render);
+      E.viewportInstance = viewportInstance;
+
+      // override destructor
+      viewportInstance.destroy = function() {
+        E.render.remove();
+        E.drawn = false;
+        E.drawnAt = [];
+      }
+      E.drawn = true;
+
+      // click event
+      $(E.render).on("click", function() {
+        ET.gotoTime(E.start);
+        // prevent bubble up to container click
+        return false;
+      });
+
+      return E.render;
+    }
+
+    this.includeInstanceAtTime = function(time) {
+      // if already included, abort
+      for (var i = 0; i < E.drawnAt.length; i++) { 
+        if (time == E.drawnAt[i]) return;
+      }
+
+      // append existing viewportInstance to drawnUnits
+      if (!ET.drawnUnits[time]) {
+        ET.drawnUnits[time] = [];
+      }
+      ET.drawnUnits[time].push(e.viewportInstance);
     }
     
-    this.activate = function(currentTime, ET) {
-      var relTime = currentTime - E.start;
-      E.element.addClass("active-event");
-      activation(relTime, E);
-      if (currentTime == E.end) {
-        setTimeout(function() {
-          E.element.removeClass("active-event");
-          E.deactivate();
-        }, ET.timeUnitMS);
-      } 
+    this.activate = function() {
+      var relTime = ET.currentTime - E.start;
+      E.render.addClass("active-event");
+      handler.activate(relTime);
     }
 
     this.deactivate = function() {
-      deactivation(E);
+      var relTime = ET.lastActivation - E.start;
+      handler.deactivate(relTime);
+      if (ET.currentTime > E.end || ET.currentTime < E.start) {
+        E.finish();
+      }
+    }
+
+    this.finish = function() {
+      E.render.removeClass("active-event");
+      handler.finish();
     }
   }
 
-  var e = new Event(
-    function(time, E) {
-      eventType.animate(time, E);
-    },
-    function(E) {
-      eventType.finish(E);
-    }
-  );
-
-  for (var i in eventType.params) {
-    e[i] = eventType.params[i];
-  }
-
+  var e = new Event();
   for (var t = e.start; t <= e.end; t++) {
     if (!ET.events[t]) {
       ET.events[t] = [];

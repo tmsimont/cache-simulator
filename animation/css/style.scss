@@ -5,7 +5,9 @@ $border-color:        #ccc;
 html, body {
   background:$main-background;
   font-family:Consolas;
+  font-size:13px;
   padding:0px;
+  margin: 0px;
 }
 
 .address {
@@ -30,50 +32,93 @@ html, body {
   }
 }
 
-.cache-set-container {
-  padding-bottom:30px;
-}
-
-.cache {
-  padding-left: 150px;
-  .bit-group {
-    display: inline-block;
-    border:1px solid $border-color;
-    &.tag-bits {
-      margin-right:10px;
-    }
-  }
-
-  .cache-line {
-    .cache-bit {
-      border-right:1px solid $border-color;
-      display:inline-block;
-      width:10px;
-      height:10px;
-      &.valid-bit { 
-        background:#efefef;
-      }
-      &.flash-search {
-        background:#8ff;
-      }
-      &.flash-hit {
-        background:#83f;
-      }
-    }
-    &:hover {
-      .cache-bit {
-        background-color:#aea;
-      }
-    }
-  }
-  
-}
-
-
 #stage {
+.cache {
+  &.state-initial {
+    width:100px;
+    height:100px;
+    border:1px solid #ccc;
+    margin:0 0 30px 0;
+
+    .cache-set-container {
+      display:none;
+    }
+
+    .cache-label {
+      position:absolute;
+      top:50%;
+      left: 0;
+      width:100%;
+      text-align:center;
+      margin-top:-10px;
+    }
+  }
+
+  &.state-open {
+    top:20px;
+    padding-top:50px;
+    padding-bottom:50px;
+  
+    .cache-label {
+      position:absolute;
+      left:0;
+      top:-20px;
+    }
+
+    .address {
+      position:absolute;
+      left: 0;
+      top: 0;
+    }
+    
+    .cache-sets-container {
+      padding-left: 150px;
+    }
+
+    .cache-set-container {
+      padding-bottom:30px;
+    }
+
+    .cache-block {
+      .bit-group {
+        display: inline-block;
+        border:1px solid $border-color;
+        &.tag-bits {
+          margin-right:10px;
+        }
+        .cache-bit {
+          border-right:1px solid $border-color;
+          display:inline-block;
+          width:10px;
+          height:10px;
+          &.valid-bit { 
+            background:#efefef;
+          }
+          &.flash-search {
+            background:#8ff;
+          }
+          &.flash-hit {
+            background:#83f;
+          }
+        }
+      }
+    }
+  }
+}
+}
+
+#main {
+  height:100%;
+}
+
+#stage-container {
   padding:10px;
+}
+#stage {
   div { position:relative; }
   position:relative;
+  overflow:auto;
+  height:100%;
   svg.arrow {
     position:absolute;
     left:0px;
@@ -90,8 +135,10 @@ html, body {
 .timeline-target {
   position:relative;
   .timeline-container {
-    border:1px solid #ccc;
+    border-top:1px solid #ccc;
+    border-bottom:1px solid #ccc;
     height:100%;
+    overflow:hidden;
   }
   .needle {
     width:1px;
@@ -130,4 +177,11 @@ html, body {
       }
     }
   }
+}
+.timeline-buttons {
+  position:absolute;
+  height:30px;
+  top:-30px;
+  width:100%;
+  left:0px;
 }
