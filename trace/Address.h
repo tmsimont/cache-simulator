@@ -22,8 +22,9 @@ public:
 	int getTag();
 	int getIndex();
 	int getOffset();
+	bool operator==(const address& b);
+	static const int ADDRESS_SIZE = 32;
 private:
-	const int ADDRESS_SIZE = 32;
 	bitset<ADDRESS_SIZE> addressBits;
 	int tagSize;
 	int indexSize;

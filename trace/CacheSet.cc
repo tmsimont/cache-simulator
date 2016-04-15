@@ -24,11 +24,11 @@ cacheSet::cacheSet()
 cacheSet::cacheSet(int nB, int bS)
 {
 	numbBlocks = nB;
-	blocksSize = bS;
+	blockSize = bS;
 	blocks.resize(numbBlocks);
 	for (int i = 0; i < numbBlocks; ++i)
 	{
-		blocks[i] = new cacheBlock(blockSize);
+		blocks[i] = cacheBlock(blockSize);
 	}
 
 }
@@ -55,7 +55,7 @@ bool cacheSet::inCacheSet(address add)
 	return in;
 }
 
-CacheSet::~CacheSet()
+cacheSet::~cacheSet()
 {
-	erase blocks;
+
 }

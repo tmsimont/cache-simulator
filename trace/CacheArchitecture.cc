@@ -24,20 +24,20 @@ cacheArchitecture::cacheArchitecture()
 cacheArchitecture::cacheArchitecture(cacheParameters firstCache)
 {
 	arch.resize(1);
-	arch[0] = new cahce(firstCache);
+	arch[0] = cache(firstCache);
 	numbCaches = 1;
 }
 
-void cacheParameter::addCache(cacheParameters nextCache)
+void cacheArchitecture::addCache(cacheParameters nextCache)
 {
 	arch.resize(numbCaches + 1);
-	arch[numbCaches] = new cache(nextCache);
+	arch[numbCaches] = cache(nextCache);
 				//Add cache
 	++numbCaches;
 
 }
 
-int cacheParameter::cacheRead(address add)						//returns time needed to read
+int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 {
 	int time = 0, i = 0;
 	bool found = false;
@@ -56,7 +56,7 @@ int cacheParameter::cacheRead(address add)						//returns time needed to read
 	return time;
 }
 
-int cacheParameter::cacheWrite(address add)						//returns time needed to write
+int cacheArchitecture::cacheWrite(address add)						//returns time needed to write
 {
 	int time = 0, i = 0;
 	bool found = false;
@@ -78,5 +78,5 @@ int cacheParameter::cacheWrite(address add)						//returns time needed to write
 
 cacheArchitecture::~cacheArchitecture()
 {
-	erase arch;
+
 }

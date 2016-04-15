@@ -18,20 +18,20 @@ File: Cache.cc
 
 using namespace std;
 
-chace::cache()
+cache::cache()
 {
 
 }
 
-cache::cache(cacheParameter para)
+cache::cache(cacheParameters para)
 {
 	priority = para.getPriority();
 	blockSize = para.getBlockSize();
 	name = para.getName();
 	size = para.getSize();
 	associativity = para.getAssociativity();
-	missPenalty = para.missPenalty();
-	hitTime = para.hitTime();
+	missPenalty = para.getMissPenalty();
+	hitTime = para.getHitTime();
 	
 	numbBlocks = size / blockSize;
 	numbSets = numbBlocks / associativity;
@@ -39,7 +39,7 @@ cache::cache(cacheParameter para)
 	sets.resize(numbSets);
 	for (int i = 0; i < numbSets; ++i)
 	{
-		sets[i] = new cache(numbBlocks, blockSize);
+		sets[i] = cacheSet(numbBlocks, blockSize);
 	}
 	
 }
@@ -51,7 +51,7 @@ bool cache::hasAddress(address add)
 
 	while ((i < numbSets) && (!inCache))
 	{
-		inCache = sets[i].hasAddress(add);
+		inCache = sets[i].inCacheSet(add);
 		++i;
 	}
 
@@ -68,5 +68,5 @@ void cache::write(address add)
 
 cache::~cache()
 {
-	erase sets;
+
 }

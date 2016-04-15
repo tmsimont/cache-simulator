@@ -44,3 +44,11 @@ int address::getOffset()
 {
 	return offset;
 }
+
+
+bool address::operator==(const address& b)
+{
+	if (this->getIndex == b.getIndex && this->getOffset == b.getOffset && this->getTag == b.getTag)
+		return true;
+	return false;
+}

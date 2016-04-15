@@ -18,7 +18,7 @@ using namespace std;
 
 //is not currently returning event that is occurring, just time needed to read/write
 
-class cacheArchitecure
+class cacheArchitecture
 {
 public:
 	cacheArchitecture();

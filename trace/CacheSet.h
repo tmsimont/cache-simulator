@@ -26,7 +26,7 @@ public:
 	~cacheSet();
 private:
 	int numbBlocks;
-	int blocksSize;
+	int blockSize;
 	vector<cacheBlock> blocks;
 
 

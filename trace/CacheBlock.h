@@ -24,9 +24,9 @@ public:
 	void write(address ad);
 	
 private:
-	bit validBit;
-	bitset tag;
-	bitset contents;
+	bool validBit;
+	bitset<address::ADDRESS_SIZE> tag;
+	bitset<address::ADDRESS_SIZE> contents;
 	vector<address> slots;
 	int blockSize;
 	int filled;

@@ -21,7 +21,7 @@ class cache
 {
 public:
 	cache();
-	cache(cacheParameter para);
+	cache(cacheParameters para);
 
 	bool hasAddress(address add);
 	void write(address add);

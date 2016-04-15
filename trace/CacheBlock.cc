@@ -44,7 +44,7 @@ bool cacheBlock::inBlock(address ad)
 	return in;
 }
 
-void write(address ad)
+void cacheBlock::write(address ad)
 {
 	if (filled < blockSize)			//if slots in block are not filled, write to empty slot
 	{
@@ -60,5 +60,5 @@ void write(address ad)
 
 cacheBlock::~cacheBlock()
 {
-	erase slots;
+
 }
