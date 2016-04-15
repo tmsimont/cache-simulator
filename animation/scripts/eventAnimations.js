@@ -6,27 +6,51 @@ EventAnimations[CACHE_EVENT.SEARCH] = function(cacheEvent) {
   var set = cache.sets[cacheEvent.cacheSet];
   var block = set.blocks[cacheEvent.blockId];
 
-  var address = new CacheAddress();
-  var addrView = address.getViewForCache(cache);
-
   var line = false;
   var showingAddress = false;
+  var scrolledToCache = false;
+  var scrolledToCacheSet = false;
+  var setOpen = false;
 
   this.activate = function(time) {
     switch (time) {
-      case 3:
+      case 4:
         set.dom.find(".tag-bit").addClass("flash-search");
+        cache.addressElement.find(".tag").addClass("tag-search");
+      case 3:
+        if (!setOpen) {
+          line.remove();
+          set.showOpenState();
+          if (!scrolledToCacheSet) {
+            $(set.dom).velocity("scroll", {
+              container : $("#stage"),
+              duration : 200,
+              offset : -30
+            });
+            scrolledToCache = true;
+          }
+          line = cache.lineToSet(set);
+          setOpen = true;
+        }
       case 2:
         if (!line) {
-          line = lineToSet(addrView, cache, set);
+          line = cache.lineToSet(set);
         }
       case 1:
         if (!showingAddress) {
-          $(cache.dom).prepend(addrView);
+          cache.showAddress(cacheEvent.address);
           showingAddress = true;
         }
       case 0:
         cache.showOpenState();
+        if (!scrolledToCache) {
+          $(cache.dom).velocity("scroll", {
+            container : $("#stage"),
+            duration : 200,
+            offset : -1 * (cache.label.outerHeight() + 5)
+          });
+          scrolledToCache = true;
+        }
         break;
     }
   }
@@ -38,10 +62,17 @@ EventAnimations[CACHE_EVENT.SEARCH] = function(cacheEvent) {
       line = false;
     }
     if (showingAddress) {
-      addrView.remove();
+      cache.clearAddress();
       showingAddress = false;
     }
+    scrolledToCacheSet = false;
+    scrolledToCache = false;
     set.dom.find(".tag-bit").removeClass("flash-search");
+    cache.addressElement.find(".tag").removeClass("tag-search");
+    if (setOpen) {
+      set.showInitialState();
+      setOpen = false;
+    }
   }
 }
 
@@ -51,11 +82,49 @@ EventAnimations[CACHE_EVENT.HIT] = function(cacheEvent) {
   var set = cache.sets[cacheEvent.cacheSet];
   var block = set.blocks[cacheEvent.blockId];
 
+  var line = false;
+  var bitLine = false;
+  var showingAddress = false;
+  var scrolledToCache = false;
+  var setOpen = false;
+
   this.activate = function(time) {
-    console.log(block);
-    // 1: show the search
-    if (time == 0) {
-      block.dom.find(".tag-bit").addClass("flash-hit");
+    switch (time) {
+      case 1:
+        if(!bitLine) {
+          var hitBit = 1 + cache.getOffset(cacheEvent.address);
+          var bit = $(block.dom).find( ".data-bit:nth-child("+hitBit+")")
+          bit.addClass("hit-bit");
+          bitLine = cache.lineToBit(bit);
+        }
+        set.dom.find(".tag-bit").removeClass("flash-search");
+        cache.addressElement.find(".tag").removeClass("tag-search");
+        break;
+      case 0:
+        if (!setOpen) {
+          set.showOpenState();  
+          setOpen = true;
+        }
+        if (!showingAddress) {
+          cache.showAddress(cacheEvent.address);
+          showingAddress = true;
+        }
+        if (!line) {
+          line = cache.lineToSet(set);
+        }
+        set.dom.find(".tag-bit").addClass("flash-search");
+        cache.addressElement.find(".tag").addClass("tag-search");
+        cache.showOpenState();
+        if (!scrolledToCache) {
+          $(cache.dom).velocity("scroll", {
+            container : $("#stage"),
+            duration : 200,
+            offset : -1 * (cache.label.outerHeight() + 5)
+          });
+          scrolledToCache = true;
+        }
+        block.dom.find(".tag-bit").addClass("flash-hit");
+        break;
     }
   }
 
@@ -63,32 +132,92 @@ EventAnimations[CACHE_EVENT.HIT] = function(cacheEvent) {
   }
 
   this.finish = function() {
+    if (line) {
+      line.remove();
+      line = false;
+    }
+    if (bitLine) {
+      bitLine.remove();
+      bitLine = false;
+    }
+    if (showingAddress) {
+      cache.clearAddress();
+      showingAddress = false;
+    }
+    scrolledToCache = false;
+    set.dom.find(".tag-bit").removeClass("flash-search");
     block.dom.find(".tag-bit").removeClass("flash-hit");
+    set.dom.find(".hit-bit").removeClass("hit-bit");
+    if (setOpen) {
+      set.showInitialState();
+      setOpen = false;
+    }
   }
 }
 
-function lineToSet(address, cache, set) {
-  var idxp = $(address).find(".values .idx").offset();
-  var target = set.dom;
-  var csp = target.offset();
-  var targetY = csp.top + target.height() / 2;
-  var targetX = csp.left - 20;
-  return new drawArrow(
-      {
-        x:idxp.left, 
-        y:idxp.top + 20
-      }, 
-      {
-        x:targetX,
-        y:targetY
-      },
-      [
-        {
-          x:idxp.left,
-          y:targetY
-        }
-      ]
-  );
 
+EventAnimations[CACHE_EVENT.MISS] = function(cacheEvent) {
+  var architecture = cacheEvent.architecture;
+  var cache = architecture.caches[cacheEvent.cacheID];
+  var set = cache.sets[cacheEvent.cacheSet];
+  var block = set.blocks[cacheEvent.blockId];
+
+  var line = false;
+  var showingAddress = false;
+  var scrolledToCache = false;
+  var setOpen = false;
+
+  this.activate = function(time) {
+    switch (time) {
+      case 1:
+        set.dom.find(".tag-bit").removeClass("flash-miss");
+        break;
+      case 0:
+        if (!setOpen) {
+          set.showOpenState();  
+          setOpen = true;
+        }
+        if (!showingAddress) {
+          cache.showAddress(cacheEvent.address);
+          showingAddress = true;
+        }
+        if (!line) {
+          line = cache.lineToSet(set);
+        }
+        cache.showOpenState();
+        if (!scrolledToCache) {
+          $(cache.dom).velocity("scroll", {
+            container : $("#stage"),
+            duration : 200,
+            offset : -1 * (cache.label.outerHeight() + 5)
+          });
+          scrolledToCache = true;
+        }
+        set.dom.find(".tag-bit").addClass("flash-miss");
+        break;
+    }
+  }
+
+  this.deactivate = function(time) {
+  }
+
+  this.finish = function() {
+    if (line) {
+      line.remove();
+      line = false;
+    }
+    if (showingAddress) {
+      cache.clearAddress();
+      showingAddress = false;
+    }
+    scrolledToCache = false;
+    set.dom.find(".tag-bit").removeClass("flash-search");
+    block.dom.find(".tag-bit").removeClass("flash-miss");
+    if (setOpen) {
+      set.showInitialState();
+      setOpen = false;
+    }
+  }
 }
+
 
