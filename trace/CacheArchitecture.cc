@@ -14,6 +14,8 @@ File: CacheArchitecture.cc
 #include "Cache.h"
 #include "Address.h"
 
+#define DEBUG 1
+
 using namespace std;
 
 cacheArchitecture::cacheArchitecture()
@@ -46,14 +48,24 @@ int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 	{
 		found = arch[i].hasAddress(add);
 		if (found)
+		{
+			#ifdef DEBUG
+				cout << "Found " << add.getAddr() << " in " << arch[i].getName() << endl;
+			#endif
 			time += arch[i].getHitTime();
+		}
 		else
+		{
 			time += arch[i].getMissPenalty();
+		}
 		arch[i].write(add);
 		++i;
 	}
 	for (i = i - 1; i > 0; --i)
 	{
+		#ifdef DEBUG
+			cout << "Writing back to " << arch[i].getName() << endl;
+		#endif
 		arch[i].write(add);
 	}
 
@@ -69,14 +81,25 @@ int cacheArchitecture::cacheWrite(address add)						//returns time needed to wri
 	{
 		found = arch[i].hasAddress(add);
 		if (found)
+		{
+			#ifdef DEBUG
+						cout << "Found " << add.getAddr() << " in " << arch[i].getName() << endl;
+			#endif
 			time += arch[i].getHitTime();
+
+		}
 		else
+		{
 			time += arch[i].getMissPenalty();
+		}
 		arch[i].write(add);
 		++i;
 	}
 	for (i = i - 1; i > 0; --i)
 	{
+		#ifdef DEBUG
+				cout << "Writing back to " << arch[i].getName() << endl;
+		#endif
 		arch[i].write(add);
 	}
 	return time;

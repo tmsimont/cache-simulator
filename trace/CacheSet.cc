@@ -15,7 +15,7 @@ File: CacheSet.cc
 #include "CacheBlock.h"
 #include "Address.h"
 
-//#define DEBUG 1
+#define DEBUG 1
 
 using namespace std;
 
