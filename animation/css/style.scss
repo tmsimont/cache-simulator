@@ -80,7 +80,6 @@ html, body {
           position:relative;
           margin-bottom:10px;
           &.set-closed {
-            width: 60%;
             border: 1px solid #ccc;
           }
         }
@@ -116,6 +115,12 @@ html, body {
             }
           }
         }
+        &.moving-block {
+          background:#33a;
+          .cache-bit {
+            background:#33a;
+          }
+        }
       }
     }
   }
@@ -143,6 +148,24 @@ html, body {
 #timeline {
   width:100%;
   height:200px;
+  .timeline-action-window {
+    position:absolute;
+    height:30px;
+    top:-30px;
+    width:50%;
+    text-align:right;
+    font-size:15px;
+    font-weight:bold;
+    right:0px;
+    padding-right:30px;
+  }
+  .timeline-buttons {
+    position:absolute;
+    height:30px;
+    top:-30px;
+    width:50%;
+    left:0px;
+  }
 }
 
 .timeline-target {
@@ -190,11 +213,4 @@ html, body {
       }
     }
   }
-}
-.timeline-buttons {
-  position:absolute;
-  height:30px;
-  top:-30px;
-  width:100%;
-  left:0px;
 }

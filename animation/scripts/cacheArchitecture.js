@@ -12,16 +12,16 @@ CacheArchitecture.prototype.addCache = function(parameters) {
   var cache = new Cache(parameters);
 
   // figure number of lines
-  var numLines = parameters.size / parameters.blockSize;
+  var numBlocks = parameters.size / parameters.blockSize;
 
-  // figure number of sets
-  var linesPerSet = numLines / parameters.associativity;
+  // number of sets 
+  var numberOfSets = numBlocks / parameters.associativity;
 
   
   // build cache blocks and build into sets for cache
-  for (var i = 0; i < parameters.associativity; i++) {
+  for (var i = 0; i < numberOfSets; i++) {
     var set = new CacheSet(i);
-    for (var j = 0; j < linesPerSet; j++) {
+    for (var j = 0; j < parameters.associativity; j++) {
       var block = new CacheBlock(
         1,
         cache.tagSize,

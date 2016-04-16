@@ -55,6 +55,7 @@ function EventTimeline(target) {
 
   ET.container.prepend(ET.axisContainer);
   ET.addControls(target);
+  ET.addWindow(target);
 
 }
 
@@ -410,6 +411,13 @@ EventTimeline.prototype.gotoTime = function(unit) {
   });
 }
 
+EventTimeline.prototype.addWindow = function(target) {
+  var ET = this;
+  ET.actionWindow = $("<div>");
+  ET.actionWindow.addClass("timeline-action-window");
+  target.prepend(ET.actionWindow);
+}
+
 EventTimeline.prototype.addControls = function(target) {
   var ET = this;
 
@@ -560,6 +568,9 @@ EventTimeline.prototype.addEvent = function(handler) {
       var relTime = ET.currentTime - E.start;
       E.render.addClass("active-event");
       handler.activate(relTime);
+      if (typeof handler.windowTitle != "undefined") {
+        ET.actionWindow.text(handler.windowTitle);
+      }
     }
 
     this.deactivate = function() {
@@ -573,6 +584,7 @@ EventTimeline.prototype.addEvent = function(handler) {
     this.finish = function() {
       E.render.removeClass("active-event");
       handler.finish();
+      ET.actionWindow.text("");
     }
   }
 

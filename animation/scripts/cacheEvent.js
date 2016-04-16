@@ -1,7 +1,8 @@
 var CACHE_EVENT = {
   SEARCH       : 0,
   HIT          : 1,
-  MISS         : 2
+  MISS         : 2,
+  REPLACE      : 3
 }
 
 function CacheEvent(params) {
@@ -9,6 +10,10 @@ function CacheEvent(params) {
   for (var i in params) {
     self[i] = params[i];
   }
+  if (params['instruction']) {
+    self.windowTitle = "Current instruction: " + params['instruction'];
+  }
+
   if (typeof params.animator == "undefined")
     self.animator = new EventAnimations[self.type](this);
 
