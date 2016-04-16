@@ -14,48 +14,41 @@ File: CacheBlock.cc
 #include "CacheBlock.h"
 #include "Address.h"
 
+//#define DEBUG 1
+
 using namespace std;
 
 cacheBlock::cacheBlock()
 {
 	blockSize = 0;
+	validBit = false;
+	addr = address();
 }
 
 cacheBlock::cacheBlock(int bS)
 {
 	blockSize = bS;
-	slots.resize(blockSize);
-	filled = 0;
+	validBit = false;
+	addr = address();
 }
 
 bool cacheBlock::inBlock(address ad)
 {
-	bool in = false;
-	int i = 0;
-
-	while ((i < blockSize) && !in)
-	{
-		if (slots[i] == ad)
-			in = true;
-
-		++i;
-	}
-
-	return in;
+	#ifdef DEBUG
+		cout << "InBlock, myaddr: " << addr.getAddr() << ", check addr: " << ad.getAddr() << ", valid: " << (validBit == true ? "1" : "0") << " in " << this << endl;
+	#endif
+	if (addr == ad && validBit)
+		return true;
+	return false;
 }
 
 void cacheBlock::write(address ad)
 {
-	if (filled < blockSize)			//if slots in block are not filled, write to empty slot
-	{
-		slots[filled] = ad;
-		++filled;
-	}
-	else							//if slots in block are filled, evict one of addresses (currently this is random)
-	{
-		int r = rand() % blockSize;
-		slots[r] = ad;
-	}
+	#ifdef DEBUG
+		cout << "setting valid bit and addr to " << ad.getAddr() << " in " << this << endl;
+	#endif
+	this->validBit = true;
+	this->addr = ad;
 }
 
 cacheBlock::~cacheBlock()

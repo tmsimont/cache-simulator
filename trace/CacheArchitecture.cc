@@ -49,8 +49,12 @@ int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 			time += arch[i].getHitTime();
 		else
 			time += arch[i].getMissPenalty();
-
+		arch[i].write(add);
 		++i;
+	}
+	for (i = i - 1; i > 0; --i)
+	{
+		arch[i].write(add);
 	}
 
 	return time;
@@ -68,10 +72,13 @@ int cacheArchitecture::cacheWrite(address add)						//returns time needed to wri
 			time += arch[i].getHitTime();
 		else
 			time += arch[i].getMissPenalty();
-
+		arch[i].write(add);
 		++i;
 	}
-
+	for (i = i - 1; i > 0; --i)
+	{
+		arch[i].write(add);
+	}
 	return time;
 }
 

@@ -29,6 +29,12 @@ unsigned int address::getAddr()
 	return addr;
 }
 
+address& address::operator=(const address &b)
+{
+	this->addr = b.addr;
+	return *this;
+}
+
 bool address::operator==(const address& b)
 {
 	if (this->addr = b.addr)

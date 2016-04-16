@@ -19,6 +19,7 @@ public:
 	address();
 	address(unsigned int addr);
 	bool operator==(const address& b);
+	address& address::operator=(const address &b);
 	static const int ADDRESS_SIZE = 32;
 	unsigned int getAddr();
 private:

@@ -15,6 +15,8 @@ File: CacheSet.cc
 #include "CacheBlock.h"
 #include "Address.h"
 
+//#define DEBUG 1
+
 using namespace std;
 
 cacheSet::cacheSet()
@@ -27,13 +29,10 @@ cacheSet::cacheSet(int nB, int bS)
 	numbBlocks = nB;
 	blockSize = bS;
 	blocks.resize(numbBlocks);
-
-	cout << "num blocks: " << numbBlocks << endl;
 	for (int i = 0; i < numbBlocks; ++i)
 	{
 		blocks[i] = cacheBlock(blockSize);
 	}
-	cout << "end num blocks" << endl;
 
 }
 
@@ -43,19 +42,18 @@ void cacheSet::writeAddress(address add)
 	uniform_int_distribution<int> distribution(0, numbBlocks);
 	//confirm 0 <= i < blockSize
 	//calculate which set to write to
-	blocks[distribution(generator)].write(add);
+	blocks[add.getAddr() % numbBlocks].write(add);
 }
 
 bool cacheSet::inCacheSet(address add)
 {
 	bool in = false;
-	int i = 0;
 
-	while((i < numbBlocks) && !in)
-	{
-		in = blocks[i].inBlock(add);
-		++i;
-	}
+	#ifdef DEBUG
+		cout << "checking for " << add.getAddr() << " in block " << add.getAddr() % numbBlocks << endl;
+	#endif
+
+	in = blocks[add.getAddr() % numbBlocks].inBlock(add);
 
 	return in;
 }

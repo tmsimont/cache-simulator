@@ -16,6 +16,8 @@ File: Cache.cc
 #include "CacheParameters.h"
 #include "Address.h"
 
+//#define DEBUG 1
+
 using namespace std;
 
 cache::cache()
@@ -37,12 +39,10 @@ cache::cache(cacheParameters para)
 	numbSets = numbBlocks / associativity;
 
 	sets.resize(numbSets);
-	cout << "Num sets: " << numbSets << endl;
 	for (int i = 0; i < numbSets; ++i)
 	{
 		sets[i] = cacheSet(numbBlocks, blockSize);
 	}
-	cout << "End num sets" << endl;
 	
 }
 
@@ -51,10 +51,12 @@ bool cache::hasAddress(address add)
 	bool inCache = false;
 	int i = 0;
 
-	while ((i < numbSets) && (!inCache))
+	for (int i = 0; i < associativity && inCache == false; i++)
 	{
-		inCache = sets[i].inCacheSet(add);
-		++i;
+	#ifdef DEBUG
+			cout << "in set " << ((add.getAddr() >> (int)log(size)) % associativity) + i << endl;
+	#endif
+		inCache = sets[((add.getAddr() >> (int)log(size)) % associativity) + i].inCacheSet(address(add.getAddr() >> (int)log(size)));
 	}
 
 	return inCache;
@@ -65,7 +67,10 @@ void cache::write(address add)
 	//int i = add.getIndex();
 	//confirm 0 <= i < numbSets
 	//calculate which set to write to
-	sets[add.getAddr() % numbSets].writeAddress(add);
+
+	//TODO: free this to write to write to any of the available sets
+
+	sets[((add.getAddr() >> (int)log(size)) % associativity)].writeAddress(address(add.getAddr() >> (int)log(size)));
 }
 
 cache::~cache()

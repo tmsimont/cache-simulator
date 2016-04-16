@@ -25,12 +25,9 @@ public:
 	void write(address ad);
 	
 private:
+	address addr;
 	bool validBit;
-	bitset<address::ADDRESS_SIZE> tag;
-	bitset<address::ADDRESS_SIZE> contents;
-	vector<address> slots;
 	int blockSize;
-	int filled;
 };
 
 #endif // CACHEBLOCK_H
