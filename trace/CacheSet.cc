@@ -9,10 +9,13 @@ File: CacheSet.cc
 #include <iostream>
 #include <string>
 #include <iterator>
+#include <random>
 
 #include "CacheSet.h"
 #include "CacheBlock.h"
 #include "Address.h"
+
+//#define DEBUG 1
 
 using namespace std;
 
@@ -35,22 +38,22 @@ cacheSet::cacheSet(int nB, int bS)
 
 void cacheSet::writeAddress(address add)
 {
-	int i = add.getIndex();
+	default_random_engine generator;
+	uniform_int_distribution<int> distribution(0, numbBlocks);
 	//confirm 0 <= i < blockSize
 	//calculate which set to write to
-	blocks[i].write(add);
+	blocks[add.getAddr() % numbBlocks].write(add);
 }
 
 bool cacheSet::inCacheSet(address add)
 {
 	bool in = false;
-	int i = 0;
 
-	while((i < numbBlocks) && !in)
-	{
-		in = blocks[i].inBlock(add);
-		++i;
-	}
+	#ifdef DEBUG
+		cout << "checking for " << add.getAddr() << " in block " << add.getAddr() % numbBlocks << endl;
+	#endif
+
+	in = blocks[add.getAddr() % numbBlocks].inBlock(add);
 
 	return in;
 }

@@ -17,18 +17,13 @@ class address
 {
 public:
 	address();
-	address(int aB, int tS, int iS, int o);
-
-	int getTag();
-	int getIndex();
-	int getOffset();
+	address(unsigned int addr);
 	bool operator==(const address& b);
+	address& address::operator=(const address &b);
 	static const int ADDRESS_SIZE = 32;
+	unsigned int getAddr();
 private:
-	bitset<ADDRESS_SIZE> addressBits;
-	int tagSize;
-	int indexSize;
-	int offset;
+	unsigned int addr;
 };
 
 #endif // ADDRESS_H
