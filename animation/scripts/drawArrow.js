@@ -1,6 +1,5 @@
 var arrowID = 0;
-function drawArrow(from, to, stops) {
-  var target = "stage";
+function drawArrow(from, to, stops, target) {
 
   if (arguments.length == 2) {
     stops = [];
@@ -70,7 +69,7 @@ function drawArrow(from, to, stops) {
 
   svg.appendChild(instance);
 
-  document.getElementById(target).appendChild(svg);
+  $(target).append(svg);
 
   this.remove = function() {
     svg.remove();

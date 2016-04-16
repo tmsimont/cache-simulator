@@ -1,8 +1,6 @@
-function CacheAddress() {
-  this.bits = [1,0,1,0,1,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,0,1];
-}
+function CacheAddress(cache, bits) {
+  this.bits = bits;
 
-CacheAddress.prototype.getViewForCache = function(cache) {
   var address = this;
   var dom = $("<div>");
   dom.addClass("address");
@@ -22,7 +20,7 @@ CacheAddress.prototype.getViewForCache = function(cache) {
   labels.append(lblTag);
   var valTag = $("<div>");
   valTag.addClass("tag");
-  var tagBits = cache.getTagBits(address);
+  var tagBits = cache.getTagBits(bits);
   var tagString = "";
   for (var i = 0; i < tagBits.length; i++) {
     tagString = tagString + tagBits[i];
@@ -37,7 +35,7 @@ CacheAddress.prototype.getViewForCache = function(cache) {
   labels.append(lblIdx);
   var valIdx = $("<div>");
   valIdx.addClass("idx");
-  var idxBits = cache.getIndexBits(address);
+  var idxBits = cache.getIndexBits(bits);
   var idxString = "";
   for (var i = 0; i < idxBits.length; i++) {
     idxString = idxString + idxBits[i];
@@ -52,7 +50,7 @@ CacheAddress.prototype.getViewForCache = function(cache) {
   labels.append(lblOffset);
   var valOffset = $("<div>");
   valOffset.addClass("offset");
-  var offsetBits = cache.getOffsetBits(address);
+  var offsetBits = cache.getOffsetBits(bits);
   var offsetString = "";
   for (var i = 0; i < offsetBits.length; i++) {
     offsetString = offsetString + offsetBits[i];
@@ -60,7 +58,7 @@ CacheAddress.prototype.getViewForCache = function(cache) {
   valOffset.text(offsetString);
   values.append(valOffset);
   
-  return dom;
+  this.dom = dom;
+
+
 }
-
-

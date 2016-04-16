@@ -33,78 +33,92 @@ html, body {
 }
 
 #stage {
-.cache {
-  &.state-initial {
-    width:100px;
-    height:100px;
-    border:1px solid #ccc;
-    margin:0 0 30px 0;
+  .cache {
+    position: relative;
+    &.state-initial {
+      width:100px;
+      height:100px;
+      border:1px solid #ccc;
+      margin:0 0 30px 0;
 
-    .cache-set-container {
-      display:none;
+      .cache-set-container {
+        display:none;
+      }
+
+      .cache-label {
+        position:absolute;
+        top:50%;
+        left: 0;
+        width:100%;
+        text-align:center;
+        margin-top:-10px;
+      }
     }
 
-    .cache-label {
-      position:absolute;
-      top:50%;
-      left: 0;
-      width:100%;
-      text-align:center;
-      margin-top:-10px;
-    }
-  }
-
-  &.state-open {
-    top:20px;
-    padding-top:50px;
-    padding-bottom:50px;
-  
-    .cache-label {
-      position:absolute;
-      left:0;
-      top:-20px;
-    }
-
-    .address {
-      position:absolute;
-      left: 0;
-      top: 0;
-    }
+    &.state-open {
+      top:20px;
+      padding-top:50px;
+      padding-bottom:50px;
     
-    .cache-sets-container {
-      padding-left: 150px;
-    }
+      .cache-label {
+        position:absolute;
+        left:0;
+        top:-20px;
+      }
 
-    .cache-set-container {
-      padding-bottom:30px;
-    }
-
-    .cache-block {
-      .bit-group {
-        display: inline-block;
-        border:1px solid $border-color;
-        &.tag-bits {
-          margin-right:10px;
+      .address {
+        position:absolute;
+        left: 0;
+        top: 0;
+        .tag-search {
+          background:#8ff;
         }
-        .cache-bit {
-          border-right:1px solid $border-color;
-          display:inline-block;
-          width:10px;
-          height:10px;
-          &.valid-bit { 
-            background:#efefef;
+      }
+      
+      .cache-sets-container {
+        .cache-set-container {
+          position:relative;
+          margin-bottom:10px;
+          &.set-closed {
+            width: 60%;
+            border: 1px solid #ccc;
           }
-          &.flash-search {
-            background:#8ff;
+        }
+      }
+
+      .cache-block {
+        .bit-group {
+          display: inline-block;
+          border:1px solid $border-color;
+          &.tag-bits {
+            margin-right:10px;
           }
-          &.flash-hit {
-            background:#83f;
+          .cache-bit {
+            border-right:1px solid $border-color;
+            display:inline-block;
+            width:10px;
+            height:10px;
+            &.valid-bit { 
+              background:#efefef;
+            }
+            &.flash-search {
+              background:#8ff;
+            }
+            &.flash-hit {
+              background:#83f;
+            }
+            &.flash-miss {
+              background:#e33;
+            }
+            &.hit-bit {
+              background:#0A0;
+              border-color:#0A0;
+            }
           }
         }
       }
     }
   }
-}
 }
 
 #main {
@@ -115,10 +129,9 @@ html, body {
   padding:10px;
 }
 #stage {
-  div { position:relative; }
   position:relative;
-  overflow:auto;
   height:100%;
+  overflow:auto;
   svg.arrow {
     position:absolute;
     left:0px;

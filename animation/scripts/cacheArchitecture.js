@@ -16,17 +16,17 @@ CacheArchitecture.prototype.addCache = function(parameters) {
 
   // figure number of sets
   var linesPerSet = numLines / parameters.associativity;
+
   
   // build cache blocks and build into sets for cache
   for (var i = 0; i < parameters.associativity; i++) {
     var set = new CacheSet(i);
     for (var j = 0; j < linesPerSet; j++) {
-      // todo: figure out number of bits needed for tag
       var block = new CacheBlock(
-          [1],
-          [0,1,0,1,1,1,0,1],
-          [1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,1,0,1,1,0,1,0,0,0,0,1,1,0,1]
-       );
+        1,
+        cache.tagSize,
+        parameters.blockSize
+      );
       set.addBlock(block);
     }
     cache.addSet(set);
@@ -37,12 +37,6 @@ CacheArchitecture.prototype.addCache = function(parameters) {
 }
 CacheArchitecture.prototype.adjustSizing = function() {
   for (var i = 0; i < this.caches.length; i++) {
-    var dom = this.caches[i].dom;
-    var width = 0;
-    width += dom.find(".valid-bits:first").outerWidth(true);
-    width += dom.find(".tag-bits:first").outerWidth(true);
-    width += dom.find(".data-bits:first").outerWidth(true);
-    $(dom).width(width);
   }
 }
 

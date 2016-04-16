@@ -34,18 +34,22 @@ html, body {
   padding: 2px;
 }
 
-/* line 37, style.scss */
+/* line 36, style.scss */
+#stage .cache {
+  position: relative;
+}
+/* line 38, style.scss */
 #stage .cache.state-initial {
   width: 100px;
   height: 100px;
   border: 1px solid #ccc;
   margin: 0 0 30px 0;
 }
-/* line 43, style.scss */
+/* line 44, style.scss */
 #stage .cache.state-initial .cache-set-container {
   display: none;
 }
-/* line 47, style.scss */
+/* line 48, style.scss */
 #stage .cache.state-initial .cache-label {
   position: absolute;
   top: 50%;
@@ -54,106 +58,117 @@ html, body {
   text-align: center;
   margin-top: -10px;
 }
-/* line 57, style.scss */
+/* line 58, style.scss */
 #stage .cache.state-open {
   top: 20px;
   padding-top: 50px;
   padding-bottom: 50px;
 }
-/* line 62, style.scss */
+/* line 63, style.scss */
 #stage .cache.state-open .cache-label {
   position: absolute;
   left: 0;
   top: -20px;
 }
-/* line 68, style.scss */
+/* line 69, style.scss */
 #stage .cache.state-open .address {
   position: absolute;
   left: 0;
   top: 0;
 }
-/* line 74, style.scss */
-#stage .cache.state-open .cache-sets-container {
-  padding-left: 150px;
+/* line 73, style.scss */
+#stage .cache.state-open .address .tag-search {
+  background: #8ff;
 }
-/* line 78, style.scss */
-#stage .cache.state-open .cache-set-container {
-  padding-bottom: 30px;
+/* line 79, style.scss */
+#stage .cache.state-open .cache-sets-container .cache-set-container {
+  position: relative;
+  margin-bottom: 10px;
 }
-/* line 83, style.scss */
+/* line 82, style.scss */
+#stage .cache.state-open .cache-sets-container .cache-set-container.set-closed {
+  width: 60%;
+  border: 1px solid #ccc;
+}
+/* line 90, style.scss */
 #stage .cache.state-open .cache-block .bit-group {
   display: inline-block;
   border: 1px solid #ccc;
 }
-/* line 86, style.scss */
+/* line 93, style.scss */
 #stage .cache.state-open .cache-block .bit-group.tag-bits {
   margin-right: 10px;
 }
-/* line 89, style.scss */
+/* line 96, style.scss */
 #stage .cache.state-open .cache-block .bit-group .cache-bit {
   border-right: 1px solid #ccc;
   display: inline-block;
   width: 10px;
   height: 10px;
 }
-/* line 94, style.scss */
+/* line 101, style.scss */
 #stage .cache.state-open .cache-block .bit-group .cache-bit.valid-bit {
   background: #efefef;
 }
-/* line 97, style.scss */
+/* line 104, style.scss */
 #stage .cache.state-open .cache-block .bit-group .cache-bit.flash-search {
   background: #8ff;
 }
-/* line 100, style.scss */
+/* line 107, style.scss */
 #stage .cache.state-open .cache-block .bit-group .cache-bit.flash-hit {
   background: #83f;
 }
-
 /* line 110, style.scss */
+#stage .cache.state-open .cache-block .bit-group .cache-bit.flash-miss {
+  background: #e33;
+}
+/* line 113, style.scss */
+#stage .cache.state-open .cache-block .bit-group .cache-bit.hit-bit {
+  background: #0A0;
+  border-color: #0A0;
+}
+
+/* line 124, style.scss */
 #main {
   height: 100%;
 }
 
-/* line 114, style.scss */
+/* line 128, style.scss */
 #stage-container {
   padding: 10px;
 }
 
-/* line 117, style.scss */
+/* line 131, style.scss */
 #stage {
   position: relative;
-  overflow: auto;
   height: 100%;
+  overflow: auto;
 }
-/* line 118, style.scss */
-#stage div {
-  position: relative;
-}
-/* line 122, style.scss */
+/* line 135, style.scss */
 #stage svg.arrow {
   position: absolute;
   left: 0px;
   top: 0px;
 }
 
-/* line 130, style.scss */
+/* line 143, style.scss */
 #timeline {
   width: 100%;
   height: 200px;
 }
 
-/* line 135, style.scss */
+/* line 148, style.scss */
 .timeline-target {
   position: relative;
 }
-/* line 137, style.scss */
+/* line 150, style.scss */
 .timeline-target .timeline-container {
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   height: 100%;
   overflow: hidden;
 }
-/* line 143, style.scss */
+/* line 156, style.scss */
 .timeline-target .needle {
   width: 1px;
   height: 100%;
@@ -162,14 +177,14 @@ html, body {
   top: 0px;
   background: #c33;
 }
-/* line 151, style.scss */
+/* line 164, style.scss */
 .timeline-target .axis-container {
   position: absolute;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
-/* line 156, style.scss */
+/* line 169, style.scss */
 .timeline-target .axis-container .axis {
   height: 100%;
   border-left: 1px solid #ddd;
@@ -177,28 +192,28 @@ html, body {
   left: 0px;
   top: 0px;
 }
-/* line 162, style.scss */
+/* line 175, style.scss */
 .timeline-target .axis-container .axis.axis-major {
   border-left: 1px solid #999;
 }
-/* line 167, style.scss */
+/* line 180, style.scss */
 .timeline-target .event-container {
   position: absolute;
   width: 100%;
   height: 100%;
 }
-/* line 171, style.scss */
+/* line 184, style.scss */
 .timeline-target .event-container .event-element {
   position: absolute;
   height: 20px;
   background: #aae;
 }
-/* line 175, style.scss */
+/* line 188, style.scss */
 .timeline-target .event-container .event-element.active-event {
   background: #ee3;
 }
 
-/* line 181, style.scss */
+/* line 194, style.scss */
 .timeline-buttons {
   position: absolute;
   height: 30px;
