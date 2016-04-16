@@ -9,6 +9,7 @@ File: CacheSet.cc
 #include <iostream>
 #include <string>
 #include <iterator>
+#include <random>
 
 #include "CacheSet.h"
 #include "CacheBlock.h"
@@ -26,19 +27,23 @@ cacheSet::cacheSet(int nB, int bS)
 	numbBlocks = nB;
 	blockSize = bS;
 	blocks.resize(numbBlocks);
+
+	cout << "num blocks: " << numbBlocks << endl;
 	for (int i = 0; i < numbBlocks; ++i)
 	{
 		blocks[i] = cacheBlock(blockSize);
 	}
+	cout << "end num blocks" << endl;
 
 }
 
 void cacheSet::writeAddress(address add)
 {
-	int i = add.getIndex();
+	default_random_engine generator;
+	uniform_int_distribution<int> distribution(0, numbBlocks);
 	//confirm 0 <= i < blockSize
 	//calculate which set to write to
-	blocks[i].write(add);
+	blocks[distribution(generator)].write(add);
 }
 
 bool cacheSet::inCacheSet(address add)

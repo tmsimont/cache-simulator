@@ -37,10 +37,12 @@ cache::cache(cacheParameters para)
 	numbSets = numbBlocks / associativity;
 
 	sets.resize(numbSets);
+	cout << "Num sets: " << numbSets << endl;
 	for (int i = 0; i < numbSets; ++i)
 	{
 		sets[i] = cacheSet(numbBlocks, blockSize);
 	}
+	cout << "End num sets" << endl;
 	
 }
 
@@ -60,10 +62,10 @@ bool cache::hasAddress(address add)
 
 void cache::write(address add)
 {
-	int i = add.getIndex();
+	//int i = add.getIndex();
 	//confirm 0 <= i < numbSets
 	//calculate which set to write to
-	sets[i].writeAddress(add);
+	sets[add.getAddr() % numbSets].writeAddress(add);
 }
 
 cache::~cache()

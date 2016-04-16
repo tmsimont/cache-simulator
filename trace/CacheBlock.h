@@ -19,6 +19,7 @@ class cacheBlock
 {
 public:
 	cacheBlock();
+	~cacheBlock();
 	cacheBlock(int bS);
 	bool inBlock(address ad);
 	void write(address ad);

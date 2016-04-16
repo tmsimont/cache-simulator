@@ -16,39 +16,22 @@ using namespace std;
 
 address::address()
 {
-	addressBits = 0;
-	tagSize = 0;
-	indexSize = 0;
-	offset = 0;
+
 }
 
-address::address(int aB, int tS, int iS, int o)
+address::address(unsigned int addr)
 {
-	addressBits = aB;
-	tagSize = tS;
-	indexSize = iS;
-	offset = o;
+	this->addr = addr;
 }
 
-int address::getTag()
+unsigned int address::getAddr()
 {
-	return tagSize;
+	return addr;
 }
-
-int address::getIndex()
-{
-	return indexSize;
-}
-
-int address::getOffset()
-{
-	return offset;
-}
-
 
 bool address::operator==(const address& b)
 {
-	if (this->getIndex == b.getIndex && this->getOffset == b.getOffset && this->getTag == b.getTag)
+	if (this->addr = b.addr)
 		return true;
 	return false;
 }
