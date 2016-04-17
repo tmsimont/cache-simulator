@@ -3,8 +3,8 @@ var EventAnimations = {};
 EventAnimations[CACHE_EVENT.SEARCH] = function(cacheEvent) {
   var architecture = cacheEvent.architecture;
   var cache = architecture.caches[cacheEvent.cacheID];
-  var set = cache.sets[cacheEvent.cacheSet];
-  var block = set.blocks[cacheEvent.blockId];
+  var set = cache.sets[cacheEvent.cacheSetID];
+  var block = set.blocks[cacheEvent.blockID];
 
   var line = false;
   var showingAddress = false;
@@ -79,8 +79,8 @@ EventAnimations[CACHE_EVENT.SEARCH] = function(cacheEvent) {
 EventAnimations[CACHE_EVENT.HIT] = function(cacheEvent) {
   var architecture = cacheEvent.architecture;
   var cache = architecture.caches[cacheEvent.cacheID];
-  var set = cache.sets[cacheEvent.cacheSet];
-  var block = set.blocks[cacheEvent.blockId];
+  var set = cache.sets[cacheEvent.cacheSetID];
+  var block = set.blocks[cacheEvent.blockID];
 
   var line = false;
   var bitLine = false;
@@ -101,6 +101,7 @@ EventAnimations[CACHE_EVENT.HIT] = function(cacheEvent) {
         cache.addressElement.find(".tag").removeClass("tag-search");
         break;
       case 0:
+        cache.showOpenState();
         if (!setOpen) {
           set.showOpenState();  
           setOpen = true;
@@ -114,7 +115,6 @@ EventAnimations[CACHE_EVENT.HIT] = function(cacheEvent) {
         }
         set.dom.find(".tag-bit").addClass("flash-search");
         cache.addressElement.find(".tag").addClass("tag-search");
-        cache.showOpenState();
         if (!scrolledToCache) {
           $(cache.dom).velocity("scroll", {
             container : $("#stage"),
@@ -159,8 +159,8 @@ EventAnimations[CACHE_EVENT.HIT] = function(cacheEvent) {
 EventAnimations[CACHE_EVENT.MISS] = function(cacheEvent) {
   var architecture = cacheEvent.architecture;
   var cache = architecture.caches[cacheEvent.cacheID];
-  var set = cache.sets[cacheEvent.cacheSet];
-  var block = set.blocks[cacheEvent.blockId];
+  var set = cache.sets[cacheEvent.cacheSetID];
+  var block = set.blocks[cacheEvent.blockID];
 
   var line = false;
   var showingAddress = false;
@@ -173,6 +173,7 @@ EventAnimations[CACHE_EVENT.MISS] = function(cacheEvent) {
         set.dom.find(".tag-bit").removeClass("flash-miss");
         break;
       case 0:
+        cache.showOpenState();
         if (!setOpen) {
           set.showOpenState();  
           setOpen = true;
@@ -184,7 +185,6 @@ EventAnimations[CACHE_EVENT.MISS] = function(cacheEvent) {
         if (!line) {
           line = cache.lineToSet(set);
         }
-        cache.showOpenState();
         if (!scrolledToCache) {
           $(cache.dom).velocity("scroll", {
             container : $("#stage"),
@@ -218,6 +218,115 @@ EventAnimations[CACHE_EVENT.MISS] = function(cacheEvent) {
       setOpen = false;
     }
   }
+}
+
+
+EventAnimations[CACHE_EVENT.REPLACE] = function(cacheEvent){ 
+  var architecture = cacheEvent.architecture;
+  var cache = architecture.caches[cacheEvent.cacheID];
+  var set = cache.sets[cacheEvent.cacheSetID];
+  var block = set.blocks[cacheEvent.blockID];
+  var toCache = architecture.caches[cacheEvent.toCacheID];
+  var toSet = toCache.sets[cacheEvent.toCacheSetID];
+  var toBlock = toSet.blocks[cacheEvent.toBlockID];
+
+
+  var bitLine = false;
+  var setOpen = false;
+  var showingAddress = false;
+  var line = false;
+  var scrolledToCache = false;
+
+  var lineForMotion = false;
+  var lineR = false;
+  var scrolledToToCache = false;
+
+  this.activate = function (time) {
+    switch (time) {
+      case 4:
+        toSet.showOpenState();
+        // update lines now that upper set is open
+        lineForMotion.remove();
+        lineForMotion = cache.lineSendBlockTo(block, toCache);
+        lineR.remove();
+        lineR = toCache.lineToSet(toSet);
+      case 3: 
+        if (!lineR) {
+          lineR = toCache.lineToSet(toSet);
+        }
+      case 2:
+        if (!scrolledToToCache) {
+          $(toCache.dom).velocity("scroll", {
+            container : $("#stage"),
+            duration : 200,
+            offset : -1 * (cache.label.outerHeight() + 5)
+          });
+          scrolledToCache = true;
+        }
+  
+      case 1:
+        toCache.showOpenState();
+        if(!lineForMotion) {
+          lineForMotion = cache.lineSendBlockTo(block, toCache);
+        }
+
+
+      case 0:
+        // show state where block was found
+        // ----------------------------------------
+        cache.showOpenState();
+        if (!setOpen) {
+          set.showOpenState();  
+          setOpen = true;
+        }
+        if (!showingAddress) {
+          cache.showAddress(cacheEvent.address);
+          showingAddress = true;
+        }
+        if (!scrolledToCache) {
+          $(cache.dom).velocity("scroll", {
+            container : $("#stage"),
+            duration : 200,
+            offset : -1 * (cache.label.outerHeight() + 5)
+          });
+          scrolledToCache = true;
+        }
+        // ----------------------------------------
+
+        // now do new stuff
+        block.dom.addClass("moving-block");
+        break;
+    }
+  }
+  this.deactivate = function(time) {
+  }
+  this.finish = function() {
+    if (line) {
+      line.remove();
+      line = false;
+    }
+    if (showingAddress) {
+      cache.clearAddress();
+      showingAddress = false;
+    }
+    scrolledToCache = false;
+    set.dom.find(".tag-bit").removeClass("flash-search");
+    block.dom.find(".tag-bit").removeClass("flash-miss");
+    if (setOpen) {
+      set.showInitialState();
+      setOpen = false;
+    }
+    if (lineForMotion) {
+      lineForMotion.remove();
+      lineForMotion = false;
+    }
+    if (lineR) {
+      lineR.remove();
+      lineR = false;
+    }
+  }
+
+  
 }
 
 

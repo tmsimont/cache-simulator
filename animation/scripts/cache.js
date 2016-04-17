@@ -2,7 +2,13 @@ function Cache(parameters) {
   this.sets = [];
   this.parameters = parameters;
 
-  this.indexSize = Math.log2(parameters.associativity);
+  // figure number of lines
+  var numBlocks = parameters.size / parameters.blockSize;
+
+  // number of sets 
+  var numberOfSets = numBlocks / parameters.associativity;
+
+  this.indexSize = Math.log2(numberOfSets);
   this.offsetSize = Math.log2(parameters.blockSize);
   this.tagSize = parameters.addressSize - this.indexSize - this.offsetSize;
 
@@ -175,12 +181,11 @@ Cache.prototype.lineToBit = function(bit) {
   var C = this;
   var offsetE = $(C.addressElement).find(".values .offset");
   var offsetP = offsetE.position();
-  console.log(bit);
   var target = bit;
   var csp = target.position();
   var pp = target.offsetParent().position();
   var targetY = (pp.top + csp.top) - bit.outerHeight();
-  var targetX = (pp.left + csp.left) + (bit.outerWidth());
+  var targetX = (pp.left + csp.left) + (bit.outerWidth() / 2) - 6;
   return new drawArrow(
       {
         x:offsetP.left + offsetE.outerWidth(), 
@@ -188,15 +193,55 @@ Cache.prototype.lineToBit = function(bit) {
       }, 
       {
         x:targetX,
-        y:targetY
+        y:targetY - 5
       },
       [
         {
-          x:targetX - 10,
+          x:targetX,
           y:offsetP.top - offsetE.outerHeight() / 2
         }
       ],
       C.dom
   );
 
+}
+
+Cache.prototype.lineSendBlockTo = function(block, targetCache) {
+  var C = this;
+  var offsetE = $(block.dom);
+  var offsetP = offsetE.position();
+  var offsetPP = offsetE.offsetParent().position();
+  var sourceY = (offsetPP.top + offsetP.top) - block.dom.outerHeight()/2 + 6;
+  var sourceX = (offsetPP.left + offsetP.left) + block.dom.outerWidth();
+
+  var sourceCacheP = C.dom.position();
+  var targetCacheP = $(targetCache.dom).position();
+  var tcAddressP = $(targetCache.addressElement).position();
+
+  var targetX = targetCacheP.left - sourceCacheP.left + tcAddressP.left;
+  targetX += targetCache.addressElement.outerWidth() + 10;
+  var targetY = targetCacheP.top - sourceCacheP.top + tcAddressP.top;
+  targetY += targetCache.addressElement.outerHeight() / 2 - 6;
+  return new drawArrow(
+    {
+      x:sourceX,
+      y:sourceY
+    },
+    {
+      x:targetX,
+      y:targetY
+    },
+    [
+      {
+        x: sourceX + 30,
+        y: sourceY
+      },
+      {
+        x: sourceX + 30,
+        y: targetY
+      }
+      
+    ],
+    C.dom
+  );
 }

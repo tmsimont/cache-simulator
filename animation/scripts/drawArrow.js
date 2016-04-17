@@ -8,16 +8,29 @@ function drawArrow(from, to, stops, target) {
   var ns = 'http://www.w3.org/2000/svg';
   var svg = document.createElementNS(ns, 'svg');
 
-  var w = from.x < to.x ? to.x - from.x : from.x - to.x;
-  var h = from.y < to.y ? to.y - from.y : from.y - to.y;
-  // todo: support stops that are outside of from/to ranges
-  h += 10;
+
+  // support stops that are outside of from/to ranges
+  var minstopX = from.x < to.x ? from.x : to.x;
+  var minstopY = from.y < to.y ? from.y : to.y;
+  var maxstopX = from.x > to.x ? from.x : to.x;
+  var maxstopY = from.y > to.y ? from.y : to.y;
+  for (var i = 0; i < stops.length; i++) {
+    if (stops[i].x < minstopX) minstopX = stops[i].x; 
+    if (stops[i].y < minstopY) minstopY = stops[i].y; 
+    if (stops[i].x > maxstopX) maxstopX = stops[i].x; 
+    if (stops[i].y > maxstopY) maxstopY = stops[i].y; 
+  }
+  var w = maxstopX - minstopX;
+  var h = maxstopY - minstopY;
+  w += 15;
+  h += 15;
+
   svg.setAttribute("width",w);
   svg.setAttribute("height",h);
   svg.setAttribute("class","arrow");
 
-  var l = from.x < to.x ? from.x : to.x;
-  var t = from.y < to.y ? from.y : to.y; 
+  var l = minstopX;
+  var t = minstopY; 
   svg.setAttribute("style", "left:"+l+"px;top:"+t+"px;");
 
   var defs = document.createElementNS(ns, "defs");
@@ -42,20 +55,19 @@ function drawArrow(from, to, stops, target) {
 
   var instance = document.createElementNS(ns, "path");
 
-  var pfx,pty,ptx,pty;
-  pfx = from.x < to.x ? 2 : w;
-  pfy = from.y < to.y ? 2 : h;
-  ptx = to.x < from.x ? 6 : w - 6;
-  pty = to.y < from.y ? 6 : h - 6;
-  if (from.x == to.x) pfx = ptx = 5;
-  if (from.y == to.y) pfy = pty = 5;
+  var pfx = from.x - l + 6;
+  var ptx = to.x - l + 6;
+  var pfy = from.y - t + 6;
+  var pty = to.y - t + 6;
+  if (pfx == ptx) pfx = ptx = 6;
+  if (pfy == pty) pfy = pty = 6;
   var pathString = "M " + pfx + "," + pfy;
   for (var i = 0; i < stops.length; i++) {
     var stx, sty;
     // todo: support stops outside of to/from range
     sty =  stops[i].y - t;
     stx =  stops[i].x - l;
-    stx += 2;
+    stx += 6;
     sty += 6;
     pathString +=         " L " + stx + "," + sty;
   }

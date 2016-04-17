@@ -33,7 +33,7 @@ CacheSet.prototype.showInitialState = function() {
   var S = this;
   this.dom.addClass("set-closed");
   this.dom.removeClass("set-open");
-  this.dom.height( 5 * this.blocks.length);
+  this.dom.height( 15 * this.blocks.length);
 
   if (S.blocksBuilt) {
     for (var i = 0; i < this.blocks.length; i++) {
@@ -41,8 +41,6 @@ CacheSet.prototype.showInitialState = function() {
     }
     S.blocksBuilt = false;
   }
-
-  $(S.dom).width("");
 
   this.dom.unbind("click");
   this.dom.on("click", function() {
@@ -84,7 +82,6 @@ CacheSet.prototype.showOpenState = function() {
     S.blocksBuilt = true;
   }
 
-  this.setWidth();
 
   this.dom.unbind("click");
   this.dom.on("click", function() {
