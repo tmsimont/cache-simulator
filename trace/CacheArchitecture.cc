@@ -114,6 +114,7 @@ int cacheArchitecture::cacheWrite(address add)						//returns time needed to wri
 {
 	int time = 0, i = 0;
 	bool found = false;
+	CacheSearch finder = CacheSearch();
 
 	while ((i < numbCaches) && (!found))
 	{
@@ -121,7 +122,7 @@ int cacheArchitecture::cacheWrite(address add)						//returns time needed to wri
 		cout << "Here" << endl;
 		cout << "Looking in " << arch[i].getName() << " for " << add.getAddr() << endl;
 #endif
-		found = arch[i].hasAddress(add);
+		found = finder.cacheHasAddress(arch[i], add);
 		if (found)
 		{
 #ifdef DEBUG
