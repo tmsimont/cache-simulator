@@ -39,6 +39,15 @@ void cacheArchitecture::addCache(cacheParameters nextCache)
 
 }
 
+cache cacheArchitecture::getCache(int priority)
+{
+	return arch[priority];
+}
+
+int cacheArchitecture::getNumbCaches() {
+	return numbCaches;
+}
+
 int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 {
 	int time = 0, i = 0;

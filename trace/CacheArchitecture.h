@@ -26,6 +26,9 @@ public:
 	void addCache(cacheParameters nextCache);
 	int cacheRead(address add);						//returns time needed to read
 	int cacheWrite(address add);					//returns time needed to write
+	int getNumbCaches();
+
+	cache getCache(int priority);
 
 	~cacheArchitecture();
 private:

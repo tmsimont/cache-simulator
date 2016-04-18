@@ -7,6 +7,7 @@ class CacheTest
 public:
 	CacheTest();
 	static void runTest();
+	static void testAddressing();
 	~CacheTest();
 };
 

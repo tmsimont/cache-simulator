@@ -14,6 +14,7 @@ File: Cache.h
 #include "CacheSet.h"
 #include "CacheParameters.h"
 #include "Address.h"
+#include <bitset>
 
 using namespace std;
 
@@ -28,6 +29,15 @@ public:
 	int getMissPenalty() { return missPenalty; }
 	int getHitTime() { return hitTime; }
 	string getName() { return name; }
+
+
+	unsigned int indexSize;
+	unsigned int offsetSize;
+	unsigned int tagSize;
+	unsigned int getTag(address ofAddress);
+	unsigned int getIndex(address ofAddress);
+	unsigned int getOffset(address ofAddress);
+	
 
 	~cache();
 
