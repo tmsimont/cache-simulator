@@ -9,6 +9,7 @@ File: Cache.cc
 #include <iostream>
 #include <string>
 #include <iterator>
+#include <random>
 
 #include "Cache.h"
 #include "CacheBlock.h"
@@ -41,9 +42,12 @@ cache::cache(cacheParameters para)
 	sets.resize(numbSets);
 	for (int i = 0; i < numbSets; ++i)
 	{
-		sets[i] = cacheSet(numbBlocks, blockSize);
+		sets[i] = cacheSet(associativity, blockSize);
 	}
 	
+	#ifdef DEBUG
+		cout << "Cache " << name << ", priority: " << priority << ", " << "block size: " << blockSize << ", " << "assoc: " << associativity << ", " << " size: " << size << ", numBlocks: " << numbBlocks << ", " << " numSets: " << numbSets << endl;
+	#endif
 }
 
 bool cache::hasAddress(address add)
@@ -53,10 +57,10 @@ bool cache::hasAddress(address add)
 
 	for (int i = 0; i < associativity && inCache == false; i++)
 	{
-	#ifdef DEBUG
-			cout << "in set " << ((add.getAddr() >> (int)log(size)) % associativity) + i << endl;
-	#endif
-		inCache = sets[((add.getAddr() >> (int)log(size)) % associativity) + i].inCacheSet(address(add.getAddr() >> (int)log(size)));
+	//#ifdef DEBUG
+	//		cout << "in set " << ((add.getAddr() >> (int)log(size)) % associativity) + i << endl;
+	//#endif
+		inCache = sets[(add.getAddr() % numbSets) + i].inCacheSet(add);
 	}
 
 	return inCache;
@@ -68,9 +72,14 @@ void cache::write(address add)
 	//confirm 0 <= i < numbSets
 	//calculate which set to write to
 
-	//TODO: free this to write to write to any of the available sets
+	default_random_engine generator;
+	uniform_int_distribution<int> distribution(0, associativity - 1);
+	//confirm 0 <= i < blockSize
 
-	sets[((add.getAddr() >> (int)log(size)) % associativity)].writeAddress(address(add.getAddr() >> (int)log(size)));
+
+	//calculate which set to write to
+
+	sets[add.getAddr() % numbSets + distribution(generator)].writeAddress(address(add.getAddr()));
 }
 
 cache::~cache()
