@@ -61,7 +61,11 @@ bool cacheSet::inCacheSet(address add)
 	return in;
 }
 
+vector<cacheBlock> cacheSet::getCacheBlocks()
+{
+	return blocks;
+}
+
 cacheSet::~cacheSet()
 {
-
 }

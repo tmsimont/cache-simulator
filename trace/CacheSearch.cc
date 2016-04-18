@@ -1,25 +1,14 @@
 #include "CacheSearch.h"
+#include "CacheSet.h"
+#include "CacheBlock.h"
+#include <vector>
 
-bool CacheSearch::cacheHasAddress(cacheArchitecture ca, address a)
+bool CacheSearch::cacheHasAddress(cache c, address a)
 {
-	int time = 0, i = 0;
 	bool found = false;
-
-	while ((i < ca.getNumbCaches()) && (!found))
-	{
-		cache& thisCache = ca.getCache(i);
-		found = thisCache.hasAddress(a);
-		if (found)
-		{
-			time += thisCache.getHitTime();
-		}
-		else
-		{
-			time += thisCache.getMissPenalty();
-		}
-		thisCache.write(a);
-		++i;
-	}
-
-	return time;
+	cacheSet set = c.getCacheSet(c.getIndex(a));
+	vector<cacheBlock> blocks = set.getCacheBlocks();
+	for (int i = 0; i < blocks.size() && found == false; i++)
+		found = blocks[i].inBlock(c.getTag(a));
+	return found;
 }

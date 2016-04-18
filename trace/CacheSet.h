@@ -23,6 +23,8 @@ public:
 	void writeAddress(address add);
 	bool inCacheSet(address add);
 
+	vector<cacheBlock> getCacheBlocks();
+
 	~cacheSet();
 private:
 	int numbBlocks;

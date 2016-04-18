@@ -13,6 +13,7 @@ File: CacheArchitecture.cc
 #include "CacheArchitecture.h"
 #include "Cache.h"
 #include "Address.h"
+#include "CacheSearch.h"
 
 #define DEBUG 1
 
@@ -52,13 +53,14 @@ int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 {
 	int time = 0, i = 0;
 	bool found = false;
+	CacheSearch finder = CacheSearch();
 
 	while ((i < numbCaches) && (!found))
 	{
 #ifdef DEBUG
 		cout << "Looking in " << arch[i].getName() << " for " << add.getAddr() << endl;
 #endif
-		found = arch[i].hasAddress(add);
+		found = finder.cacheHasAddress(arch[i], add);
 		if (found)
 		{
 #ifdef DEBUG

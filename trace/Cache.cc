@@ -57,20 +57,12 @@ cache::cache(cacheParameters para)
 	#endif
 }
 
-bool cache::hasAddress(address add)
-{					// currently looking through every set - should fix to look in correct set first
-	bool inCache = false;
-	int i = 0;
+bool cache::hasAddress(address add) {
+	return sets[getIndex(add)].inCacheSet(add);
+}
 
-	for (int i = 0; i < associativity && inCache == false; i++)
-	{
-	//#ifdef DEBUG
-	//		cout << "in set " << ((add.getAddr() >> (int)log(size)) % associativity) + i << endl;
-	//#endif
-		inCache = sets[(add.getAddr() % numbSets) + i].inCacheSet(add);
-	}
-
-	return inCache;
+cacheSet cache::getCacheSet(int index) {
+	return sets[index];
 }
 
 void cache::write(address add)

@@ -5,5 +5,6 @@
 
 
 class CacheSearch {
-	bool cacheHasAddress(cacheArchitecture c, address a);
+public:
+	bool cacheHasAddress(cache c, address a);
 };

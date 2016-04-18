@@ -38,6 +38,7 @@ public:
 	unsigned int getIndex(address ofAddress);
 	unsigned int getOffset(address ofAddress);
 	
+	cacheSet getCacheSet(int index);
 
 	~cache();
 
