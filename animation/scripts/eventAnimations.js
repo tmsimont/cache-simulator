@@ -90,7 +90,7 @@ EventAnimations[CACHE_EVENT.HIT] = function(cacheEvent) {
 
   this.activate = function(time) {
     switch (time) {
-      case 1:
+      case 2:
         if(!bitLine) {
           var hitBit = 1 + cache.getOffset(cacheEvent.address);
           var bit = $(block.dom).find( ".data-bit:nth-child("+hitBit+")")
@@ -155,6 +155,59 @@ EventAnimations[CACHE_EVENT.HIT] = function(cacheEvent) {
   }
 }
 
+EventAnimations[CACHE_EVENT.HIT_VALID] = function(cacheEvent) {
+  var normalHitAnimator = new EventAnimations[CACHE_EVENT.HIT](cacheEvent);
+  var architecture = cacheEvent.architecture;
+  var cache = architecture.caches[cacheEvent.cacheID];
+  var set = cache.sets[cacheEvent.cacheSetID];
+  var block = set.blocks[cacheEvent.blockID];
+
+  this.activate = function(time) {
+    switch (time) {
+      case 2:
+        normalHitAnimator.activate(time);
+      case 1:
+        block.dom.find(".valid-bit").addClass("valid");
+      default:
+        normalHitAnimator.activate(time);
+        break;
+    }
+  }
+  this.deactivate = function(time) {
+    normalHitAnimator.deactivate(time);
+  }
+  this.finish = function(time) {
+    block.dom.find(".valid-bit").removeClass("valid");
+    normalHitAnimator.finish(time);
+  }
+}
+
+EventAnimations[CACHE_EVENT.HIT_INVALID] = function(cacheEvent) {
+  var normalHitAnimator = new EventAnimations[CACHE_EVENT.HIT](cacheEvent);
+  var architecture = cacheEvent.architecture;
+  var cache = architecture.caches[cacheEvent.cacheID];
+  var set = cache.sets[cacheEvent.cacheSetID];
+  var block = set.blocks[cacheEvent.blockID];
+
+  this.activate = function(time) {
+    switch (time) {
+      case 2:
+        normalHitAnimator.activate(time);
+      case 1:
+        block.dom.find(".valid-bit").addClass("valid");
+      default:
+        normalHitAnimator.activate(time);
+        break;
+    }
+  }
+  this.deactivate = function(time) {
+    normalHitAnimator.deactivate(time);
+  }
+  this.finish = function(time) {
+    block.dom.find(".valid-bit").removeClass("invalid");
+    normalHitAnimator.finish(time);
+  }
+}
 
 EventAnimations[CACHE_EVENT.MISS] = function(cacheEvent) {
   var architecture = cacheEvent.architecture;
@@ -243,6 +296,8 @@ EventAnimations[CACHE_EVENT.REPLACE] = function(cacheEvent){
 
   this.activate = function (time) {
     switch (time) {
+      case 5:
+        toBlock.dom.addClass("moving-block");
       case 4:
         toSet.showOpenState();
         // update lines now that upper set is open
@@ -312,6 +367,8 @@ EventAnimations[CACHE_EVENT.REPLACE] = function(cacheEvent){
     scrolledToCache = false;
     set.dom.find(".tag-bit").removeClass("flash-search");
     block.dom.find(".tag-bit").removeClass("flash-miss");
+    block.dom.removeClass("moving-block");
+    toBlock.dom.removeClass("moving-block");
     if (setOpen) {
       set.showInitialState();
       setOpen = false;

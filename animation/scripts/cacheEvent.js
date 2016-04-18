@@ -1,8 +1,10 @@
 var CACHE_EVENT = {
   SEARCH       : 0,
   HIT          : 1,
-  MISS         : 2,
-  REPLACE      : 3
+  HIT_VALID    : 2,
+  HIT_INVALID  : 3,
+  MISS         : 4,
+  REPLACE      : 5
 }
 
 function CacheEvent(params) {
