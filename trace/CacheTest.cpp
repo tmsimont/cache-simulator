@@ -26,7 +26,7 @@ void CacheTest::runTest()
 
 	for (string line; getline(cin, line);)
 	{
-		scanf_s("%u %x", &action, &addr);
+		scanf("%u %x", &action, &addr);
 		if (action == READ)
 		{
 			time += a.cacheRead(address(addr));
