@@ -27,6 +27,7 @@ public:
 	void write(address add);
 	int getMissPenalty() { return missPenalty; }
 	int getHitTime() { return hitTime; }
+	string getName() { return name; }
 
 	~cache();
 

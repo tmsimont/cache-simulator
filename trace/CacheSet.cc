@@ -41,8 +41,10 @@ void cacheSet::writeAddress(address add)
 	default_random_engine generator;
 	uniform_int_distribution<int> distribution(0, numbBlocks);
 	//confirm 0 <= i < blockSize
+	
+	
 	//calculate which set to write to
-	blocks[add.getAddr() % numbBlocks].write(add);
+	blocks[distribution(generator)].write(address(add.getAddr() >> (int)log(blockSize)));
 }
 
 bool cacheSet::inCacheSet(address add)
@@ -53,7 +55,8 @@ bool cacheSet::inCacheSet(address add)
 		cout << "checking for " << add.getAddr() << " in block " << add.getAddr() % numbBlocks << endl;
 	#endif
 
-	in = blocks[add.getAddr() % numbBlocks].inBlock(add);
+	for (int i = 0; i < numbBlocks && in == false; i++)
+		in = blocks[i].inBlock(address(add.getAddr() >> (int)log(blockSize)));
 
 	return in;
 }

@@ -14,6 +14,8 @@ File: CacheArchitecture.cc
 #include "Cache.h"
 #include "Address.h"
 
+#define DEBUG 1
+
 using namespace std;
 
 cacheArchitecture::cacheArchitecture()
@@ -44,17 +46,54 @@ int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 
 	while ((i < numbCaches) && (!found))
 	{
+#ifdef DEBUG
+		cout << "Looking in " << arch[i].getName() << " for " << add.getAddr() << endl;
+#endif
 		found = arch[i].hasAddress(add);
 		if (found)
+		{
+#ifdef DEBUG
+
+			cout << arch[i].getName() << " hit for " << add.getAddr() << endl;
+#endif
 			time += arch[i].getHitTime();
+		}
 		else
+		{
+#ifdef DEBUG
+			cout << arch[i].getName() << " miss for " << add.getAddr() << endl;
+#endif
 			time += arch[i].getMissPenalty();
+		}
+#ifdef DEBUG
+		cout << "Here1" << i << endl;
+#endif
 		arch[i].write(add);
+#ifdef DEBUG
+		cout << "Here2" << endl;
+#endif
 		++i;
+
+		if (found)
+			for (i = i - 2; i >= 0; i--)
+			{
+#ifdef DEBUG
+				cout << "Writing back to " << arch[i].getName() << endl;
+#endif
+				arch[i].write(add);
+			}
+
 	}
-	for (i = i - 1; i > 0; --i)
+
+	if (!found)
 	{
-		arch[i].write(add);
+		for (i = 0; i < numbCaches; i++)
+		{
+#ifdef DEBUG
+			cout << "Writing to " << arch[i].getName() << endl;
+#endif
+			arch[i].write(add);
+		}
 	}
 
 	return time;
@@ -67,18 +106,57 @@ int cacheArchitecture::cacheWrite(address add)						//returns time needed to wri
 
 	while ((i < numbCaches) && (!found))
 	{
+#ifdef DEBUG
+		cout << "Here" << endl;
+		cout << "Looking in " << arch[i].getName() << " for " << add.getAddr() << endl;
+#endif
 		found = arch[i].hasAddress(add);
 		if (found)
+		{
+#ifdef DEBUG
+			cout << arch[i].getName() << " hit for " << add.getAddr() << endl;
+#endif
 			time += arch[i].getHitTime();
+
+		}
 		else
+		{
+#ifdef DEBUG
+			cout << arch[i].getName() << " miss for " << add.getAddr() << endl;
+#endif
 			time += arch[i].getMissPenalty();
+		}
+#ifdef DEBUG
+		cout << "Here1" << i << endl;
+#endif
 		arch[i].write(add);
+#ifdef DEBUG
+		cout << "Here2" << endl;
+#endif
 		++i;
+
+		if (found)
+			for (i = i - 2; i >= 0; i--)
+			{
+#ifdef DEBUG
+				cout << "Writing back to " << arch[i].getName() << endl;
+#endif
+				arch[i].write(add);
+			}
+
 	}
-	for (i = i - 1; i > 0; --i)
+
+	if (!found)
 	{
-		arch[i].write(add);
+		for (i = 0; i < numbCaches; i++)
+		{
+#ifdef DEBUG
+			cout << "Writing to " << arch[i].getName() << endl;
+#endif
+			arch[i].write(add);
+		}
 	}
+
 	return time;
 }
 
