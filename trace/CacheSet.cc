@@ -44,7 +44,7 @@ void cacheSet::writeAddress(address add)
 	
 	
 	//calculate which set to write to
-	blocks[distribution(generator)].write(address(add.getAddr() >> (int)log(blockSize)));
+	blocks[distribution(generator)].write(add);
 }
 
 bool cacheSet::inCacheSet(address add)
@@ -56,7 +56,7 @@ bool cacheSet::inCacheSet(address add)
 	#endif
 
 	for (int i = 0; i < numbBlocks && in == false; i++)
-		in = blocks[i].inBlock(address(add.getAddr() >> (int)log(blockSize)));
+		in = blocks[i].inBlock(add);
 
 	return in;
 }

@@ -1,6 +1,8 @@
 #include "CacheTest.h"
 #include <bitset>
 
+#define _CRT_SECURE_NO_WARNINGS 1 
+
 #define READ 0
 #define WRITE 1
 
@@ -27,7 +29,7 @@ void CacheTest::runTest()
 
 	for (string line; getline(cin, line);)
 	{
-		scanf("%u %x", &action, &addr);
+		scanf_s("%u %x", &action, &addr);
 		if (action == READ)
 		{
 			time += a.cacheRead(address(addr));

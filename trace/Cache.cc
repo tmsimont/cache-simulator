@@ -58,7 +58,7 @@ cache::cache(cacheParameters para)
 }
 
 bool cache::hasAddress(address add) {
-	return sets[getIndex(add)].inCacheSet(add);
+	return sets[getIndex(add)].inCacheSet(address(getTag(add)));
 }
 
 cacheSet cache::getCacheSet(int index) {
@@ -67,18 +67,8 @@ cacheSet cache::getCacheSet(int index) {
 
 void cache::write(address add)
 {
-	//int i = add.getIndex();
-	//confirm 0 <= i < numbSets
-	//calculate which set to write to
 
-	default_random_engine generator;
-	uniform_int_distribution<int> distribution(0, associativity - 1);
-	//confirm 0 <= i < blockSize
-
-
-	//calculate which set to write to
-
-	sets[add.getAddr() % numbSets + distribution(generator)].writeAddress(address(add.getAddr()));
+	sets[getIndex(add)].writeAddress(address(getTag(add)));
 }
 
 unsigned int cache::getTag(address ofAddress) {
