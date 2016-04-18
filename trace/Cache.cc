@@ -53,12 +53,13 @@ cache::cache(cacheParameters para)
 	}
 	
 	#ifdef DEBUG
+
 		cout << "Cache " << name << ", priority: " << priority << ", " << "block size: " << blockSize << ", " << "assoc: " << associativity << ", " << " size: " << size << ", numBlocks: " << numbBlocks << ", " << " numSets: " << numbSets << endl;
 	#endif
 }
 
 bool cache::hasAddress(address add) {
-	return sets[getIndex(add)].inCacheSet(address(getTag(add)));
+	return sets[getIndex(add)].inCacheSet(add);
 }
 
 cacheSet cache::getCacheSet(int index) {
@@ -67,8 +68,8 @@ cacheSet cache::getCacheSet(int index) {
 
 void cache::write(address add)
 {
-
-	sets[getIndex(add)].writeAddress(address(getTag(add)));
+	// the set is determinate in any write policy. it's based on the set index of the address
+	sets[getIndex(add)].writeAddress(address(add.getAddr()));
 }
 
 unsigned int cache::getTag(address ofAddress) {
