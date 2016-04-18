@@ -67,18 +67,8 @@ cacheSet cache::getCacheSet(int index) {
 
 void cache::write(address add)
 {
-	//int i = add.getIndex();
-	//confirm 0 <= i < numbSets
-	//calculate which set to write to
-
-	default_random_engine generator;
-	uniform_int_distribution<int> distribution(0, associativity - 1);
-	//confirm 0 <= i < blockSize
-
-
-	//calculate which set to write to
-
-	sets[add.getAddr() % numbSets + distribution(generator)].writeAddress(address(add.getAddr()));
+	// the set is determinate in any write policy. it's based on the set index of the address
+	sets[getIndex(add)].writeAddress(address(add.getAddr()));
 }
 
 unsigned int cache::getTag(address ofAddress) {
