@@ -10,6 +10,7 @@ public:
 	static void testAddressing();
 	static void stepThrough();
 	static void stepThroughSmall();
+	static void printCache(cache c);
 	~CacheTest();
 };
 

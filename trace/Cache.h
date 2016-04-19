@@ -21,6 +21,7 @@ using namespace std;
 class cache
 {
 public:
+
 	cache();
 	cache(cacheParameters para);
 
@@ -40,12 +41,14 @@ public:
 	
 	cacheSet getCacheSet(int index);
 
-	~cache();
-
-private:
 	vector<cacheSet> sets;
 	int numbBlocks;
 	int numbSets;
+
+	~cache();
+
+private:
+
 
 	int priority;
 	int blockSize;

@@ -15,7 +15,7 @@ CacheTest::CacheTest()
 void CacheTest::runTest()
 {
 
-	cacheParameters p = cacheParameters(0, 64, "L1", 8 * 512, 1, 5, 1);
+	cacheParameters p = cacheParameters(0, 64, "L1", 64, 1, 5, 1);
 	cacheParameters p2 = cacheParameters(1, 64, "L2", 8 * 64 * 1024, 1, 10, 6);
 	cacheParameters p3 = cacheParameters(2, 64, "L3", 8 * 1024 * 1024, 1, 15, 11);
 
@@ -28,6 +28,8 @@ void CacheTest::runTest()
 
 	unsigned long long time = 0;
 
+
+
 	for (string line; getline(cin, line);)
 	{
 		scanf_s("%u %x", &action, &addr);
@@ -35,11 +37,22 @@ void CacheTest::runTest()
 		{
 			time += a.cacheRead(address(addr));
 		}
-		else if(action == WRITE)
+		else
 		{
 			time += a.cacheWrite(address(addr));
 		}
 	}
+
+	cout << "Index size: " << a.getCache(0).indexSize << endl;
+	cout << "Tag size: " << a.getCache(0).tagSize << endl;
+	cout << "Offset size: " << a.getCache(0).offsetSize << endl;
+	printCache(a.getCache(0));
+	cout << "-------" << endl;
+	printCache(a.getCache(1));
+	cout << "Index size: " << a.getCache(1).indexSize << endl;
+	cout << "Tag size: " << a.getCache(1).tagSize << endl;
+	cout << "Offset size: " << a.getCache(1).offsetSize << endl;
+
 	cout << "Final results:" << endl;
 	cout << "Time: " << time << endl;
 }
@@ -92,7 +105,6 @@ void CacheTest::testAddressing() {
 	while (true);
 
 }
-
 
 
 int cacheRead(std::vector<cache>& arch, int numbCaches, address add)						//returns time needed to read
@@ -220,7 +232,22 @@ void CacheTest::stepThroughSmall() {
 	cacheRead(testarch, 2, a3);
 	cacheRead(testarch, 2, a1);
 
-//	while (true);
+}
+
+void CacheTest::printCache(cache a)
+{
+	for (int i = 0; i < a.numbSets; i++)
+	{
+		for (int j = 0; j < a.sets[i].numbBlocks; j++)
+		{
+			if (a.sets[i].blocks[j].validBit)
+			{
+				cout << "Set #:" << i << ",";
+				cout << "Block #:" << j << endl;
+				cout << a.sets[i].blocks[j].addr.getAddr() << endl;
+			}
+		}
+	}
 }
 
 CacheTest::~CacheTest()

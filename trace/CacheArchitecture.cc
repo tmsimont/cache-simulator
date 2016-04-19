@@ -58,14 +58,14 @@ int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 	while ((i < numbCaches) && (!found))
 	{
 #ifdef DEBUG
-		cout << "Looking in " << arch[i].getName() << " for " << add.getAddr() << endl;
+		cout << "Looking in " << arch[i].getName() << " for " << arch[i].getTag(add.getAddr()) << endl;
 #endif
 		found = finder.cacheHasAddress(arch[i], add);
 		if (found)
 		{
 #ifdef DEBUG
 
-			cout << arch[i].getName() << " hit for " << add.getAddr() << endl;
+			cout << arch[i].getName() << " hit for " << arch[i].getTag(add.getAddr()) << endl;
 #endif
 			time += arch[i].getHitTime();
 		}
@@ -76,13 +76,8 @@ int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 #endif
 			time += arch[i].getMissPenalty();
 		}
-#ifdef DEBUG
-		cout << "Here1" << i << endl;
-#endif
-		arch[i].write(add);
-#ifdef DEBUG
-		cout << "Here2" << endl;
-#endif
+
+
 		++i;
 
 		if (found)
@@ -119,7 +114,6 @@ int cacheArchitecture::cacheWrite(address add)						//returns time needed to wri
 	while ((i < numbCaches) && (!found))
 	{
 #ifdef DEBUG
-		cout << "Here" << endl;
 		cout << "Looking in " << arch[i].getName() << " for " << add.getAddr() << endl;
 #endif
 		found = finder.cacheHasAddress(arch[i], add);
@@ -138,13 +132,8 @@ int cacheArchitecture::cacheWrite(address add)						//returns time needed to wri
 #endif
 			time += arch[i].getMissPenalty();
 		}
-#ifdef DEBUG
-		cout << "Here1" << i << endl;
-#endif
-		arch[i].write(add);
-#ifdef DEBUG
-		cout << "Here2" << endl;
-#endif
+
+
 		++i;
 
 		if (found)
