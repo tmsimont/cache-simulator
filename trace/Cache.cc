@@ -68,9 +68,8 @@ cacheSet cache::getCacheSet(int index) {
 
 void cache::write(address add)
 {
-	cout << "write to set id " << getIndex(add) << endl;
 	// the set is determinate in any write policy. it's based on the set index of the address
-	sets[getIndex(add)].writeAddress(address(getIndex(add.getAddr())));
+	sets[getIndex(add)].writeAddress(address(getTag(add.getAddr())));
 }
 
 unsigned int cache::getTag(address ofAddress) {
