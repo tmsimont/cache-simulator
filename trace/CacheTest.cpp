@@ -14,8 +14,8 @@ CacheTest::CacheTest()
 void CacheTest::runTest()
 {
 
-	cacheParameters p = cacheParameters(0, 64, "L1", 64, 1, 5, 1);
-	cacheParameters p2 = cacheParameters(1, 64, "L2", 8 * 64 * 1024, 1, 10, 6);
+	cacheParameters p = cacheParameters(0, 64, "L1", 64 * 1024, 2, 5, 1);
+	cacheParameters p2 = cacheParameters(1, 64, "L2", 8 * 64 * 1024, 4, 10, 6);
 	cacheParameters p3 = cacheParameters(2, 64, "L3", 8 * 1024 * 1024, 1, 15, 11);
 
 	cacheArchitecture a = cacheArchitecture(p);
