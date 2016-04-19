@@ -35,6 +35,8 @@ function EventTimeline(target) {
   ET.events = {};
   ET.immediate = false;
   ET.lastActivation = -1;
+  ET.pauseOnFinish = false;
+  ET.finishing = false;
 
   
   // build timeline dom elements ------------------------
@@ -332,6 +334,11 @@ EventTimeline.prototype.eventLoop = function() {
   }
 
   ET.activateEvents();
+  if (ET.finishing && ET.pauseOnFinish) {
+    ET.pauseOnFinish = false;
+    ET.finishing = false;
+    return;
+  }
   ET.currentTime++;
   ET.positionNeedle();
   ET.timeoutPending = setTimeout(function() {
@@ -354,11 +361,17 @@ EventTimeline.prototype.immediateAction = function(action) {
 
 EventTimeline.prototype.activateEvents = function() {
   var ET = this;
+  ET.finishing = false;
   if (ET.events[ET.lastActivation]) {
     for (var i = 0; i < ET.events[ET.lastActivation].length; i++) {
       var e = ET.events[ET.lastActivation][i];
       e.deactivate();
     }
+  }
+  ET.lastActivation = ET.currentTime;
+  if (ET.finishing && ET.pauseOnFinish) {
+    ET.pause();
+    return;
   }
   if (ET.events[ET.currentTime]) {
     for (var i = 0; i < ET.events[ET.currentTime].length; i++) {
@@ -366,7 +379,6 @@ EventTimeline.prototype.activateEvents = function() {
       e.activate();
     }
   }
-  ET.lastActivation = ET.currentTime;
 }
 
 EventTimeline.prototype.positionNeedle = function() {
@@ -437,21 +449,32 @@ EventTimeline.prototype.addControls = function(target) {
   buttons.addClass("timeline-buttons");
   target.append(buttons)
 
-
-  var speedUp = $("<button>");
-  speedUp.text("+");
-  $(buttons).append(speedUp);
-  speedUp.click(function() {
-    ET.timeUnitMS -= 10;
+  var rewind = $("<button>");
+  rewind.text("<<");
+  $(buttons).append(rewind);
+  rewind.click(function() {
+    ET.gotoTime(0);
   });
 
-  var speedDown = $("<button>");
-  speedDown.text("-");
-  $(buttons).append(speedDown);
-  speedDown.click(function() {
-    ET.timeUnitMS += 10;
-  });
 
+
+  var stepB = $("<button>");
+  stepB.text("<||");
+  $(buttons).append(stepB);
+  stepB.click(function() {
+    ET.pause();
+    // nothing more to do at the end of time...
+    if (ET.currentTime > ET.timeEnd) {
+      ET.playing = false;
+      return;
+    }
+
+    ET.currentTime--;
+    ET.currentTime--;
+    ET.activateEvents();
+    ET.currentTime++;
+    ET.positionNeedle();
+  });
 
   var pause = $("<button>");
   pause.text("||");
@@ -467,26 +490,59 @@ EventTimeline.prototype.addControls = function(target) {
     ET.play();
   });
 
-  var rewind = $("<button>");
-  rewind.text("<<");
-  $(buttons).append(rewind);
-  rewind.click(function() {
-    ET.gotoTime(0);
+
+  var stepF = $("<button>");
+  stepF.text("||>");
+  $(buttons).append(stepF);
+  stepF.click(function() {
+    ET.pause();
+    // nothing more to do at the end of time...
+    if (ET.currentTime > ET.timeEnd) {
+      ET.playing = false;
+      return;
+    }
+
+    ET.activateEvents();
+    ET.currentTime++;
+    ET.positionNeedle();
   });
 
-  var zoomIn = $("<button>");
-  zoomIn.text("in");
-  $(buttons).append(zoomIn);
-  zoomIn.click(function() {
-    ET.setViewportSize(ET.viewportUnits - 10);
+
+  var stepF = $("<button>");
+  stepF.text("--|>");
+  $(buttons).append(stepF);
+  stepF.click(function() {
+    ET.pauseOnFinish = true;
+    ET.play();
   });
 
-  var zoomOut = $("<button>");
-  zoomOut.text("out");
-  $(buttons).append(zoomOut);
-  zoomOut.click(function() {
-    ET.setViewportSize(ET.viewportUnits + 10);
+  var speedText = $("<span>");
+  speedText.addClass("speed-text");
+  $(speedText).text(Math.round(200/ET.timeUnitMS*100)/100);
+
+  var speedUp = $("<button>");
+  speedUp.text("+");
+  $(buttons).append(speedUp);
+  speedUp.click(function() {
+    console.log((Math.round(200/ET.timeUnitMS*100)/100))
+    if ((Math.round(200/ET.timeUnitMS*100)/100) < 3) {
+      ET.timeUnitMS -= 10;
+      $(speedText).text(Math.round(200/ET.timeUnitMS*100)/100);
+    }
   });
+
+  var speedDown = $("<button>");
+  speedDown.text("-");
+  $(buttons).append(speedDown);
+  speedDown.click(function() {
+    if ((Math.round(200/ET.timeUnitMS*100)) > .5) {
+    ET.timeUnitMS += 10;
+    $(speedText).text(Math.round(200/ET.timeUnitMS*100)/100);
+    }
+  });
+
+  $(buttons).append(speedText);
+
 }
 
 
@@ -578,6 +634,7 @@ EventTimeline.prototype.addEvent = function(handler) {
       handler.deactivate(relTime);
       if (ET.currentTime > E.end || ET.currentTime < E.start) {
         E.finish();
+        ET.finishing = true;
       }
     }
 

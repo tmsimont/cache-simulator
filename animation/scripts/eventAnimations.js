@@ -19,7 +19,10 @@ EventAnimations[CACHE_EVENT.SEARCH] = function(cacheEvent) {
         cache.addressElement.find(".tag").addClass("tag-search");
       case 3:
         if (!setOpen) {
-          line.remove();
+          if (line) {
+            line.remove();
+            line = false;
+          }
           set.showOpenState();
           if (!scrolledToCacheSet) {
             $(set.dom).velocity("scroll", {
@@ -55,6 +58,16 @@ EventAnimations[CACHE_EVENT.SEARCH] = function(cacheEvent) {
     }
   }
   this.deactivate = function(time) {
+    switch (time) {
+      case 2:
+        if (line) {
+          line.remove();
+          line = false;
+        }
+        break;
+      default:
+        break;
+    }
   }
   this.finish = function() {
     if (line) {
@@ -87,9 +100,22 @@ EventAnimations[CACHE_EVENT.HIT] = function(cacheEvent) {
   var showingAddress = false;
   var scrolledToCache = false;
   var setOpen = false;
+  var scrollToShowOffset = false;
 
   this.activate = function(time) {
     switch (time) {
+      case 6:
+      case 5:
+      case 4:
+      case 3:
+        if (!scrollToShowOffset) {
+          $(set.dom).velocity("scroll", {
+            container : $("#stage"),
+            duration : 200,
+            offset : -1 * (cache.label.outerHeight() + 5)
+          });
+          scrollToShowOffset = true;
+        }
       case 2:
         if(!bitLine) {
           var hitBit = 1 + cache.getOffset(cacheEvent.address);
@@ -129,6 +155,15 @@ EventAnimations[CACHE_EVENT.HIT] = function(cacheEvent) {
   }
 
   this.deactivate = function(time) {
+    if (time == 2) {
+      if (bitLine) {
+        bitLine.remove();
+        bitLine = false;
+        var hitBit = 1 + cache.getOffset(cacheEvent.address);
+        var bit = $(block.dom).find( ".data-bit:nth-child("+hitBit+")")
+        bit.removeClass("hit-bit");
+      }
+    }
   }
 
   this.finish = function() {
@@ -175,6 +210,9 @@ EventAnimations[CACHE_EVENT.HIT_VALID] = function(cacheEvent) {
   }
   this.deactivate = function(time) {
     normalHitAnimator.deactivate(time);
+    if (time == 1) {
+      block.dom.find(".valid-bit").removeClass("valid");
+    }
   }
   this.finish = function(time) {
     block.dom.find(".valid-bit").removeClass("valid");
@@ -190,18 +228,18 @@ EventAnimations[CACHE_EVENT.HIT_INVALID] = function(cacheEvent) {
   var block = set.blocks[cacheEvent.blockID];
 
   this.activate = function(time) {
-    switch (time) {
-      case 2:
-        normalHitAnimator.activate(time);
-      case 1:
-        block.dom.find(".valid-bit").addClass("valid");
-      default:
-        normalHitAnimator.activate(time);
-        break;
+    if (time >= 1) {
+      block.dom.find(".valid-bit").addClass("invalid");
+    }
+    else if (time < 1) {
+      normalHitAnimator.activate(time);
     }
   }
   this.deactivate = function(time) {
     normalHitAnimator.deactivate(time);
+    if (time == 1) {
+      block.dom.find(".valid-bit").removeClass("invalid");
+    }
   }
   this.finish = function(time) {
     block.dom.find(".valid-bit").removeClass("invalid");
@@ -294,10 +332,17 @@ EventAnimations[CACHE_EVENT.REPLACE] = function(cacheEvent){
   var lineR = false;
   var scrolledToToCache = false;
 
+  var showingToAddress = false;
+
   this.activate = function (time) {
     switch (time) {
-      case 5:
+      case 6:
         toBlock.dom.addClass("moving-block");
+      case 5:
+        if (!showingToAddress) {
+          toCache.showAddress(cacheEvent.address);
+          showingToAddress = true;
+        }
       case 4:
         toSet.showOpenState();
         // update lines now that upper set is open

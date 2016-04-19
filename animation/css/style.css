@@ -191,19 +191,24 @@ html, body {
   width: 50%;
   left: 0px;
 }
+/* line 174, style.scss */
+#timeline .timeline-buttons .speed-text {
+  display: inline-block;
+  padding: 0 10px;
+}
 
-/* line 177, style.scss */
+/* line 181, style.scss */
 .timeline-target {
   position: relative;
 }
-/* line 179, style.scss */
+/* line 183, style.scss */
 .timeline-target .timeline-container {
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   height: 100%;
   overflow: hidden;
 }
-/* line 185, style.scss */
+/* line 189, style.scss */
 .timeline-target .needle {
   width: 1px;
   height: 100%;
@@ -212,14 +217,14 @@ html, body {
   top: 0px;
   background: #c33;
 }
-/* line 193, style.scss */
+/* line 197, style.scss */
 .timeline-target .axis-container {
   position: absolute;
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
-/* line 198, style.scss */
+/* line 202, style.scss */
 .timeline-target .axis-container .axis {
   height: 100%;
   border-left: 1px solid #ddd;
@@ -227,23 +232,23 @@ html, body {
   left: 0px;
   top: 0px;
 }
-/* line 204, style.scss */
+/* line 208, style.scss */
 .timeline-target .axis-container .axis.axis-major {
   border-left: 1px solid #999;
 }
-/* line 209, style.scss */
+/* line 213, style.scss */
 .timeline-target .event-container {
   position: absolute;
   width: 100%;
   height: 100%;
 }
-/* line 213, style.scss */
+/* line 217, style.scss */
 .timeline-target .event-container .event-element {
   position: absolute;
   height: 20px;
   background: #aae;
 }
-/* line 217, style.scss */
+/* line 221, style.scss */
 .timeline-target .event-container .event-element.active-event {
   background: #ee3;
 }
