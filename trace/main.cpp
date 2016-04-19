@@ -3,9 +3,7 @@
 int main(int argc, char**argv)
 {
 
-	CacheTest::runTest();
-
-
+	//CacheTest::runTest();
 	//CacheTest::testAddressing();
-
+	CacheTest::stepThroughSmall();
 }

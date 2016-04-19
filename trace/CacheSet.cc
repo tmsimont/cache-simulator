@@ -39,12 +39,14 @@ cacheSet::cacheSet(int nB, int bS)
 void cacheSet::writeAddress(address add)
 {
 	default_random_engine generator;
+	cout << "numbBlocks " << numbBlocks << endl;
 	uniform_int_distribution<int> distribution(0, numbBlocks);
 	//confirm 0 <= i < blockSize
 	
-	
+	int id = distribution(generator);
+	cout << "write to block id " << id << endl;
 	//calculate which set to write to
-	blocks[distribution(generator)].write(add);
+	blocks[id].write(add);
 }
 
 bool cacheSet::inCacheSet(address add)
