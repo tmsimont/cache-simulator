@@ -37,7 +37,7 @@ address& address::operator=(const address &b)
 
 bool address::operator==(const address& b)
 {
-	if (this->addr = b.addr)
+	if (this->addr == b.addr)
 		return true;
 	return false;
 }

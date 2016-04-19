@@ -23,10 +23,11 @@ public:
 	cacheBlock(int bS);
 	bool inBlock(address ad);
 	void write(address ad);
-	
-private:
 	address addr;
 	bool validBit;
+	
+private:
+
 	int blockSize;
 };
 

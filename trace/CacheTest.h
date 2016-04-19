@@ -8,6 +8,7 @@ public:
 	CacheTest();
 	static void runTest();
 	static void testAddressing();
+	static void printCache(cache c);
 	~CacheTest();
 };
 
