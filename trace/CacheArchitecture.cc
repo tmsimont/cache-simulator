@@ -58,14 +58,14 @@ int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 	while ((i < numbCaches) && (!found))
 	{
 #ifdef DEBUG
-		cout << "Looking in " << arch[i].getName() << " for " << arch[i].getTag(add.getAddr()) << endl;
+		cout << "Looking in " << arch[i].getName() << " for " << add.getAddr() << endl;
 #endif
 		found = finder.cacheHasAddress(arch[i], add);
 		if (found)
 		{
 #ifdef DEBUG
 
-			cout << arch[i].getName() << " hit for " << arch[i].getTag(add.getAddr()) << endl;
+			cout << arch[i].getName() << " hit for " << add.getAddr() << endl;
 #endif
 			time += arch[i].getHitTime();
 		}

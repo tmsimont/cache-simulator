@@ -6,7 +6,7 @@ class CacheTest
 {
 public:
 	CacheTest();
-	static void runTest();
+	static void runTest(int argc, char ** argv);
 	static void testAddressing();
 	static void printCache(cache c);
 	~CacheTest();

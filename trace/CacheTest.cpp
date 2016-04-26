@@ -5,22 +5,59 @@
 
 #define READ 0
 #define WRITE 1
+#define INSTRUCTION 2
 
 //#define DEBUG 1
 CacheTest::CacheTest()
 {
 }
 
-void CacheTest::runTest()
+void CacheTest::runTest(int argc, char ** argv )
 {
 
-	cacheParameters p = cacheParameters(0, 64, "L1", 64 * 1024, 2, 5, 1);
-	cacheParameters p2 = cacheParameters(1, 64, "L2", 8 * 64 * 1024, 4, 10, 6);
-	cacheParameters p3 = cacheParameters(2, 64, "L3", 8 * 1024 * 1024, 1, 15, 11);
 
-	cacheArchitecture a = cacheArchitecture(p);
-	a.addCache(p2);
-	//a.addCache(p3);
+	for (int i = 1; i < argc - 1; i++)
+	{
+		if (string(argv[i]) == "-iL1")
+		{
+
+		}
+		else if(string(argv[i]) == "-iL2")
+		{
+
+		}
+		else if (string(argv[i]) == "-iL3")
+		{
+
+		}
+		else if (string(argv[i]) == "-dL1")
+		{
+
+		}
+		else if (string(argv[i]) == "-dL2")
+		{
+
+		}
+		else if (string(argv[i]) == "-dL3")
+		{
+
+		}
+	}
+
+	cacheParameters d1 = cacheParameters(0, 64, "dL1", 1024, 2, 5, 1);
+	cacheParameters d2 = cacheParameters(1, 64, "dL2", 8 * 64 * 1024, 4, 10, 6);
+	cacheParameters d3 = cacheParameters(2, 64, "dL3", 8 * 1024 * 1024, 1, 15, 11);
+
+	cacheArchitecture data = cacheArchitecture(d1);
+	data.addCache(d2);
+	//data.addCache(d3);
+	cacheParameters i1 = cacheParameters(0, 64, "iL1", 1024, 2, 5, 1);
+	cacheParameters i2 = cacheParameters(1, 64, "iL2", 8 * 64 * 1024, 4, 10, 6);
+	cacheParameters i3 = cacheParameters(2, 64, "iL3", 8 * 1024 * 1024, 1, 15, 11);
+	cacheArchitecture instr = cacheArchitecture(i1);
+	instr.addCache(i2);
+	//instr.addCache(d3);
+
 
 	unsigned int action;
 	unsigned int addr;
@@ -34,23 +71,18 @@ void CacheTest::runTest()
 		scanf_s("%u %x", &action, &addr);
 		if (action == READ)
 		{
-			time += a.cacheRead(address(addr));
+			time += data.cacheRead(address(addr));
 		}
-		else
+		else if(action == WRITE)
 		{
-			time += a.cacheWrite(address(addr));
+			time += data.cacheWrite(address(addr));
+		}
+		else if (action == INSTRUCTION)
+		{
+			time += instr.cacheRead(address(addr));
 		}
 	}
 
-	cout << "Index size: " << a.getCache(0).indexSize << endl;
-	cout << "Tag size: " << a.getCache(0).tagSize << endl;
-	cout << "Offset size: " << a.getCache(0).offsetSize << endl;
-	printCache(a.getCache(0));
-	cout << "-------" << endl;
-	printCache(a.getCache(1));
-	cout << "Index size: " << a.getCache(1).indexSize << endl;
-	cout << "Tag size: " << a.getCache(1).tagSize << endl;
-	cout << "Offset size: " << a.getCache(1).offsetSize << endl;
 
 	cout << "Final results:" << endl;
 	cout << "Time: " << time << endl;
@@ -103,22 +135,6 @@ void CacheTest::testAddressing() {
 
 	while (true);
 
-}
-
-void CacheTest::printCache(cache a)
-{
-	for (int i = 0; i < a.numbSets; i++)
-	{
-		for (int j = 0; j < a.sets[i].numbBlocks; j++)
-		{
-			if (a.sets[i].blocks[j].validBit)
-			{
-				cout << "Set #:" << i << ",";
-				cout << "Block #:" << j << endl;
-				cout << a.sets[i].blocks[j].addr.getAddr() << endl;
-			}
-		}
-	}
 }
 
 CacheTest::~CacheTest()
