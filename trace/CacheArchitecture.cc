@@ -32,22 +32,22 @@ cacheArchitecture::cacheArchitecture()
 
 cacheArchitecture::cacheArchitecture(cacheParameters firstCache)
 {
-	arch.resize(1);
-	arch[0] = cache(firstCache);
+	caches.resize(1);
+	caches[0] = cache(firstCache);
 	numbCaches = 1;
 }
 
 void cacheArchitecture::addCache(cacheParameters nextCache)
 {
-	arch.resize(numbCaches + 1);
-	arch[numbCaches] = cache(nextCache);
+	caches.resize(numbCaches + 1);
+	caches[numbCaches] = cache(nextCache);
 	++numbCaches;
 
 }
 
 cache cacheArchitecture::getCache(int priority)
 {
-	return arch[priority];
+	return caches[priority];
 }
 
 int cacheArchitecture::getNumbCaches() {
@@ -62,27 +62,25 @@ int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 
 	while ((i < numbCaches) && (!found))
 	{
-		eventCapture("Looking in " + arch[i].getName() + " for ");// add.getAddr()
-		found = finder.cacheHasAddress(arch[i], add);
+		eventCapture("Looking in " + caches[i].getName() + " for ");// add.getAddr()
+		found = finder.cacheHasAddress(caches[i], add);
 		if (found)
 		{
-			eventCapture(arch[i].getName() + " hit for "); // add.getAddr()
-			time += arch[i].getHitTime();
+			eventCapture(caches[i].getName() + " hit for "); // add.getAddr()
+			time += caches[i].getHitTime();
 		}
 		else
 		{
-			eventCapture(arch[i].getName() + " miss for "); // add.getAddr();
-			time += arch[i].getMissPenalty();
+			eventCapture(caches[i].getName() + " miss for "); // add.getAddr();
+			time += caches[i].getMissPenalty();
 		}
-
-
 		++i;
 
 		if (found)
 			for (i = i - 2; i >= 0; i--)
 			{
-				eventCapture("Writing back to " + arch[i].getName());
-				arch[i].write(add);
+				eventCapture("Writing forward to " + caches[i].getName());
+				caches[i].write(add);
 			}
 
 	}
@@ -91,8 +89,8 @@ int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 	{
 		for (i = 0; i < numbCaches; i++)
 		{
-			eventCapture("Writing to " + arch[i].getName());
-			arch[i].write(add);
+			eventCapture("Writing to " + caches[i].getName());
+			caches[i].write(add);
 		}
 	}
 
@@ -107,18 +105,18 @@ int cacheArchitecture::cacheWrite(address add)						//returns time needed to wri
 
 	while ((i < numbCaches) && (!found))
 	{
-		eventCapture("Looking in " + arch[i].getName() + " for ");// add.getAddr()
-		found = finder.cacheHasAddress(arch[i], add);
+		eventCapture("Looking in " + caches[i].getName() + " for ");// add.getAddr()
+		found = finder.cacheHasAddress(caches[i], add);
 		if (found)
 		{
-			eventCapture(arch[i].getName() + " hit for "); // add.getAddr();
-			time += arch[i].getHitTime();
+			eventCapture(caches[i].getName() + " hit for "); // add.getAddr();
+			time += caches[i].getHitTime();
 
 		}
 		else
 		{
-			eventCapture(arch[i].getName() + " miss for ");// + add.getAddr());
-			time += arch[i].getMissPenalty();
+			eventCapture(caches[i].getName() + " miss for ");// + add.getAddr());
+			time += caches[i].getMissPenalty();
 		}
 
 
@@ -127,8 +125,8 @@ int cacheArchitecture::cacheWrite(address add)						//returns time needed to wri
 		if (found)
 			for (i = i - 2; i >= 0; i--)
 			{
-				eventCapture("Writing back to " + arch[i].getName());
-				arch[i].write(add);
+				eventCapture("Writing forward to " + caches[i].getName());
+				caches[i].write(add);
 			}
 
 	}
@@ -137,14 +135,79 @@ int cacheArchitecture::cacheWrite(address add)						//returns time needed to wri
 	{
 		for (i = 0; i < numbCaches; i++)
 		{
-			eventCapture("Writing to " + arch[i].getName());
-			arch[i].write(add);
+			eventCapture("Writing to " + caches[i].getName());
+			caches[i].write(add);
 		}
 	}
 
 	return time;
 }
 
+int cacheArchitecture::instructionRead(address add)
+{
+	// pass read to normal process if no instruction cache
+	if (!hasInstructionCache) {
+		return cacheRead(add);
+	}
+
+	// otherwise basically do the same thing... but treat caches[0] as instruction
+
+	int time = 0, i = 0;
+	bool found = false;
+	CacheSearch finder = CacheSearch();
+
+	while ((i < numbCaches) && (!found))
+	{
+		cache* lookingIn = &(caches[i]);
+		if (i == 0) {
+			lookingIn = &instructionCache;
+		}
+
+		eventCapture("Looking in " + lookingIn->getName() + " for ");// add.getAddr()
+		found = finder.cacheHasAddress(*lookingIn, add);
+		if (found)
+		{
+			eventCapture(lookingIn->getName() + " hit for "); // add.getAddr()
+			time += lookingIn->getHitTime();
+		}
+		else
+		{
+			eventCapture(lookingIn->getName() + " miss for "); // add.getAddr();
+			time += lookingIn->getMissPenalty();
+		}
+		++i;
+
+		if (found)
+			for (i = i - 2; i >= 0; i--)
+			{
+				eventCapture("Writing forward to " + lookingIn->getName());
+				lookingIn->write(add);
+			}
+
+	}
+
+	if (!found)
+	{
+		for (i = 0; i < numbCaches; i++)
+		{
+			cache* lookingIn = &(caches[i]);
+			if (i == 0) {
+				lookingIn = &instructionCache;
+			}
+			eventCapture("Writing to " + lookingIn->getName());
+			lookingIn->write(add);
+		}
+	}
+
+	return time;
+}
+
+
+void cacheArchitecture::useInstructionCache(cache instrCache)
+{
+	hasInstructionCache = true;
+	instructionCache = instrCache;
+}
 
 cacheArchitecture::~cacheArchitecture()
 {
