@@ -53,7 +53,7 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, CacheUp
 		// write forward from main memory to LN ... L1
 		for (int j = arch->getNumbCaches() - 1; j >= 0; --j)
 		{
-			if (j < arch->getNumbCaches() - 2) {
+			if (j < arch->getNumbCaches() - 1) {
 				previousCache = getCacheAtIndex(j + 1);
 			}
 			currentCache = getCacheAtIndex(j);
