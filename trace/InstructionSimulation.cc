@@ -82,7 +82,7 @@ void InstructionSimulation::mainMemoryRead()
 
 void InstructionSimulation::reportEvent(string e)
 {
-	std::cout << "event: " + e << ". during simulate of addr: " << add->getAddr() << std::endl;
+	std::cout << currentCache->getName() << " event: " + e << ". during simulate of addr: " << add->getAddr() << std::endl;
 	// note variables encapsulated in InstructionSimulation instance (see InstructionSimulation.h)
 	// time
 	// previousCache (might be nullptr if coming form main memory)
