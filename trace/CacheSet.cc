@@ -15,7 +15,6 @@ File: CacheSet.cc
 #include "CacheBlock.h"
 #include "Address.h"
 
-//#define DEBUG 1
 
 using namespace std;
 
@@ -49,14 +48,8 @@ void cacheSet::writeAddress(address add)
 bool cacheSet::inCacheSet(address add)
 {
 	bool in = false;
-
-	#ifdef DEBUG
-		cout << "checking for " << add.getAddr() << " in block " << add.getAddr() % numbBlocks << endl;
-	#endif
-
 	for (int i = 0; i < numbBlocks && in == false; i++)
 		in = blocks[i].inBlock(add);
-
 	return in;
 }
 

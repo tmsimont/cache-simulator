@@ -1,9 +1,12 @@
 #include "CacheSimulator.h"
+#include "InstructionSimulation.h"
+#include "InstructionSimulationRead.h"
+#include "InstructionSimulationWrite.h"
+#include "InstructionSimulationReadInstruction.h"
 #include "json.hpp"
 
 #include <iostream>
 #include <fstream>
-
 
 #define READ 0
 #define WRITE 1
@@ -85,6 +88,8 @@ void CacheSimulator::readTrace(std::istream& source)
 	for (string line; getline(source, line);)
 	{
 		scanf_s("%u %x", &action, &addr);
+
+
 		if (action == READ)
 		{
 			time += architecture.cacheRead(address(addr));

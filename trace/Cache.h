@@ -39,7 +39,7 @@ public:
 	unsigned int getIndex(address ofAddress);
 	unsigned int getOffset(address ofAddress);
 	
-	cacheSet getCacheSet(int index);
+	cacheSet getCacheSet(address forAddress);
 
 	vector<cacheSet> sets;
 	int numbBlocks;
