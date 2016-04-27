@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CACHESIMULATOR_H
+#define CACHESIMULATOR_H
 #include "CacheArchitecture.h"
 #include "CacheParameters.h"
 #include <iostream>
@@ -13,3 +14,4 @@ private:
 	cacheArchitecture architecture;
 };
 
+#endif CACHESIMULATOR_H

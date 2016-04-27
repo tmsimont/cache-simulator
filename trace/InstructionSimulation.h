@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INSTRUCTIONSIMULATION_H
+#define INSTRUCTIONSIMULATION_H
 #include "CacheEvent.h"
 #include "CacheSearch.h"
 #include "CacheUpdater.h"
@@ -51,3 +52,5 @@ protected:
 	cache* previousCache;
 	vector<CacheEvent> events;
 };
+
+#endif // INSTRUCTIONSIMULATION_H

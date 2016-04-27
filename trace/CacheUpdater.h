@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CACHEUPDATER_H
+#define CACHEUPDATER_H
 #include "CacheEvent.h"
 #include "Cache.h"
 #include <vector>
@@ -10,3 +11,4 @@ private:
 	cache* targetCache;
 	std::vector<CacheEvent> events;
 };
+#endif // CACHEUPDATER_H

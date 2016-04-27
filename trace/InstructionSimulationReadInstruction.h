@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INSTRUCTIONSIMULATIONREADINSTRUCTION_H
+#define INSTRUCTIONSIMULATIONREADINSTRUCTION_H
 #include "InstructionSimulation.h"
 class InstructionSimulationReadInstruction : public InstructionSimulation {
 	void InstructionSimulationReadInstruction::hitCache(cache * cache);
@@ -11,3 +12,5 @@ class InstructionSimulationReadInstruction : public InstructionSimulation {
 	 */
 	cache * getCacheAtIndex(int i);
 };
+
+#endif // INSTRUCTIONSIMULATIONREADINSTRUCTION_H
