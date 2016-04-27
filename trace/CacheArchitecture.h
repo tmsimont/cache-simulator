@@ -13,6 +13,7 @@ File: CacheArchitecture.h
 #include "Cache.h"
 #include "Address.h"
 #include "CacheParameters.h"
+#include "CacheUpdater.h"
 
 using namespace std;
 
@@ -29,7 +30,8 @@ public:
 	int instructionRead(address add);
 	int getNumbCaches();
 
-	cache getCache(int priority);
+	cache* getCache(int priority);
+	cache* getInstructionCache();
 
 	// pass a cache and the architecture will use this as instruction cache
 	// todo: extend cacheArchitecture to cacheArchitecture instruction?

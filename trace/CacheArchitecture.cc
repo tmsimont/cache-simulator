@@ -45,9 +45,17 @@ void cacheArchitecture::addCache(cacheParameters nextCache)
 
 }
 
-cache cacheArchitecture::getCache(int priority)
+cache* cacheArchitecture::getCache(int priority)
 {
-	return caches[priority];
+	return &(caches[priority]);
+}
+
+cache * cacheArchitecture::getInstructionCache()
+{
+	if (hasInstructionCache)
+		return &instructionCache;
+	else
+		return &(caches[0]);
 }
 
 int cacheArchitecture::getNumbCaches() {
@@ -59,6 +67,7 @@ int cacheArchitecture::cacheRead(address add)						//returns time needed to read
 	int time = 0, i = 0;
 	bool found = false;
 	CacheSearch finder = CacheSearch();
+	CacheUpdater updater = CacheUpdater();
 
 	while ((i < numbCaches) && (!found))
 	{

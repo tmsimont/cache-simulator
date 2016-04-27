@@ -10,9 +10,4 @@ int main(int argc, char**argv)
 	sim.readTrace(std::cin);
 
 
-	CacheTest::runTest(argc, argv);
-
-
-	//CacheTest::testAddressing();
-
 }
