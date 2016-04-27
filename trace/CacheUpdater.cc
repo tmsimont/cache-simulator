@@ -20,7 +20,7 @@ CacheUpdater::CacheUpdater(cache * targetCache)
 	this->targetCache = targetCache;
 }
 
-void CacheUpdater::hitCache(address * addr)
+void CacheUpdater::hitCache(address * addr, int setIdx, int blockIdx)
 {
 	// nothing to do... unless this an special extended LRU
 }

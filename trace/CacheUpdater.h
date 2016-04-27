@@ -9,7 +9,7 @@ public:
 	CacheUpdater();
 	CacheUpdater(cache* targetCache);
 	virtual std::vector<CacheEvent> writeToCache(address * addr) = 0;
-	void hitCache(address * addr);
+	void hitCache(address * addr, int setIdx, int blockIdx);
 	cache * getCache();
 protected:
 	cache* targetCache;

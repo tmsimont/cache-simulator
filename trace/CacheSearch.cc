@@ -3,11 +3,13 @@
 #include "CacheBlock.h"
 #include <vector>
 
-bool CacheSearch::cacheHasAddress(cache *c, address *a)
+void CacheSearch::search(cache *c, address *a)
 {
-	bool found = false;
+	found = false;
 	cacheSet *set = c->getCacheSet(*a);
-	for (int i = 0; i < set->blocks.size() && found == false; i++)
+	for (int i = 0; i < set->blocks.size() && found == false; i++) {
 		found = set->blocks[i].inBlock(c->getTag(*a));
-	return found;
+		blockIdx = i;
+		setIdx = c->getIndex(*a);
+	}
 }

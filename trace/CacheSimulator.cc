@@ -76,7 +76,7 @@ void CacheSimulator::createArchitecture(string jsonFilename)
 
 				// todo: parse replacment policy ( 0 = random, 1 = LRU)
 				// todo: parse "use instruction cache" (boolean)
-				params[i].replacementPolicy = cacheParameters::ReplacementPolicy::RANDOM;
+				params[i].replacementPolicy = cacheParameters::ReplacementPolicy::PSEUDOLRU;
 
 			}
 		}

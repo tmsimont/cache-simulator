@@ -28,6 +28,7 @@ public:
 	bool hasAddress(address add);
 	int getMissPenalty() { return params.missPenalty; }
 	int getHitTime() { return params.hitTime; }
+	int getAssociativity() { return params.associativity; }
 	string getName() { return params.name; }
 	cacheParameters::ReplacementPolicy getReplacementPolicy() { return params.replacementPolicy; }
 

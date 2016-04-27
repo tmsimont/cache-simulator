@@ -10,7 +10,7 @@ std::vector<CacheEvent> CacheUpdaterFIFO::writeToCache(address * addr)
 	// determine target block
 	cacheBlock * targetBlock;
 
-	// todo: implement FIFO
+	// todo: implement FIFO (see CacheUpdaterPseudoLRU.h and CacheUpdaterPseudoLRU.cc for inspiration...)
 	targetBlock = &(targetSet->blocks[0]);
 
 	// adjust the block tag and valid bit

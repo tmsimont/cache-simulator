@@ -10,7 +10,7 @@ std::vector<CacheEvent> CacheUpdaterLRU::writeToCache(address * addr)
 	// determine target block
 	cacheBlock * targetBlock;
 
-	// todo: implement LRU
+	// todo: implement LRU (see CacheUpdaterPseudoLRU.h and CacheUpdaterPseudoLRU.cc for inspiration...)
 	targetBlock = &(targetSet->blocks[0]);
 
 	// adjust the block tag and valid bit
@@ -21,6 +21,6 @@ std::vector<CacheEvent> CacheUpdaterLRU::writeToCache(address * addr)
 	return events;
 }
 
-void CacheUpdaterLRU::hitCache(address * addr)
+void CacheUpdaterLRU::hitCache(address * addr, int setIdx, int blockIdx)
 {
 }

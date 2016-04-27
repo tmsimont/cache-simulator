@@ -6,6 +6,6 @@ class CacheUpdaterLRU : public CacheUpdater {
 public:
 	CacheUpdaterLRU(cache * target) : CacheUpdater(target) {};
 	std::vector<CacheEvent> writeToCache(address * addr);
-	void hitCache(address * addr);
+	void hitCache(address * addr, int setIdx, int blockIdx);
 };
 #endif // CACHEUPDATERLRU_H

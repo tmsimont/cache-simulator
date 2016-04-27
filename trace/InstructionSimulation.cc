@@ -32,7 +32,8 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 		currentCache = updater->getCache();
 
 		// search the cache
-		found = finder->cacheHasAddress(currentCache, add);
+		finder->search(currentCache, add);
+		found = finder->wasFound();
 
 		if (found)
 		{
@@ -120,6 +121,8 @@ void InstructionSimulation::reportEvent(string e)
 	// time
 	// previousCache (might be nullptr if coming form main memory)
 	// currentCache
+	// finder->setWhereFound()
+	// finder->blockWhereFound()
 	// vector<CacheEvent> events
 	// @todo: events.push(new CacheEvent)
 }

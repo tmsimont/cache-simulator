@@ -4,7 +4,7 @@
 void InstructionSimulationWrite::hitCache(CacheUpdater * updater)
 {
 	reportEvent("write hit");
-	updater->hitCache(add);
+	updater->hitCache(add, finder->setWhereFound(), finder->blockWhereFound());
 	time += updater->getCache()->getHitTime();
 }
 void InstructionSimulationWrite::missCache(CacheUpdater * updater)
