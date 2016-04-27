@@ -24,22 +24,29 @@ cacheArchitecture::cacheArchitecture()
 
 cacheArchitecture::cacheArchitecture(cacheParameters firstCache)
 {
-	caches.resize(1);
-	caches[0] = cache(firstCache);
-	numbCaches = 1;
+	numbCaches = 0;
+	addCache(firstCache);
 }
 
 void cacheArchitecture::addCache(cacheParameters nextCache)
 {
 	caches.resize(numbCaches + 1);
-	caches[numbCaches] = cache(nextCache);
-	++numbCaches;
+	caches[numbCaches] = new cache(nextCache);
 
+	// todo: use different updaters based on update policy of cache
+	cacheUpdaters.resize(numbCaches + 1);
+	cacheUpdaters[numbCaches] = new CacheUpdater(caches[numbCaches]);
+
+	++numbCaches;
 }
 
 cache* cacheArchitecture::getCache(int priority)
 {
-	return &(caches[priority]);
+	return caches[priority];
+}
+CacheUpdater* cacheArchitecture::getCacheUpdater(int priority)
+{
+	return cacheUpdaters[priority];
 }
 
 cache * cacheArchitecture::getInstructionCache()
@@ -47,7 +54,15 @@ cache * cacheArchitecture::getInstructionCache()
 	if (hasInstructionCache)
 		return &instructionCache;
 	else
-		return &(caches[0]);
+		return caches[0];
+}
+
+CacheUpdater * cacheArchitecture::getInstructionCacheUpdater()
+{
+	if (hasInstructionCache)
+		return &instructionUpdater;
+	else
+		return cacheUpdaters[0];
 }
 
 int cacheArchitecture::getNumbCaches() {
@@ -58,9 +73,17 @@ void cacheArchitecture::useInstructionCache(cacheParameters instrCacheParam)
 {
 	hasInstructionCache = true;
 	instructionCache = cache(instrCacheParam);
+	instructionUpdater = CacheUpdater(&instructionCache);
 }
 
 cacheArchitecture::~cacheArchitecture()
 {
-
+	for (int i = 0; i < caches.size(); i++) {
+		delete (caches[i]);
+	}
+	caches.clear();
+	for (int i = 0; i < cacheUpdaters.size(); i++) {
+		delete (cacheUpdaters[i]);
+	}
+	cacheUpdaters.clear();
 }

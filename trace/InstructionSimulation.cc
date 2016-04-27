@@ -2,10 +2,9 @@
 #include "InstructionSimulation.h"
 #include <iostream>
 
-vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, CacheUpdater * updater, cacheArchitecture* arch, address* add)
+vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheArchitecture* arch, address* add)
 {
 	this->finder = finder;
-	this->updater = updater;
 	this->arch = arch;
 	this->add = add;
 	this->previousCache = nullptr;
@@ -15,31 +14,34 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, CacheUp
 
 	int i = 0;
 	bool found = false;
+	CacheUpdater* updater;
 
 	// search L1 out to LN caches
 	while ((i < arch->getNumbCaches()) && (!found))
 	{
 		// set this instruction instance's currentCache pointer
-		currentCache = getCacheAtIndex(i);
+		updater = getCacheUpdaterAtIndex(i);
+		currentCache = updater->getCache();
 
 		// search the cache
 		found = finder->cacheHasAddress(currentCache, add);
 
 		if (found)
 		{
-			hitCache(currentCache);
+			hitCache(updater);
 
 			// write forward from L(i) ... L1
 			for (int j = i - 1; j >= 0; --j)
 			{
 				previousCache = currentCache;
-				currentCache = getCacheAtIndex(i);
-				writeForward(currentCache);
+				updater = getCacheUpdaterAtIndex(j);
+				currentCache = updater->getCache();
+				writeForward(updater);
 			}
 		}
 		else
 		{
-			missCache(currentCache);
+			missCache(updater);
 		}
 		++i;
 	}
@@ -54,10 +56,12 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, CacheUp
 		for (int j = arch->getNumbCaches() - 1; j >= 0; --j)
 		{
 			if (j < arch->getNumbCaches() - 1) {
-				previousCache = getCacheAtIndex(j + 1);
+				CacheUpdater * previousUpdater = getCacheUpdaterAtIndex(j + 1);
+				previousCache = previousUpdater->getCache();
 			}
-			currentCache = getCacheAtIndex(j);
-			writeForward(currentCache);
+			updater = getCacheUpdaterAtIndex(j);
+			currentCache = updater->getCache();
+			writeForward(updater);
 		}
 	}
 
@@ -70,8 +74,8 @@ int InstructionSimulation::getTime()
 }
 
 
-cache* InstructionSimulation::getCacheAtIndex(int i) {
-	return arch->getCache(i);
+CacheUpdater* InstructionSimulation::getCacheUpdaterAtIndex(int i) {
+	return arch->getCacheUpdater(i);
 }
 
 

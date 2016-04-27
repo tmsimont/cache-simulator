@@ -1,18 +1,18 @@
 #pragma once
 #include "InstructionSimulationRead.h"
 
-void InstructionSimulationRead::hitCache(cache * cache)
+void InstructionSimulationRead::hitCache(CacheUpdater * updater)
 {
 	reportEvent("read hit");
-	time += cache->getHitTime();
+	time += updater->getCache()->getHitTime();
 }
-void InstructionSimulationRead::missCache(cache * cache)
+void InstructionSimulationRead::missCache(CacheUpdater * updater)
 {
 	reportEvent("read miss");
-	time += cache->getMissPenalty();
+	time += updater->getCache()->getMissPenalty();
 }
-void InstructionSimulationRead::writeForward(cache * cache)
+void InstructionSimulationRead::writeForward(CacheUpdater * updater)
 {
 	reportEvent("read write forward");
-	updater->writeToCache(cache, add);
+	updater->writeToCache(add);
 }

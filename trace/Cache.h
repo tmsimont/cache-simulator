@@ -29,7 +29,7 @@ public:
 	int getMissPenalty() { return params.missPenalty; }
 	int getHitTime() { return params.hitTime; }
 	string getName() { return params.name; }
-
+	cacheParameters::ReplacementPolicy getReplacementPolicy() { return params.replacementPolicy; }
 
 	unsigned int indexSize;
 	unsigned int offsetSize;

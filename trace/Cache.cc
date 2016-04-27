@@ -72,5 +72,4 @@ unsigned int cache::getOffset(address ofAddress) {
 
 cache::~cache()
 {
-
 }

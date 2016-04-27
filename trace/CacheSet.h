@@ -23,6 +23,7 @@ public:
 	bool inCacheSet(address add);
 	int numbBlocks;
 	vector<cacheBlock> blocks;
+	vector<bool> nwayLRUBits;
 	~cacheSet();
 private:
 	int blockSize;

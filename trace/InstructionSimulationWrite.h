@@ -2,8 +2,8 @@
 #define INSTRUCTIONSIMULATIONWRITE_H
 #include "InstructionSimulation.h"
 class InstructionSimulationWrite : public InstructionSimulation {
-	void InstructionSimulationWrite::hitCache(cache * cache);
-	void InstructionSimulationWrite::missCache(cache * cache);
-	void InstructionSimulationWrite::writeForward(cache * cache);
+	void InstructionSimulationWrite::hitCache(CacheUpdater * updater);
+	void InstructionSimulationWrite::missCache(CacheUpdater * updater);
+	void InstructionSimulationWrite::writeForward(CacheUpdater * updater);
 };
 #endif // INSTRUCTIONSIMULATIONWRITE_H

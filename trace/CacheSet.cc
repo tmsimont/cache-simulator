@@ -28,9 +28,11 @@ cacheSet::cacheSet(int nB, int bS)
 	numbBlocks = nB;
 	blockSize = bS;
 	blocks.resize(numbBlocks);
+	nwayLRUBits.resize(numbBlocks);
 	for (int i = 0; i < numbBlocks; ++i)
 	{
 		blocks[i] = cacheBlock(blockSize);
+		nwayLRUBits[i] = 0;
 	}
 
 }

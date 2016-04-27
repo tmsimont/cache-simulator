@@ -28,7 +28,9 @@ public:
 	int getNumbCaches();
 
 	cache* getCache(int priority);
+	CacheUpdater* getCacheUpdater(int priority);
 	cache* getInstructionCache();
+	CacheUpdater* getInstructionCacheUpdater();
 
 	// pass a cache and the architecture will use this as instruction cache
 	// todo: extend cacheArchitecture to cacheArchitecture instruction?
@@ -36,8 +38,10 @@ public:
 
 	~cacheArchitecture();
 private:
-	vector<cache> caches;
+	vector<cache*> caches;
+	vector<CacheUpdater*> cacheUpdaters;
 	cache instructionCache;
+	CacheUpdater instructionUpdater;
 	bool hasInstructionCache;
 	int numbCaches;
 };

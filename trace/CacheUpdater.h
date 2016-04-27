@@ -6,7 +6,10 @@
 
 class CacheUpdater {
 public:
-	std::vector<CacheEvent> writeToCache(cache* target, address * addr);
+	CacheUpdater();
+	CacheUpdater(cache* targetCache);
+	std::vector<CacheEvent> writeToCache(address * addr);
+	cache * getCache();
 private:
 	cache* targetCache;
 	std::vector<CacheEvent> events;

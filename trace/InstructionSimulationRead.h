@@ -2,9 +2,9 @@
 #define INSTRUCTIONSIMULATIONREAD_H
 #include "InstructionSimulation.h"
 class InstructionSimulationRead : public InstructionSimulation {
-	void InstructionSimulationRead::hitCache(cache * cache);
-	void InstructionSimulationRead::missCache(cache * cache);
-	void InstructionSimulationRead::writeForward(cache * cache);
+	void InstructionSimulationRead::hitCache(CacheUpdater * updater);
+	void InstructionSimulationRead::missCache(CacheUpdater * updater);
+	void InstructionSimulationRead::writeForward(CacheUpdater * updater);
 };
 
 #endif // INSTRUCTIONSIMULATIONREAD_H

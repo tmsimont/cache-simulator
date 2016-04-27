@@ -28,21 +28,20 @@ using std::vector;
  */
 class InstructionSimulation {
 public:
-	virtual void hitCache(cache* cache) = 0;
-	virtual void missCache(cache* cache) = 0;
-	virtual void writeForward(cache* cache) = 0;
+	virtual void hitCache(CacheUpdater * updater) = 0;
+	virtual void missCache(CacheUpdater * updater) = 0;
+	virtual void writeForward(CacheUpdater * updater) = 0;
 
 	void mainMemoryRead();
 	void reportEvent(std::string e);
-	vector<CacheEvent> simulate(CacheSearch * finder, CacheUpdater * updater, cacheArchitecture* arch, address* add);
+	vector<CacheEvent> simulate(CacheSearch * finder, cacheArchitecture* arch, address* add);
 
 	int getTime();
 protected:
 
 	CacheSearch * finder;
-	CacheUpdater * updater;
 
-	cache* getCacheAtIndex(int i);
+	CacheUpdater* getCacheUpdaterAtIndex(int i);
 
 	// reporting
 	cacheArchitecture* arch;

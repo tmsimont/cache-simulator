@@ -18,6 +18,7 @@ using json = nlohmann::json;
 
 CacheSimulator::CacheSimulator()
 {
+	architecture = nullptr;
 }
 
 void CacheSimulator::createArchitecture(string jsonFilename)
@@ -75,6 +76,7 @@ void CacheSimulator::createArchitecture(string jsonFilename)
 
 				// todo: parse replacment policy ( 0 = random, 1 = LRU)
 				// todo: parse "use instruction cache" (boolean)
+				params[i].replacementPolicy = cacheParameters::ReplacementPolicy::RANDOM;
 
 			}
 		}
@@ -91,17 +93,20 @@ void CacheSimulator::createArchitecture(string jsonFilename)
 		return;
 	}
 
+	if (architecture != nullptr) {
+		delete architecture;
+	}
 
 	// pass parsed params into simulator's cacheArchitecture instance
-	architecture = cacheArchitecture(params[0]);
+	architecture = new cacheArchitecture(params[0]);
 	for (int i = 1; i < params.size(); i++)
-		architecture.addCache(params[i]);
+		architecture->addCache(params[i]);
 
 
 	// todo: check boolean in config: useInstructionCache?
 
 	cacheParameters instr = params[0]; // instruction cache is clone of L1
-	architecture.useInstructionCache(instr);
+	architecture->useInstructionCache(instr);
 }
 
 void CacheSimulator::readTrace(std::istream& source)
@@ -111,7 +116,6 @@ void CacheSimulator::readTrace(std::istream& source)
 	unsigned long long time = 0;
 
 	CacheSearch *finder = new CacheSearch();
-	CacheUpdater *updater = new CacheUpdater();
 
 	for (string line; getline(source, line);)
 	{
@@ -136,7 +140,7 @@ void CacheSimulator::readTrace(std::istream& source)
 			continue;
 		}
 
-		inst->simulate(finder, updater, &architecture, addrInstance);
+		inst->simulate(finder, architecture, addrInstance);
 		time += inst->getTime();
 
 		// trash memory we're done
@@ -145,6 +149,12 @@ void CacheSimulator::readTrace(std::istream& source)
 	}
 
 	delete finder;
-	delete updater;
 
+}
+
+CacheSimulator::~CacheSimulator()
+{
+	if (architecture != nullptr) {
+		delete architecture;
+	}
 }

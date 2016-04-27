@@ -10,8 +10,9 @@ public:
 	CacheSimulator();
 	void createArchitecture(string jsonFilename);
 	void readTrace(std::istream& source);
+	~CacheSimulator();
 private:
-	cacheArchitecture architecture;
+	cacheArchitecture * architecture;
 };
 
 #endif CACHESIMULATOR_H

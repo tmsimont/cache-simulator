@@ -1,19 +1,19 @@
 #pragma once
 #include "InstructionSimulationWrite.h"
 
-void InstructionSimulationWrite::hitCache(cache * cache)
+void InstructionSimulationWrite::hitCache(CacheUpdater * updater)
 {
 	reportEvent("write hit");
-	time += cache->getHitTime();
+	time += updater->getCache()->getHitTime();
 }
-void InstructionSimulationWrite::missCache(cache * cache)
+void InstructionSimulationWrite::missCache(CacheUpdater * updater)
 {
 	reportEvent("write miss");
-	time += cache->getMissPenalty();
+	time += updater->getCache()->getMissPenalty();
 }
-void InstructionSimulationWrite::writeForward(cache * cache)
+void InstructionSimulationWrite::writeForward(CacheUpdater * updater)
 {
 	reportEvent("write write forward");
-	updater->writeToCache(cache, add);
+	updater->writeToCache(add);
 }
 
