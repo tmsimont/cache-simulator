@@ -62,6 +62,7 @@ void CacheSimulator::createArchitecture(string jsonFilename)
 		}
 		else
 		{
+			cout << "usage: [executable] [configuration file] < [input file] > [output file]" << endl;
 			return;
 		}
 
@@ -69,6 +70,7 @@ void CacheSimulator::createArchitecture(string jsonFilename)
 	catch (exception& e)
 	{
 		cout << "usage: [executable] [configuration file] < [input file] > [output file]" << endl;
+		return;
 	}
 
 

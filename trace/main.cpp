@@ -6,8 +6,8 @@ int main(int argc, char**argv)
 {
 
 	CacheSimulator sim = CacheSimulator();
-	//sim.createArchitecture(argv[1]);
-	sim.createArchitectureTest();
+	sim.createArchitecture(argv[1]);
+	//sim.createArchitectureTest();
 	sim.readTrace(std::cin);
 
 

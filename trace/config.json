@@ -10,9 +10,6 @@
       "miss_time": 5,
       "hit_time": 1
     },
-
-
-
     {
       "name": "L2",
       "priority": 1,
