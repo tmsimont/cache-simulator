@@ -29,25 +29,19 @@ cache::cache()
 
 cache::cache(cacheParameters para)
 {
-	priority = para.getPriority();
-	blockSize = para.getBlockSize();
-	name = para.getName();
-	size = para.getSize();
-	associativity = para.getAssociativity();
-	missPenalty = para.getMissPenalty();
-	hitTime = para.getHitTime();
+	this->params = para;
 	
-	numbBlocks = size / blockSize;
-	numbSets = numbBlocks / associativity;
+	numbBlocks = params.getSize() / params.getBlockSize();
+	numbSets = numbBlocks / params.getAssociativity();
 
 	indexSize = log2(numbSets);
-	offsetSize = log2(blockSize);
+	offsetSize = log2(params.getBlockSize());
 	tagSize = (ADDRESS_SIZE - indexSize - offsetSize);
 
 	sets.resize(numbSets);
 	for (int i = 0; i < numbSets; ++i)
 	{
-		sets[i] = cacheSet(associativity, blockSize);
+		sets[i] = cacheSet(params.getAssociativity(), params.getBlockSize());
 	}
 }
 

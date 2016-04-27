@@ -26,9 +26,9 @@ public:
 	cache(cacheParameters para);
 
 	bool hasAddress(address add);
-	int getMissPenalty() { return missPenalty; }
-	int getHitTime() { return hitTime; }
-	string getName() { return name; }
+	int getMissPenalty() { return params.getMissPenalty(); }
+	int getHitTime() { return params.getHitTime(); }
+	string getName() { return params.getName(); }
 
 
 	unsigned int indexSize;
@@ -47,18 +47,7 @@ public:
 	~cache();
 
 private:
-
-
-	int priority;
-	int blockSize;
-	string name;
-	int size;
-	int associativity;
-	//bool hasWriteBuffer;
-	//bool hasVictimBuffer;
-	//enum replacementPolicy;
-	int missPenalty;
-	int hitTime;
+	cacheParameters params;
 };
 
 #endif // CACHE_H
