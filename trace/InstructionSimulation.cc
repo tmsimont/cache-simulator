@@ -2,8 +2,10 @@
 #include "InstructionSimulation.h"
 #include <iostream>
 
-vector<CacheEvent> InstructionSimulation::simulate(cacheArchitecture* arch, address* add)
+vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, CacheUpdater * updater, cacheArchitecture* arch, address* add)
 {
+	this->finder = finder;
+	this->updater = updater;
 	this->arch = arch;
 	this->add = add;
 	this->previousCache = nullptr;
@@ -13,7 +15,6 @@ vector<CacheEvent> InstructionSimulation::simulate(cacheArchitecture* arch, addr
 
 	int i = 0;
 	bool found = false;
-	CacheSearch finder = CacheSearch();
 
 	// search L1 out to LN caches
 	while ((i < arch->getNumbCaches()) && (!found))
@@ -22,7 +23,7 @@ vector<CacheEvent> InstructionSimulation::simulate(cacheArchitecture* arch, addr
 		currentCache = getCacheAtIndex(i);
 
 		// search the cache
-		found = finder.cacheHasAddress(*currentCache, *add);
+		found = finder->cacheHasAddress(currentCache, add);
 
 		if (found)
 		{
@@ -61,6 +62,11 @@ vector<CacheEvent> InstructionSimulation::simulate(cacheArchitecture* arch, addr
 	}
 
 	return events;
+}
+
+int InstructionSimulation::getTime()
+{
+	return time;
 }
 
 

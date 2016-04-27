@@ -14,6 +14,6 @@ void InstructionSimulationWrite::missCache(cache * cache)
 void InstructionSimulationWrite::writeForward(cache * cache)
 {
 	reportEvent("write write forward");
-	cache->write(*add);
+	updater->writeToCache(cache, add);
 }
 

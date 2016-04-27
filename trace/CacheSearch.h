@@ -6,5 +6,5 @@
 
 class CacheSearch {
 public:
-	bool cacheHasAddress(cache c, address a);
+	bool cacheHasAddress(cache * c, address * a);
 };

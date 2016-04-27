@@ -33,8 +33,14 @@ public:
 
 	void mainMemoryRead();
 	void reportEvent(std::string e);
-	vector<CacheEvent> simulate(cacheArchitecture* arch, address* add);
+	vector<CacheEvent> simulate(CacheSearch * finder, CacheUpdater * updater, cacheArchitecture* arch, address* add);
+
+	int getTime();
 protected:
+
+	CacheSearch * finder;
+	CacheUpdater * updater;
+
 	cache* getCacheAtIndex(int i);
 
 	// reporting

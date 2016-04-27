@@ -55,14 +55,8 @@ bool cache::hasAddress(address add) {
 	return sets[getIndex(add)].inCacheSet(add);
 }
 
-cacheSet cache::getCacheSet(address add) {
-	return sets[getIndex(add)];
-}
-
-void cache::write(address add)
-{
-	// the set is determinate in any write policy. it's based on the set index of the address
-	sets[getIndex(add)].writeAddress(address(getTag(add.getAddr())));
+cacheSet * cache::getCacheSet(address add) {
+	return &(sets[getIndex(add)]);
 }
 
 unsigned int cache::getTag(address ofAddress) {

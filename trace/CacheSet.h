@@ -20,13 +20,9 @@ class cacheSet
 public:
 	cacheSet();
 	cacheSet(int nB, int bS);
-	void writeAddress(address add);
 	bool inCacheSet(address add);
 	int numbBlocks;
 	vector<cacheBlock> blocks;
-
-	vector<cacheBlock> getCacheBlocks();
-
 	~cacheSet();
 private:
 	int blockSize;

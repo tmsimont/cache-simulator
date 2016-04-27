@@ -26,7 +26,6 @@ public:
 	cache(cacheParameters para);
 
 	bool hasAddress(address add);
-	void write(address add);
 	int getMissPenalty() { return missPenalty; }
 	int getHitTime() { return hitTime; }
 	string getName() { return name; }
@@ -39,7 +38,7 @@ public:
 	unsigned int getIndex(address ofAddress);
 	unsigned int getOffset(address ofAddress);
 	
-	cacheSet getCacheSet(address forAddress);
+	cacheSet * getCacheSet(address forAddress);
 
 	vector<cacheSet> sets;
 	int numbBlocks;

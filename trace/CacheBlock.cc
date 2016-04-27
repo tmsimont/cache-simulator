@@ -38,12 +38,6 @@ bool cacheBlock::inBlock(address ad)
 	return false;
 }
 
-void cacheBlock::write(address ad)
-{
-	this->validBit = true;
-	this->addr = ad;
-}
-
 cacheBlock::~cacheBlock()
 {
 

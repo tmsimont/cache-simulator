@@ -22,7 +22,6 @@ public:
 	~cacheBlock();
 	cacheBlock(int bS);
 	bool inBlock(address ad);
-	void write(address ad);
 	address addr;
 	bool validBit;
 	

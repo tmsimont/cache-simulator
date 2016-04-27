@@ -3,6 +3,8 @@
 #include "InstructionSimulationRead.h"
 #include "InstructionSimulationWrite.h"
 #include "InstructionSimulationReadInstruction.h"
+#include "CacheUpdater.h"
+#include "CacheSearch.h"
 #include "json.hpp"
 
 #include <iostream>
@@ -94,6 +96,9 @@ void CacheSimulator::readTrace(std::istream& source)
 	unsigned int addr;
 	unsigned long long time = 0;
 
+	CacheSearch *finder = new CacheSearch();
+	CacheUpdater *updater = new CacheUpdater();
+
 	for (string line; getline(source, line);)
 	{
 		scanf_s("%u %x", &action, &addr);
@@ -117,11 +122,15 @@ void CacheSimulator::readTrace(std::istream& source)
 			continue;
 		}
 
-		inst->simulate(&architecture, addrInstance);
+		inst->simulate(finder, updater, &architecture, addrInstance);
+		time += inst->getTime();
 
 		// trash memory we're done
 		delete inst;
 		delete addrInstance;
 	}
+
+	delete finder;
+	delete updater;
 
 }
