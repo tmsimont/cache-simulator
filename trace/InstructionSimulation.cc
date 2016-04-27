@@ -6,34 +6,39 @@ vector<CacheEvent> InstructionSimulation::simulate(cacheArchitecture* arch, addr
 {
 	this->arch = arch;
 	this->add = add;
+	this->previousCache = nullptr;
+	this->currentCache = nullptr;
+	this->events = vector<CacheEvent>();
+	this->time = 0;
 
 	int i = 0;
 	bool found = false;
 	CacheSearch finder = CacheSearch();
-	CacheUpdater updater = CacheUpdater();
 
 	// search L1 out to LN caches
 	while ((i < arch->getNumbCaches()) && (!found))
 	{
-		// get a pointer to this cache (might be instruction...)
-		cache* cache = getCacheAtIndex(i);
+		// set this instruction instance's currentCache pointer
+		currentCache = getCacheAtIndex(i);
 
 		// search the cache
-		found = finder.cacheHasAddress(*cache, *add);
+		found = finder.cacheHasAddress(*currentCache, *add);
 
 		if (found)
 		{
-			hitCache(cache);
+			hitCache(currentCache);
 
-			// write forward to LN down to L1
-			for (i = i - 1; i >= 0; i--)
+			// write forward from L(i) ... L1
+			for (int j = i - 1; j >= 0; --j)
 			{
-				writeForward(cache);
+				previousCache = currentCache;
+				currentCache = getCacheAtIndex(i);
+				writeForward(currentCache);
 			}
 		}
 		else
 		{
-			missCache(cache);
+			missCache(currentCache);
 		}
 		++i;
 	}
@@ -42,16 +47,20 @@ vector<CacheEvent> InstructionSimulation::simulate(cacheArchitecture* arch, addr
 	if (!found)
 	{
 		mainMemoryRead();
+		previousCache = nullptr;
 
-		// write forward from main memory to LN to L1
-		for (i = arch->getNumbCaches() - 1; i >= 0; --i)
+		// write forward from main memory to LN ... L1
+		for (int j = arch->getNumbCaches() - 1; j >= 0; --j)
 		{
-			cache* cache = arch->getCache(i);
-			writeForward(cache);
+			if (j < arch->getNumbCaches() - 2) {
+				previousCache = getCacheAtIndex(j + 1);
+			}
+			currentCache = getCacheAtIndex(j);
+			writeForward(currentCache);
 		}
 	}
 
-	return vector<CacheEvent>();
+	return events;
 }
 
 
@@ -68,7 +77,10 @@ void InstructionSimulation::mainMemoryRead()
 void InstructionSimulation::reportEvent(string e)
 {
 	std::cout << "event: " + e << ". during simulate of addr: " << add->getAddr() << std::endl;
-	// note variables encapsulated in InstructionSimulation instance:
+	// note variables encapsulated in InstructionSimulation instance (see InstructionSimulation.h)
+	// time
+	// previousCache (might be nullptr if coming form main memory)
+	// currentCache
 	// vector<CacheEvent> events
-	// todo: events.push(new CacheEvent)
+	// @todo: events.push(new CacheEvent)
 }

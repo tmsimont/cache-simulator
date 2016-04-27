@@ -14,5 +14,8 @@ void InstructionSimulationRead::missCache(cache * cache)
 void InstructionSimulationRead::writeForward(cache * cache)
 {
 	reportEvent("read write forward");
+
+	CacheUpdater updater = CacheUpdater();
+
 	cache->write(*add);
 }

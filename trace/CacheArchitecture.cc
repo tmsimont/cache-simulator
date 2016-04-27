@@ -15,8 +15,6 @@ File: CacheArchitecture.cc
 #include "Address.h"
 #include "CacheSearch.h"
 
-#define DEBUG 1
-
 using namespace std;
 
 cacheArchitecture::cacheArchitecture()
