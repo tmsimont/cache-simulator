@@ -3,7 +3,7 @@
 #include "InstructionSimulationRead.h"
 #include "InstructionSimulationWrite.h"
 #include "InstructionSimulationReadInstruction.h"
-//#include "json.hpp"
+#include "json.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -12,13 +12,12 @@
 #define WRITE 1
 #define INSTRUCTION 2
 
-//using json = nlohmann::json;
+using json = nlohmann::json;
 
 CacheSimulator::CacheSimulator()
 {
 }
 
-/*
 void CacheSimulator::createArchitecture(string jsonFilename)
 {
 	// todo: read file at jsonFilename location and parse architecture
@@ -37,7 +36,7 @@ void CacheSimulator::createArchitecture(string jsonFilename)
 
 		if (!conf.empty() && conf.find("caches") != conf.end())
 		{
-			
+
 			params.resize(conf["caches"].size());
 
 			for (int i = 0; i < conf["caches"].size(); i++)
@@ -47,7 +46,7 @@ void CacheSimulator::createArchitecture(string jsonFilename)
 				for (int j = 0; j < 7; j++)
 				{
 					int this_priority = conf["caches"][i]["priority"];
-					if (!conf["caches"][i][values[j]].is_number() && !(conf["caches"][i][values[j]].is_string() && j == 0) && last_priority < this_priority )
+					if (!conf["caches"][i][values[j]].is_number() && !(conf["caches"][i][values[j]].is_string() && j == 0) && last_priority < this_priority)
 					{
 						cout << "usage: [executable] [configuration file] < [input file] > [output file]" << endl;
 						return;
@@ -75,12 +74,11 @@ void CacheSimulator::createArchitecture(string jsonFilename)
 
 	for (int i = 1; i < params.size(); i++)
 		architecture.addCache(params[i]);
-	
+
 	cacheParameters instr = cacheParameters(conf["caches"][0]["priority"], conf["caches"][0]["block_size"], conf["caches"][0]["name"], conf["caches"][0]["cache_size"], conf["caches"][0]["associativity"], conf["caches"][0]["miss_time"], conf["caches"][0]["hit_time"]);
 	architecture.useInstructionCache(instr);
 }
 
-*/
 void CacheSimulator::createArchitectureTest()
 {
 	cacheParameters d1 = cacheParameters(0, 64, "dL1", 1024, 2, 5, 1);

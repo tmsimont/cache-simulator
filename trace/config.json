@@ -1,0 +1,49 @@
+{
+  "caches": [
+    {
+      "name": "L1",
+      "priority": 0,
+      "type": "data",
+      "associativity": 1,
+      "block_size": 64,
+      "cache_size": 1024,
+      "miss_time": 5,
+      "hit_time": 1
+    },
+
+
+
+    {
+      "name": "L2",
+      "priority": 1,
+      "type": "data",
+      "associativity": 2,
+      "block_size": 64,
+      "cache_size": 524288,
+      "miss_time": 10,
+      "hit_time": 6
+    },
+    {
+      "name": "L3",
+      "priority": 2,
+      "type": "data",
+      "associativity": 4,
+      "block_size": 64,
+      "cache_size": 8388608,
+      "miss_time": 11,
+      "hit_time": 15
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+
+
+
+  
