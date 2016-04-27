@@ -13,6 +13,7 @@ CacheTest::CacheTest()
 
 
 void CacheTest::testAddressing() {
+	/*
 	cacheParameters p = cacheParameters(0, 64, "L1", 8 * 512, 1, 5, 1);
 	cacheArchitecture a = cacheArchitecture(p);
 
@@ -57,6 +58,7 @@ void CacheTest::testAddressing() {
 	cout << testingCache.getTag(testAddress) << endl;
 
 	while (true);
+	*/
 
 }
 

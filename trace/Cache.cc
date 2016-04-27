@@ -31,17 +31,17 @@ cache::cache(cacheParameters para)
 {
 	this->params = para;
 	
-	numbBlocks = params.getSize() / params.getBlockSize();
-	numbSets = numbBlocks / params.getAssociativity();
+	numbBlocks = params.size / params.blockSize;
+	numbSets = numbBlocks / params.associativity;
 
 	indexSize = log2(numbSets);
-	offsetSize = log2(params.getBlockSize());
+	offsetSize = log2(params.blockSize);
 	tagSize = (ADDRESS_SIZE - indexSize - offsetSize);
 
 	sets.resize(numbSets);
 	for (int i = 0; i < numbSets; ++i)
 	{
-		sets[i] = cacheSet(params.getAssociativity(), params.getBlockSize());
+		sets[i] = cacheSet(params.associativity, params.blockSize);
 	}
 }
 

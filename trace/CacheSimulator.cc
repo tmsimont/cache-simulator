@@ -64,10 +64,17 @@ void CacheSimulator::createArchitecture(string jsonFilename)
 					last_priority++;
 				}
 
-				params[i] = cacheParameters(conf["caches"][i]["priority"],
-					conf["caches"][i]["block_size"], conf["caches"][i]["name"],
-					conf["caches"][i]["cache_size"], conf["caches"][i]["associativity"],
-					conf["caches"][i]["miss_time"], conf["caches"][i]["hit_time"]);
+				params[i] = cacheParameters();
+				params[i].priority = conf["caches"][i]["priority"].get<int>();
+				params[i].blockSize = conf["caches"][i]["block_size"].get<int>();
+				params[i].name = conf["caches"][i]["name"].get<string>();
+				params[i].size = conf["caches"][i]["cache_size"].get<int>();
+				params[i].associativity = conf["caches"][i]["associativity"].get<int>();
+				params[i].missPenalty = conf["caches"][i]["miss_time"].get<int>();
+				params[i].hitTime = conf["caches"][i]["hit_time"].get<int>();
+
+				// todo: parse replacment policy ( 0 = random, 1 = LRU)
+				// todo: parse "use instruction cache" (boolean)
 
 			}
 		}
@@ -93,24 +100,8 @@ void CacheSimulator::createArchitecture(string jsonFilename)
 
 	// todo: check boolean in config: useInstructionCache?
 
-	cacheParameters instr = cacheParameters(
-		conf["caches"][0]["priority"],
-		conf["caches"][0]["block_size"],
-		conf["caches"][0]["name"],
-		conf["caches"][0]["cache_size"],
-		conf["caches"][0]["associativity"],
-		conf["caches"][0]["miss_time"],
-		conf["caches"][0]["hit_time"]);
+	cacheParameters instr = params[0]; // instruction cache is clone of L1
 	architecture.useInstructionCache(instr);
-}
-
-void CacheSimulator::createArchitectureTest()
-{
-	cacheParameters d1 = cacheParameters(0, 64, "dL1", 1024, 2, 5, 1);
-	cacheParameters d2 = cacheParameters(1, 64, "dL2", 8 * 64 * 1024, 4, 10, 6);
-	architecture = cacheArchitecture(d1);
-	architecture.addCache(d2);
-	architecture.useInstructionCache(d1);
 }
 
 void CacheSimulator::readTrace(std::istream& source)

@@ -26,9 +26,9 @@ public:
 	cache(cacheParameters para);
 
 	bool hasAddress(address add);
-	int getMissPenalty() { return params.getMissPenalty(); }
-	int getHitTime() { return params.getHitTime(); }
-	string getName() { return params.getName(); }
+	int getMissPenalty() { return params.missPenalty; }
+	int getHitTime() { return params.hitTime; }
+	string getName() { return params.name; }
 
 
 	unsigned int indexSize;

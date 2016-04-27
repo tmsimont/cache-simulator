@@ -8,7 +8,6 @@ class CacheSimulator
 public:
 	CacheSimulator();
 	void createArchitecture(string jsonFilename);
-	void createArchitectureTest();
 	void readTrace(std::istream& source);
 private:
 	cacheArchitecture architecture;
