@@ -40,8 +40,8 @@ public:
 private:
 	vector<cache*> caches;
 	vector<CacheUpdater*> cacheUpdaters;
-	cache instructionCache;
-	CacheUpdater instructionUpdater;
+	cache * instructionCache;
+	CacheUpdater * instructionUpdater;
 	bool hasInstructionCache;
 	int numbCaches;
 };

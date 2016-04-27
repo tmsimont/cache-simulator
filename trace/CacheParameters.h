@@ -18,7 +18,9 @@ class cacheParameters
 public:
 	static enum ReplacementPolicy {
 		RANDOM,
-		LRU
+		PSEUDOLRU,
+		LRU,
+		FIFO
 	};
 
 	int priority;

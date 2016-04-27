@@ -14,8 +14,13 @@ File: CacheArchitecture.cc
 #include "Cache.h"
 #include "Address.h"
 #include "CacheSearch.h"
+#include "CacheUpdaterRandom.h"
+#include "CacheUpdaterLRU.h"
+#include "CacheUpdaterFIFO.h"
+#include "CacheUpdaterPseudoLRU.h"
 
 using namespace std;
+CacheUpdater * getUpdaterForPolicy(cacheParameters::ReplacementPolicy policy, cache * targetCache);
 
 cacheArchitecture::cacheArchitecture()
 {
@@ -33,9 +38,8 @@ void cacheArchitecture::addCache(cacheParameters nextCache)
 	caches.resize(numbCaches + 1);
 	caches[numbCaches] = new cache(nextCache);
 
-	// todo: use different updaters based on update policy of cache
 	cacheUpdaters.resize(numbCaches + 1);
-	cacheUpdaters[numbCaches] = new CacheUpdater(caches[numbCaches]);
+	cacheUpdaters[numbCaches] = getUpdaterForPolicy(caches[numbCaches]->getReplacementPolicy(), caches[numbCaches]);
 
 	++numbCaches;
 }
@@ -52,7 +56,7 @@ CacheUpdater* cacheArchitecture::getCacheUpdater(int priority)
 cache * cacheArchitecture::getInstructionCache()
 {
 	if (hasInstructionCache)
-		return &instructionCache;
+		return instructionCache;
 	else
 		return caches[0];
 }
@@ -60,7 +64,7 @@ cache * cacheArchitecture::getInstructionCache()
 CacheUpdater * cacheArchitecture::getInstructionCacheUpdater()
 {
 	if (hasInstructionCache)
-		return &instructionUpdater;
+		return instructionUpdater;
 	else
 		return cacheUpdaters[0];
 }
@@ -72,8 +76,8 @@ int cacheArchitecture::getNumbCaches() {
 void cacheArchitecture::useInstructionCache(cacheParameters instrCacheParam)
 {
 	hasInstructionCache = true;
-	instructionCache = cache(instrCacheParam);
-	instructionUpdater = CacheUpdater(&instructionCache);
+	instructionCache = new cache(instrCacheParam);
+	instructionUpdater = getUpdaterForPolicy(instructionCache->getReplacementPolicy(), instructionCache);
 }
 
 cacheArchitecture::~cacheArchitecture()
@@ -86,4 +90,25 @@ cacheArchitecture::~cacheArchitecture()
 		delete (cacheUpdaters[i]);
 	}
 	cacheUpdaters.clear();
+	if (hasInstructionCache) {
+		delete instructionCache;
+		delete instructionUpdater;
+	}
+}
+
+CacheUpdater * getUpdaterForPolicy(cacheParameters::ReplacementPolicy policy, cache * targetCache) {
+	switch (policy) {
+	case cacheParameters::ReplacementPolicy::LRU:
+		return new CacheUpdaterLRU(targetCache);
+
+	case cacheParameters::ReplacementPolicy::PSEUDOLRU:
+		return new CacheUpdaterPseudoLRU(targetCache);
+
+	case cacheParameters::ReplacementPolicy::FIFO:
+		return new CacheUpdaterFIFO(targetCache);
+
+	case cacheParameters::ReplacementPolicy::RANDOM:
+	default:
+		return new CacheUpdaterRandom(targetCache);
+	}
 }

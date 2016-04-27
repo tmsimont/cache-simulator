@@ -8,9 +8,10 @@ class CacheUpdater {
 public:
 	CacheUpdater();
 	CacheUpdater(cache* targetCache);
-	std::vector<CacheEvent> writeToCache(address * addr);
+	virtual std::vector<CacheEvent> writeToCache(address * addr) = 0;
+	void hitCache(address * addr);
 	cache * getCache();
-private:
+protected:
 	cache* targetCache;
 	std::vector<CacheEvent> events;
 };
