@@ -93,7 +93,7 @@ void CacheTest::testAddressing() {
 	cacheParameters p = cacheParameters(0, 64, "L1", 8 * 512, 1, 5, 1);
 	cacheArchitecture a = cacheArchitecture(p);
 
-	cache testingCache = a.getCache(0);
+	cache testingCache = *(a.getCache(0));
 
 	string addrChars = "10010100101101010011010101101011";
 	unsigned int addr = 0;
