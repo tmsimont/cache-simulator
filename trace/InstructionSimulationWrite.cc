@@ -1,4 +1,3 @@
-#pragma once
 #include "InstructionSimulationWrite.h"
 
 void InstructionSimulationWrite::hitCache(CacheUpdater * updater)

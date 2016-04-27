@@ -1,4 +1,3 @@
-#pragma once
 #include "CacheArchitecture.h"
 #include <iostream>
 #include <string>

@@ -1,4 +1,3 @@
-#pragma once
 #include "InstructionSimulation.h"
 #include <iostream>
 

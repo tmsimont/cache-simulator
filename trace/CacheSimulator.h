@@ -15,4 +15,4 @@ private:
 	cacheArchitecture * architecture;
 };
 
-#endif CACHESIMULATOR_H
+#endif // CACHESIMULATOR_H

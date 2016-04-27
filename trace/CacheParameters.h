@@ -16,7 +16,7 @@ using namespace std;
 class cacheParameters
 {
 public:
-	static enum ReplacementPolicy {
+	enum ReplacementPolicy {
 		RANDOM,
 		PSEUDOLRU,
 		LRU,

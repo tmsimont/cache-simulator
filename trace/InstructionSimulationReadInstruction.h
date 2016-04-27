@@ -2,9 +2,9 @@
 #define INSTRUCTIONSIMULATIONREADINSTRUCTION_H
 #include "InstructionSimulation.h"
 class InstructionSimulationReadInstruction : public InstructionSimulation {
-	void InstructionSimulationReadInstruction::hitCache(CacheUpdater * updater);
-	void InstructionSimulationReadInstruction::missCache(CacheUpdater * updater);
-	void InstructionSimulationReadInstruction::writeForward(CacheUpdater * updater);
+	void hitCache(CacheUpdater * updater);
+	void missCache(CacheUpdater * updater);
+	void writeForward(CacheUpdater * updater);
 
 	/**
 	 * Instruction Reads will return the instruction cache updater when 
