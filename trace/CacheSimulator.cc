@@ -119,7 +119,12 @@ void CacheSimulator::readTrace(std::istream& source)
 
 	for (string line; getline(source, line);)
 	{
-		scanf_s("%u %x", &action, &addr);
+		// getline followed by scanf causes only every other line in input to be read
+		//scanf_s("%u %x", &action, &addr);
+
+		sscanf(line.c_str(), "%u %x", &action, &addr);
+
+
 
 		InstructionSimulation *inst;
 		address *addrInstance = new address(addr);
