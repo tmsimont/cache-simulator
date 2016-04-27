@@ -14,7 +14,6 @@ File: CacheBlock.cc
 #include "CacheBlock.h"
 #include "Address.h"
 
-//#define DEBUG 1
 
 using namespace std;
 
@@ -34,9 +33,6 @@ cacheBlock::cacheBlock(int bS)
 
 bool cacheBlock::inBlock(address ad)
 {
-	#ifdef DEBUG
-		cout << "InBlock, myaddr: " << addr.getAddr() << ", check addr: " << ad.getAddr() << ", valid: " << (validBit == true ? "1" : "0") << " in " << this << endl;
-	#endif
 	if (addr == ad && validBit)
 		return true;
 	return false;
@@ -44,9 +40,6 @@ bool cacheBlock::inBlock(address ad)
 
 void cacheBlock::write(address ad)
 {
-	#ifdef DEBUG
-		cout << "setting valid bit and addr to " << ad.getAddr() << " in " << this << endl;
-	#endif
 	this->validBit = true;
 	this->addr = ad;
 }

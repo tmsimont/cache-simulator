@@ -3,7 +3,7 @@
 #include "InstructionSimulationRead.h"
 #include "InstructionSimulationWrite.h"
 #include "InstructionSimulationReadInstruction.h"
-#include "json.hpp"
+//#include "json.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -12,12 +12,13 @@
 #define WRITE 1
 #define INSTRUCTION 2
 
-using json = nlohmann::json;
+//using json = nlohmann::json;
 
 CacheSimulator::CacheSimulator()
 {
 }
 
+/*
 void CacheSimulator::createArchitecture(string jsonFilename)
 {
 	// todo: read file at jsonFilename location and parse architecture
@@ -79,6 +80,16 @@ void CacheSimulator::createArchitecture(string jsonFilename)
 	architecture.useInstructionCache(instr);
 }
 
+*/
+void CacheSimulator::createArchitectureTest()
+{
+	cacheParameters d1 = cacheParameters(0, 64, "dL1", 1024, 2, 5, 1);
+	cacheParameters d2 = cacheParameters(1, 64, "dL2", 8 * 64 * 1024, 4, 10, 6);
+	architecture = cacheArchitecture(d1);
+	architecture.addCache(d2);
+	architecture.useInstructionCache(d1);
+}
+
 void CacheSimulator::readTrace(std::istream& source)
 {
 	unsigned int action;
@@ -89,19 +100,30 @@ void CacheSimulator::readTrace(std::istream& source)
 	{
 		scanf_s("%u %x", &action, &addr);
 
-
+		InstructionSimulation *inst;
+		address *addrInstance = new address(addr);
 		if (action == READ)
 		{
-			time += architecture.cacheRead(address(addr));
+			inst = new InstructionSimulationRead();
 		}
 		else if (action == WRITE)
 		{
-			time += architecture.cacheWrite(address(addr));
+			inst = new InstructionSimulationWrite();
 		}
 		else if (action == INSTRUCTION)
 		{
-			time += architecture.instructionRead(address(addr));
+			inst = new InstructionSimulationReadInstruction();
 		}
+		else {
+			delete addrInstance;
+			continue;
+		}
+
+		inst->simulate(&architecture, addrInstance);
+
+		// trash memory we're done
+		delete inst;
+		delete addrInstance;
 	}
 
 }

@@ -25,9 +25,6 @@ public:
 	cacheArchitecture();
 	cacheArchitecture(cacheParameters firstCache);
 	void addCache(cacheParameters nextCache);
-	int cacheRead(address add);						//returns time needed to read
-	int cacheWrite(address add);					//returns time needed to write
-	int instructionRead(address add);
 	int getNumbCaches();
 
 	cache* getCache(int priority);
@@ -35,7 +32,7 @@ public:
 
 	// pass a cache and the architecture will use this as instruction cache
 	// todo: extend cacheArchitecture to cacheArchitecture instruction?
-	void useInstructionCache(cache instrCache);
+	void useInstructionCache(cacheParameters instrCacheParam);
 
 	~cacheArchitecture();
 private:

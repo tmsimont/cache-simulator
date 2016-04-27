@@ -1,5 +1,6 @@
-#include "InstructionSimulation.h"
 #pragma once
+#include "InstructionSimulation.h"
+#include <iostream>
 
 vector<CacheEvent> InstructionSimulation::simulate(cacheArchitecture* arch, address* add)
 {
@@ -62,4 +63,12 @@ cache* InstructionSimulation::getCacheAtIndex(int i) {
 void InstructionSimulation::mainMemoryRead()
 {
 	time += 500; // todo: actual main read time
+}
+
+void InstructionSimulation::reportEvent(string e)
+{
+	std::cout << "event: " + e << ". during simulate of addr: " << add->getAddr() << std::endl;
+	// note variables encapsulated in InstructionSimulation instance:
+	// vector<CacheEvent> events
+	// todo: events.push(new CacheEvent)
 }

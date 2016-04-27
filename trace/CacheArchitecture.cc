@@ -19,12 +19,6 @@ File: CacheArchitecture.cc
 
 using namespace std;
 
-void eventCapture(string str) {
-#ifdef DEBUG
-	cout << str << endl;
-#endif
-}
-
 cacheArchitecture::cacheArchitecture()
 {
 	numbCaches = 0;
@@ -62,160 +56,10 @@ int cacheArchitecture::getNumbCaches() {
 	return numbCaches;
 }
 
-int cacheArchitecture::cacheRead(address add)						//returns time needed to read
-{
-	int time = 0, i = 0;
-	bool found = false;
-	CacheSearch finder = CacheSearch();
-	CacheUpdater updater = CacheUpdater();
-
-	while ((i < numbCaches) && (!found))
-	{
-		eventCapture("Looking in " + caches[i].getName() + " for ");// add.getAddr()
-		found = finder.cacheHasAddress(caches[i], add);
-		if (found)
-		{
-			eventCapture(caches[i].getName() + " hit for "); // add.getAddr()
-			time += caches[i].getHitTime();
-		}
-		else
-		{
-			eventCapture(caches[i].getName() + " miss for "); // add.getAddr();
-			time += caches[i].getMissPenalty();
-		}
-		++i;
-
-		if (found)
-			for (i = i - 2; i >= 0; i--)
-			{
-				eventCapture("Writing forward to " + caches[i].getName());
-				caches[i].write(add);
-			}
-
-	}
-
-	if (!found)
-	{
-		for (i = 0; i < numbCaches; i++)
-		{
-			eventCapture("Writing to " + caches[i].getName());
-			caches[i].write(add);
-		}
-	}
-
-	return time;
-}
-
-int cacheArchitecture::cacheWrite(address add)						//returns time needed to write
-{
-	int time = 0, i = 0;
-	bool found = false;
-	CacheSearch finder = CacheSearch();
-
-	while ((i < numbCaches) && (!found))
-	{
-		eventCapture("Looking in " + caches[i].getName() + " for ");// add.getAddr()
-		found = finder.cacheHasAddress(caches[i], add);
-		if (found)
-		{
-			eventCapture(caches[i].getName() + " hit for "); // add.getAddr();
-			time += caches[i].getHitTime();
-
-		}
-		else
-		{
-			eventCapture(caches[i].getName() + " miss for ");// + add.getAddr());
-			time += caches[i].getMissPenalty();
-		}
-
-
-		++i;
-
-		if (found)
-			for (i = i - 2; i >= 0; i--)
-			{
-				eventCapture("Writing forward to " + caches[i].getName());
-				caches[i].write(add);
-			}
-
-	}
-
-	if (!found)
-	{
-		for (i = 0; i < numbCaches; i++)
-		{
-			eventCapture("Writing to " + caches[i].getName());
-			caches[i].write(add);
-		}
-	}
-
-	return time;
-}
-
-int cacheArchitecture::instructionRead(address add)
-{
-	// pass read to normal process if no instruction cache
-	if (!hasInstructionCache) {
-		return cacheRead(add);
-	}
-
-	// otherwise basically do the same thing... but treat caches[0] as instruction
-
-	int time = 0, i = 0;
-	bool found = false;
-	CacheSearch finder = CacheSearch();
-
-	while ((i < numbCaches) && (!found))
-	{
-		cache* lookingIn = &(caches[i]);
-		if (i == 0) {
-			lookingIn = &instructionCache;
-		}
-
-		eventCapture("Looking in " + lookingIn->getName() + " for ");// add.getAddr()
-		found = finder.cacheHasAddress(*lookingIn, add);
-		if (found)
-		{
-			eventCapture(lookingIn->getName() + " hit for "); // add.getAddr()
-			time += lookingIn->getHitTime();
-		}
-		else
-		{
-			eventCapture(lookingIn->getName() + " miss for "); // add.getAddr();
-			time += lookingIn->getMissPenalty();
-		}
-		++i;
-
-		if (found)
-			for (i = i - 2; i >= 0; i--)
-			{
-				eventCapture("Writing forward to " + lookingIn->getName());
-				lookingIn->write(add);
-			}
-
-	}
-
-	if (!found)
-	{
-		for (i = 0; i < numbCaches; i++)
-		{
-			cache* lookingIn = &(caches[i]);
-			if (i == 0) {
-				lookingIn = &instructionCache;
-			}
-			eventCapture("Writing to " + lookingIn->getName());
-			lookingIn->write(add);
-		}
-	}
-
-	return time;
-}
-
-
-void cacheArchitecture::useInstructionCache(cache instrCache)
+void cacheArchitecture::useInstructionCache(cacheParameters instrCacheParam)
 {
 	hasInstructionCache = true;
-	instructionCache = instrCache;
+	instructionCache = cache(instrCacheParam);
 }
 
 cacheArchitecture::~cacheArchitecture()

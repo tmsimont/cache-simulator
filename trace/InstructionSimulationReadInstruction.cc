@@ -3,14 +3,17 @@
 
 void InstructionSimulationReadInstruction::hitCache(cache * cache)
 {
+	reportEvent("instr hit");
 	time += cache->getHitTime();
 }
 void InstructionSimulationReadInstruction::missCache(cache * cache)
 {
+	reportEvent("instr miss");
 	time += cache->getMissPenalty();
 }
 void InstructionSimulationReadInstruction::writeForward(cache * cache)
 {
+	reportEvent("instr write forward");
 	cache->write(*add);
 }
 
