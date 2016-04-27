@@ -6,7 +6,7 @@ int main(int argc, char**argv)
 {
 
 	CacheSimulator sim = CacheSimulator();
-	sim.createArchitecture("filname.json");
+	sim.createArchitecture(argv[1]);
 	sim.readTrace(std::cin);
 
 
