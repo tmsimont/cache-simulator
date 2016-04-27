@@ -14,9 +14,17 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 
 	int i = 0;
 	bool found = false;
+
+	// CacheUpdater holds a reference to a unique target cache
+	// This is tightly coupled with a cache instance.
+	// This is used here to make passing arguments a little bit
+	// cleaner from simulation to instruction to extended instructions
 	CacheUpdater* updater;
 
-	// search L1 out to LN caches
+
+	// -----------------------------------------------------------------
+	// MAIN LOOP: search L1 out to LN caches
+	// -----------------------------------------------------------------
 	while ((i < arch->getNumbCaches()) && (!found))
 	{
 		// set this instruction instance's currentCache pointer
@@ -28,7 +36,13 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 
 		if (found)
 		{
-			hitCache(updater);
+
+			// --------------------------------------------------------
+			// L(i) CACHE HIT
+			// --------------------------------------------------------
+
+			// let extensible instruction instance handle hit with updater
+			hitCache(updater); // updater is tied to the cache being hit
 
 			// write forward from L(i) ... L1
 			for (int j = i - 1; j >= 0; --j)
@@ -36,17 +50,29 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 				previousCache = currentCache;
 				updater = getCacheUpdaterAtIndex(j);
 				currentCache = updater->getCache();
-				writeForward(updater);
+
+				// let extensible instruction instance handle write with updater
+				writeForward(updater); // updater is tied to the cache being written
 			}
 		}
 		else
 		{
-			missCache(updater);
+
+			// --------------------------------------------------------
+			// L(i) CACHE MISS
+			// --------------------------------------------------------
+
+			// let extensible instruction instance handle miss with updater
+			missCache(updater); // updater is tied to the cache being missed
 		}
 		++i;
 	}
 
+
+	// --------------------------------------------------------
+	// L1 to LN all CACHE MISS
 	// no caches have the address
+	// --------------------------------------------------------
 	if (!found)
 	{
 		mainMemoryRead();
@@ -55,13 +81,16 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 		// write forward from main memory to LN ... L1
 		for (int j = arch->getNumbCaches() - 1; j >= 0; --j)
 		{
+			// track the previousCache (for event recording) if previous is not main memory
 			if (j < arch->getNumbCaches() - 1) {
 				CacheUpdater * previousUpdater = getCacheUpdaterAtIndex(j + 1);
 				previousCache = previousUpdater->getCache();
 			}
 			updater = getCacheUpdaterAtIndex(j);
 			currentCache = updater->getCache();
-			writeForward(updater);
+
+			// let extensible instruction instance handle write with updater
+			writeForward(updater); // updater is tied to the cache being written
 		}
 	}
 
