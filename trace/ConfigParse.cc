@@ -134,7 +134,7 @@ ConfigParse::ConfigParse(string inputfile)
 			if (trim(splits[0]).compare("hitTime") == 0) {
 				parsedParms.hitTime = atoi(splits[1].c_str());
 			}
-			if (trim(splits[0]).compare("policy") == 0) {
+			if (trim(splits[0]).compare("replacementPolicy") == 0) {
 				if (trim(splits[1]).compare("PsuedoLRU")) {
 					parsedParms.replacementPolicy = cacheParameters::ReplacementPolicy::PSEUDOLRU;
 				}
@@ -161,7 +161,7 @@ void ConfigParse::printParams() {
 		cout << "  blockSize : " << params[i].blockSize << endl;
 		cout << "  missPenalty : " << params[i].missPenalty << endl;
 		cout << "  hitTime : " << params[i].hitTime << endl;
-		cout << "  policy : " << params[i].replacementPolicy << endl;
+		cout << "  replacementPolicy : " << params[i].replacementPolicy << endl;
 	}
 }
 

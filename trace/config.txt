@@ -6,7 +6,7 @@ caches
     blockSize : 64
     missPenalty: 5
     hitTime : 1
-    policy : PseudoLRU
+    replacementPolicy : PseudoLRU
 
   name: L2
     associativity: 4
@@ -14,7 +14,7 @@ caches
     blockSize : 64
     missPenalty: 10
     hitTime : 5
-    policy : PseudoLRU
+    replacementPolicy : PseudoLRU
 
   name: L3
     associativity: 8
@@ -22,5 +22,5 @@ caches
     blockSize : 64
     missPenalty: 21
     hitTime : 10
-    policy : PseudoLRU
+    replacementPolicy : PseudoLRU
 
