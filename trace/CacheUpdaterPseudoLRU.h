@@ -6,7 +6,7 @@
 class CacheUpdaterPseudoLRU : public CacheUpdater {
 public:
 	CacheUpdaterPseudoLRU(cache * target);
-	std::vector<CacheEvent> writeToCache(address * addr);
+	cacheBlock * getBlockForReplacement(address * addr, cacheSet* set);
 	void hitCache(address * addr, int setIdx, int blockIdx);
 
 	// pseudo-lru special members

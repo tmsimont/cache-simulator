@@ -13,15 +13,9 @@ CacheUpdaterPseudoLRU::CacheUpdaterPseudoLRU(cache * target) : CacheUpdater(targ
 	}
 }
 
-std::vector<CacheEvent> CacheUpdaterPseudoLRU::writeToCache(address * addr)
+cacheBlock * CacheUpdaterPseudoLRU::getBlockForReplacement(address * addr, cacheSet * set)
 {
-	events = std::vector<CacheEvent>();
-
-	// get set from cache based on address (cache will use index)
 	int targetIdx = targetCache->getIndex(*addr);
-	cacheSet *targetSet = targetCache->getCacheSet(*addr);
-
-	// determine target block
 	cacheBlock * targetBlock;
 
 	// find the first not-recently used
@@ -33,15 +27,9 @@ std::vector<CacheEvent> CacheUpdaterPseudoLRU::writeToCache(address * addr)
 	}
 	--i;
 	// we're assuming i < nWayBits.size() because nWayBits is maintained at each hit...
-	targetBlock = &(targetSet->blocks[i]);
+	targetBlock = &(set->blocks[i]);
 	recordUse(targetIdx, i);
-
-	// adjust the block tag and valid bit
-	address tag = address(targetCache->getTag(addr->getAddr()));
-	targetBlock->validBit = true;
-	targetBlock->addr = tag;
-
-	return events;
+	return targetBlock;
 }
 
 void CacheUpdaterPseudoLRU::hitCache(address * addr, int setIdx, int blockIdx)

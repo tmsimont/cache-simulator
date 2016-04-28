@@ -11,11 +11,9 @@ int main(int argc, char**argv)
 		return -1;
 	}
 
-	CacheSimulator *sim = new CacheSimulator();
-	sim->createArchitecture(argv[1]);
-	sim->readTrace(std::cin);
-
-  delete sim;
+	CacheSimulator sim = CacheSimulator();
+	sim.createArchitecture(argv[1]);
+	sim.readTrace(std::cin);
 
 	return 0;
 }

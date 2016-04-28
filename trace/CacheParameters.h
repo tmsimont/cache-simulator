@@ -23,6 +23,11 @@ public:
 		FIFO
 	};
 
+	enum writePolicy {
+		THROUGH,
+		BACK
+	};
+
 	int priority;
 	int blockSize;
 	string name;

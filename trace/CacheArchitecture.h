@@ -36,6 +36,8 @@ public:
 	// todo: extend cacheArchitecture to cacheArchitecture instruction?
 	void useInstructionCache(cacheParameters instrCacheParam);
 
+	cacheParameters::writePolicy writePolicy;
+
 	~cacheArchitecture();
 private:
 	vector<cache*> caches;

@@ -19,6 +19,29 @@ CacheUpdater::CacheUpdater()
 {
 }
 
+
+std::vector<CacheEvent> CacheUpdater::writeToCache(cacheParameters::writePolicy writePolicy, address * addr)
+{
+	events = std::vector<CacheEvent>();
+
+	// get set from cache based on address (cache will use index)
+	cacheSet *targetSet = targetCache->getCacheSet(*addr);
+
+	// determine target block
+	cacheBlock * targetBlock = getBlockForReplacement(addr, targetSet);
+
+	if (writePolicy == cacheParameters::BACK) {
+		// todo: write back before replace
+	}
+
+	// adjust the block tag and valid bit
+	address tag = address(targetCache->getTag(addr->getAddr()));
+	targetBlock->validBit = true;
+	targetBlock->addr = tag;
+
+	return events;
+}
+
 CacheUpdater::CacheUpdater(cache * targetCache)
 {
 	this->targetCache = targetCache;
