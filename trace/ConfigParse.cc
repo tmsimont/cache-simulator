@@ -51,8 +51,14 @@ ConfigParse::ConfigParse(string inputfile)
 {
 
 	ifstream confstream;
-	confstream.open(inputfile);
-
+	try {
+		confstream.open(inputfile);
+	}
+	catch (exception& e)
+	{
+		std::cout << "usage: [executable] [configuration file] < [input file] > [output file]" << endl;
+		return;
+	}
 	_hasInstructionCache = false; // default
 
 	bool parsingCaches = false;

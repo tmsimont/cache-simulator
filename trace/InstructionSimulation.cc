@@ -92,7 +92,10 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 
 			// let extensible instruction instance handle write with updater
 			writeForward(updater); // updater is tied to the cache being written
-			checkForWriteBack(updater);
+			
+
+			//TODO in future: fully implement write-back in addition to write-through
+			//checkForWriteBack(updater);
 		}
 	}
 

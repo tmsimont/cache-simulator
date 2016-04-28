@@ -7,15 +7,17 @@ void InstructionSimulationWrite::hitCache(CacheUpdater * updater)
 	time += updater->getCache()->getHitTime();
 
 	// todo: check arch write policy and 
-	if (arch->writePolicy == cacheParameters::writePolicy::BACK) {
+	if (arch->writePolicy == cacheParameters::writePolicy::BACK && false) {
 		// todo: set invalid bit
 		// can use finder->blockWhereFound() and finder->setWhereFound()
 	}
-	else if (arch->writePolicy == cacheParameters::writePolicy::THROUGH) {
+	else if (arch->writePolicy == cacheParameters::writePolicy::THROUGH || true) { // todo: check write policy, write now unconditional write-through
 		// write through to other caches L(i) to LN to Main Memory
 		for (int j = updater->getCache()->getPriority() + 1; j < arch->getNumbCaches(); ++j) {
 			CacheUpdater *otherCacheUpdater = getCacheUpdaterAtIndex(j);
-			// todo: use CacheUpdater on other cache to write through
+			reportEvent("write through to " + otherCacheUpdater->getCache()->getName());
+			otherCacheUpdater->writeToCache(this->add);
+			
 		}
 	}
 }
