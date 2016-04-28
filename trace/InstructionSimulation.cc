@@ -54,10 +54,6 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 				// let extensible instruction instance handle write with updater
 				writeForward(updater); // updater is tied to the cache being written
 				checkForWriteBack(updater);
-
-				if (updater->evictedDirtyBlock()) {
-					mainMemoryRead();
-				}
 			}
 		}
 		else
