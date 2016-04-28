@@ -8,7 +8,7 @@ class CacheSimulator
 {
 public:
 	CacheSimulator();
-	void createArchitecture(string jsonFilename);
+	void createArchitecture(string inputfile);
 	void readTrace(std::istream& source);
 	~CacheSimulator();
 private:
