@@ -16,7 +16,7 @@ using namespace std;
 
 address::address()
 {
-
+  this->addr = 0;
 }
 
 address::address(unsigned int addr)

@@ -4,13 +4,12 @@ using std::vector;
 
 CacheUpdaterPseudoLRU::CacheUpdaterPseudoLRU(cache * target) : CacheUpdater(target)
 {
-	nWayBits = vector<vector<bool>>();
+	nWayBits.resize(target->numbSets);
 	for (int i = 0; i < target->numbSets; ++i) {
-		vector<bool> nway = vector<bool>();
+    nWayBits[i].resize(target->getAssociativity());
 		for (int j = 0; j < target->getAssociativity(); ++j) {
-			nway.push_back(0);
+			nWayBits[i][j] = 0;
 		}
-		nWayBits.push_back(nway);
 	}
 }
 
@@ -69,3 +68,4 @@ void CacheUpdaterPseudoLRU::recordUse(int setIdx, int blockIdx) {
 		nWayBits[setIdx][blockIdx] = 1;
 	}
 }
+
