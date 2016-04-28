@@ -20,7 +20,7 @@ CacheUpdater::CacheUpdater()
 }
 
 
-std::vector<CacheEvent> CacheUpdater::writeToCache(cacheParameters::writePolicy writePolicy, address * addr)
+std::vector<CacheEvent> CacheUpdater::writeToCache(InstructionSimulation * sim, address * addr)
 {
 	events = std::vector<CacheEvent>();
 
@@ -30,8 +30,21 @@ std::vector<CacheEvent> CacheUpdater::writeToCache(cacheParameters::writePolicy 
 	// determine target block
 	cacheBlock * targetBlock = getBlockForReplacement(addr, targetSet);
 
-	if (writePolicy == cacheParameters::writePolicy::BACK) {
-		// todo: write back before replace
+	// todo: write back before replace
+	if (sim->arch->writePolicy == cacheParameters::writePolicy::BACK) {
+		// get next cache index
+		int j = getCache()->getPriority() + 1; 
+		// if next cache is not main memory...
+		if (j < sim->arch->getNumbCaches()) {
+			CacheUpdater *otherCacheUpdater = sim->getCacheUpdaterAtIndex(j);
+			// todo: use CacheUpdater on other cache to write from THIS CACHE -> L(this + 1)
+			// that updater does the same thing again, so all caches L(this) to main memory
+			// are updated without a loop (chain of functions instead)
+		}
+		else {
+			// main memory update
+			sim->mainMemoryRead();
+		}
 	}
 
 	// adjust the block tag and valid bit

@@ -28,6 +28,7 @@ using std::vector;
  */
 class InstructionSimulation {
 public:
+	friend class CacheUpdater;
 	virtual void hitCache(CacheUpdater * updater) = 0;
 	virtual void missCache(CacheUpdater * updater) = 0;
 	virtual void writeForward(CacheUpdater * updater) = 0;

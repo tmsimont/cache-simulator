@@ -1,7 +1,7 @@
 #ifndef CACHEUPDATER_H
 #define CACHEUPDATER_H
 #include "CacheEvent.h"
-#include "CacheParameters.h"
+#include "InstructionSimulation.h"
 #include "Cache.h"
 #include <vector>
 
@@ -9,7 +9,7 @@ class CacheUpdater {
 public:
 	CacheUpdater();
 	CacheUpdater(cache* targetCache);
-	std::vector<CacheEvent> writeToCache(cacheParameters::writePolicy writePolicy, address * addr);
+	std::vector<CacheEvent> writeToCache(InstructionSimulation * sim, address * addr);
 	virtual cacheBlock * getBlockForReplacement(address * addr, cacheSet* set) = 0;
 	void hitCache(address * addr, int setIdx, int blockIdx);
 	cache * getCache();
