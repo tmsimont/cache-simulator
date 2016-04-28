@@ -1,0 +1,26 @@
+instructionCache : yes
+caches
+  name: L1
+    associativity: 1
+    size : 1024
+    blockSize : 64
+    missPenalty: 5
+    hitTime : 1
+    policy : PseudoLRU
+
+  name: L2
+    associativity: 4
+    size : 524288
+    blockSize : 64
+    missPenalty: 10
+    hitTime : 5
+    policy : PseudoLRU
+
+  name: L3
+    associativity: 8
+    size : 8388608
+    blockSize : 64
+    missPenalty: 21
+    hitTime : 10
+    policy : PseudoLRU
+
