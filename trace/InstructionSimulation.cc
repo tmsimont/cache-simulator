@@ -53,6 +53,11 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 
 				// let extensible instruction instance handle write with updater
 				writeForward(updater); // updater is tied to the cache being written
+				checkForWriteBack(updater);
+
+				if (updater->evictedDirtyBlock()) {
+					mainMemoryRead();
+				}
 			}
 		}
 		else
@@ -91,10 +96,25 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 
 			// let extensible instruction instance handle write with updater
 			writeForward(updater); // updater is tied to the cache being written
+			checkForWriteBack(updater);
 		}
 	}
 
 	return events;
+}
+
+void InstructionSimulation::checkForWriteBack(CacheUpdater * updater)
+{
+	if (arch->writePolicy == cacheParameters::writePolicy::BACK && updater->evictedDirtyBlock()) {
+		// write through to other caches L(i) to LN to Main Memory
+		for (int j = updater->getCache()->getPriority() + 1; j < arch->getNumbCaches(); ++j) {
+			CacheUpdater *otherCacheUpdater = getCacheUpdaterAtIndex(j);
+			// todo: use CacheUpdater on other cache to write through
+		}
+
+		// write to main memory
+		mainMemoryRead();
+	}
 }
 
 int InstructionSimulation::getTime()

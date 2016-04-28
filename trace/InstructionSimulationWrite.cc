@@ -31,6 +31,6 @@ void InstructionSimulationWrite::writeForward(CacheUpdater * updater)
 	// todo: there is a vector of events passed back from write to cache.. 
 	// append events to this->events
 	// todo: get time of write
-	updater->writeToCache(arch->writePolicy, add);
+	updater->writeToCache(add);
 }
 

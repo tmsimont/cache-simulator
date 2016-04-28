@@ -36,6 +36,7 @@ public:
 	void mainMemoryRead();
 	void reportEvent(std::string e);
 	vector<CacheEvent> simulate(CacheSearch * finder, cacheArchitecture* arch, address* add);
+	void checkForWriteBack(CacheUpdater * updater);
 
 	int getTime();
 protected:
