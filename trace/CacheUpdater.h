@@ -11,6 +11,8 @@ public:
 	virtual std::vector<CacheEvent> writeToCache(address * addr) = 0;
 	void hitCache(address * addr, int setIdx, int blockIdx);
 	cache * getCache();
+	// virtual destructor http://stackoverflow.com/questions/461203/when-to-use-virtual-destructors
+	virtual ~CacheUpdater();
 protected:
 	cache* targetCache;
 	std::vector<CacheEvent> events;

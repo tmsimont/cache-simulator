@@ -11,6 +11,10 @@ cache * CacheUpdater::getCache()
 	return targetCache;
 }
 
+CacheUpdater::~CacheUpdater()
+{
+}
+
 CacheUpdater::CacheUpdater()
 {
 }

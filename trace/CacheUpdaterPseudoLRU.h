@@ -12,6 +12,7 @@ public:
 	// pseudo-lru special members
 	vector<vector<bool>> nWayBits;
 	void recordUse(int setIdx, int blockIdx);
+	~CacheUpdaterPseudoLRU();
 
 };
 #endif // CACHEUPDATERPSEUDOLRU_H

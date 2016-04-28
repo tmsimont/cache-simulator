@@ -20,3 +20,7 @@ std::vector<CacheEvent> CacheUpdaterFIFO::writeToCache(address * addr)
 
 	return events;
 }
+
+CacheUpdaterFIFO::~CacheUpdaterFIFO()
+{
+}

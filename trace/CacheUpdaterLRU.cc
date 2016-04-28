@@ -24,3 +24,7 @@ std::vector<CacheEvent> CacheUpdaterLRU::writeToCache(address * addr)
 void CacheUpdaterLRU::hitCache(address * addr, int setIdx, int blockIdx)
 {
 }
+
+CacheUpdaterLRU::~CacheUpdaterLRU()
+{
+}

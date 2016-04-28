@@ -69,3 +69,7 @@ void CacheUpdaterPseudoLRU::recordUse(int setIdx, int blockIdx) {
 	}
 }
 
+CacheUpdaterPseudoLRU::~CacheUpdaterPseudoLRU()
+{
+}
+

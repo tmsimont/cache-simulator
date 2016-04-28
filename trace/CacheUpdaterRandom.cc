@@ -23,3 +23,7 @@ std::vector<CacheEvent> CacheUpdaterRandom::writeToCache(address * addr)
 
 	return events;
 }
+
+CacheUpdaterRandom::~CacheUpdaterRandom()
+{
+}
