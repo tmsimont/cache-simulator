@@ -30,7 +30,7 @@ std::vector<CacheEvent> CacheUpdater::writeToCache(cacheParameters::writePolicy 
 	// determine target block
 	cacheBlock * targetBlock = getBlockForReplacement(addr, targetSet);
 
-	if (writePolicy == cacheParameters::BACK) {
+	if (writePolicy == cacheParameters::writePolicy::BACK) {
 		// todo: write back before replace
 	}
 

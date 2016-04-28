@@ -15,7 +15,7 @@ void InstructionSimulationWrite::hitCache(CacheUpdater * updater)
 		// write through to other caches L(i) to LN to Main Memory
 		for (int j = updater->getCache()->getPriority() + 1; j < arch->getNumbCaches(); ++j) {
 			CacheUpdater *otherCacheUpdater = getCacheUpdaterAtIndex(j);
-			// todo: use CacheUpdater on for
+			// todo: use CacheUpdater on other cache to write through
 		}
 	}
 }
@@ -27,6 +27,10 @@ void InstructionSimulationWrite::missCache(CacheUpdater * updater)
 void InstructionSimulationWrite::writeForward(CacheUpdater * updater)
 {
 	reportEvent("write write forward");
+
+	// todo: there is a vector of events passed back from write to cache.. 
+	// append events to this->events
+	// todo: get time of write
 	updater->writeToCache(arch->writePolicy, add);
 }
 

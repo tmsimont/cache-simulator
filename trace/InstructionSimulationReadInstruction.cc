@@ -14,6 +14,9 @@ void InstructionSimulationReadInstruction::missCache(CacheUpdater * updater)
 void InstructionSimulationReadInstruction::writeForward(CacheUpdater * updater)
 {
 	reportEvent("instr write forward");
+	// todo: there is a vector of events passed back from write to cache.. 
+	// append events to this->events
+	// todo: get time of write
 	updater->writeToCache(arch->writePolicy, add);
 }
 
