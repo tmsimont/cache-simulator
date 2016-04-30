@@ -85,20 +85,33 @@ ConfigParse::ConfigParse(string inputfile)
 		// todo: parse "use instruction cache" (boolean)
 		if (!parsingCaches && !parsingCache) {
 			vector<string> splits = split(line, ':');
-			if (trim(splits[0]).compare("instructionCache") != 0) {
+			if (trim(splits[0]).compare("instructionCache") == 0) {
+				if (trim(splits[1]).compare("yes") == 0) {
+					_hasInstructionCache = true;
+					continue;
+				}
+				if (trim(splits[1]).compare("true") == 0) {
+					_hasInstructionCache = true;
+					continue;
+				}
+			}
+		}
+
+		if (!parsingCaches && !parsingCache) {
+			vector<string> splits = split(line, ':');
+			if (trim(splits[0]).compare("verbose") != 0) {
 				continue;
 			}
 			else {
 				if (trim(splits[1]).compare("yes") == 0) {
-					_hasInstructionCache = true;
+					_verboseOutput = true;
 				}
 				if (trim(splits[1]).compare("true") == 0) {
-					_hasInstructionCache = true;
+					_verboseOutput = true;
 				}
 				continue;
 			}
 		}
-
 
 		// inner loop on group of caches
 		if (parsingCaches) {
@@ -190,4 +203,9 @@ void ConfigParse::printParams() {
 bool ConfigParse::hasInstructionCache()
 {
 	return _hasInstructionCache;
+}
+
+bool ConfigParse::verboseOutput()
+{
+	return _verboseOutput;
 }

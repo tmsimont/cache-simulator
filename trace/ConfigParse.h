@@ -13,8 +13,10 @@ public:
 	vector<cacheParameters> getParams();
 	void printParams();
 	bool hasInstructionCache();
+	bool verboseOutput();
 private:
 	vector<cacheParameters> params;
+	bool _verboseOutput = false;
 	bool _hasInstructionCache;
 };
 

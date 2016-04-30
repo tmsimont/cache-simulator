@@ -35,7 +35,7 @@ public:
 
 	void mainMemoryRead();
 	void reportEvent(std::string e);
-	vector<CacheEvent> simulate(CacheSearch * finder, cacheArchitecture* arch, address* add);
+	vector<CacheEvent> simulate(CacheSearch * finder, cacheArchitecture* arch, address* add, bool verboseOutput);
 	void checkForWriteBack(CacheUpdater * updater);
 
 	int getTime();
@@ -52,6 +52,8 @@ protected:
 	cache* currentCache;
 	cache* previousCache;
 	vector<CacheEvent> events;
+private:
+	bool verboseOutput = false;
 };
 
 #endif // INSTRUCTIONSIMULATION_H

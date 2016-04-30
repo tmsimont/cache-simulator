@@ -9,24 +9,15 @@ cacheStatistics::cacheStatistics(cacheArchitecture arch)
 	totalTime = 0;
 	numbOfCaches = arch.getNumbCaches();
 
-	cacheHits.assign(numbOfCaches, 0);
-	cacheMisses.assign(numbOfCaches, 0);
+	cacheReadHits.assign(numbOfCaches, 0);
+	cacheReadMisses.assign(numbOfCaches, 0);
+	cacheWriteHits.assign(numbOfCaches, 0);
+	cacheWriteMisses.assign(numbOfCaches, 0);
 
-}
-
-void cacheStatistics::incrementCacheHits(int priority)
-{
-	cacheHits[priority]++;
-}
-
-void cacheStatistics::incrementCacheMisses(int priority)
-{
-	cacheMisses[priority]++;
-}
-
-void cacheStatistics::incrementTime(int timeIncrease)
-{
-	totalTime += timeIncrease;
+	instructionCacheReadHits = 0;
+	instructionCacheReadMisses = 0;
+	instructionCacheWriteHits = 0;
+	instructionCacheWriteMisses = 0;
 }
 
 void cacheStatistics::display()
@@ -37,7 +28,12 @@ void cacheStatistics::display()
 
 	for (int i = 0; i < numbOfCaches; ++i)
 	{
-		std::cout << "Cache " << i << " hits: " << cacheHits[i] << ", misses: " << cacheMisses[i] << endl;
+		std::cout << "Cache " << i << " Read Hits: " << cacheReadHits[i] << ", Read Misses: " << cacheReadMisses[i] << endl;
+		std::cout << "       Write Hits: " << cacheWriteHits[i] << ", Write Misses: " << cacheWriteMisses[i] << endl;
 	}
+
+	std::cout << "Instruction Cache Read Hits: " << instructionCacheReadHits << ", Read Misses: " << instructionCacheReadMisses << endl;
+	std::cout << "                  Write Hits: " << instructionCacheWriteHits << ", Write Misses: " << instructionCacheWriteMisses << endl;
+
 	std::cout << "-----------------------------------------------\n";
 }

@@ -13,6 +13,7 @@ public:
 	~CacheSimulator();
 private:
 	cacheArchitecture * architecture;
+	bool verboseOutput = false;
 };
 
 #endif // CACHESIMULATOR_H

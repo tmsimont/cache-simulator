@@ -43,6 +43,11 @@ void CacheSimulator::createArchitecture(string inputfile)
 		architecture->useInstructionCache(instr);
 	}
 
+	if (parser.verboseOutput())
+	{
+		verboseOutput = true;
+	}
+
 }
 
 void CacheSimulator::readTrace(std::istream& source)
@@ -76,7 +81,7 @@ void CacheSimulator::readTrace(std::istream& source)
 			continue;
 		}
 
-		inst->simulate(finder, architecture, addrInstance);
+		inst->simulate(finder, architecture, addrInstance, verboseOutput);
 		time += inst->getTime();
 
 		// trash memory we're done
