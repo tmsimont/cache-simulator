@@ -10,10 +10,10 @@ public:
 	void incrementCacheReadMisses(int priority){ cacheReadMisses[priority]++; }
 	void incrementCacheWriteHits(int priority){ cacheWriteHits[priority]++; }
 	void incrementCacheWriteMisses(int priority){ cacheWriteMisses[priority]++; }
-	void incrementInstCacheReadHits(int priority) { instructionCacheReadHits++; }
-	void incrementInstCacheReadMisses(int priority) { instructionCacheReadMisses++; }
-	void incrementInstCacheWriteHits(int priority) { instructionCacheWriteHits++; }
-	void incrementInstCacheWriteMisses(int priority) { instructionCacheWriteMisses++; }
+	void incrementInstCacheReadHits() { instructionCacheReadHits++; }
+	void incrementInstCacheReadMisses() { instructionCacheReadMisses++; }
+	void incrementInstCacheWriteHits() { instructionCacheWriteHits++; }
+	void incrementInstCacheWriteMisses() { instructionCacheWriteMisses++; }
 	void incrementTime(int timeIncrease){ totalTime += timeIncrease; }
 	
 	void display();

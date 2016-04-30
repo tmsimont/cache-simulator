@@ -1,3 +1,6 @@
+# This is a baseline cache configuration that
+# will be used for comparison against other caches
+
 instructionCache : yes
 caches
   name: L1

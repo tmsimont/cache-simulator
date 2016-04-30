@@ -3,7 +3,7 @@
 void InstructionSimulationWrite::hitCache(CacheUpdater * updater)
 {
 	reportEvent("write hit");
-	statistics->incrementCacheWriteHits(currentCache->getPriority());
+	statistics->incrementCacheWriteHits(updater->getCache()->getPriority());
 	updater->hitCache(add, finder->setWhereFound(), finder->blockWhereFound());
 	time += updater->getCache()->getHitTime();
 
@@ -18,14 +18,14 @@ void InstructionSimulationWrite::hitCache(CacheUpdater * updater)
 			CacheUpdater *otherCacheUpdater = getCacheUpdaterAtIndex(j);
 			reportEvent("write through to " + otherCacheUpdater->getCache()->getName());
 			otherCacheUpdater->writeToCache(this->add);
-			
+			statistics->incrementCacheWriteHits(otherCacheUpdater->getCache()->getPriority());
 		}
 	}
 }
 void InstructionSimulationWrite::missCache(CacheUpdater * updater)
 {
 	reportEvent("write miss");
-	statistics->incrementCacheWriteMisses(currentCache->getPriority());
+	statistics->incrementCacheWriteMisses(updater->getCache()->getPriority());
 	time += updater->getCache()->getMissPenalty();
 }
 void InstructionSimulationWrite::writeForward(CacheUpdater * updater)
@@ -36,5 +36,6 @@ void InstructionSimulationWrite::writeForward(CacheUpdater * updater)
 	// append events to this->events
 	// todo: get time of write
 	updater->writeToCache(add);
+	statistics->incrementCacheWriteHits(updater->getCache()->getPriority());
 }
 

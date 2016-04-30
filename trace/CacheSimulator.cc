@@ -6,6 +6,7 @@
 #include "CacheUpdater.h"
 #include "CacheSearch.h"
 #include "ConfigParse.h"
+#include "CacheStatistics.h"
 
 #include <iostream>
 #include <fstream>
@@ -48,6 +49,14 @@ void CacheSimulator::createArchitecture(string inputfile)
 		verboseOutput = true;
 	}
 
+	// delete any previously existing statistics object
+	if (statistics != nullptr) {
+		delete statistics;
+	}
+
+	// pass parsed params into simulator's cacheArchitecture instance
+	statistics = new cacheStatistics(architecture->getNumbCaches());
+
 }
 
 void CacheSimulator::readTrace(std::istream& source)
@@ -60,7 +69,7 @@ void CacheSimulator::readTrace(std::istream& source)
 
 	for (string line; getline(source, line);)
 	{
-		sscanf_s(line.c_str(), "%u %x", &action, &addr);
+		sscanf(line.c_str(), "%u %x", &action, &addr);
 
 		InstructionSimulation *inst;
 		address *addrInstance = new address(addr);
@@ -80,9 +89,10 @@ void CacheSimulator::readTrace(std::istream& source)
 			delete addrInstance;
 			continue;
 		}
-
+		inst->setStatistics(statistics);
 		inst->simulate(finder, architecture, addrInstance, verboseOutput);
 		time += inst->getTime();
+		statistics->incrementTime(inst->getTime());
 
 		// trash memory we're done
 		delete inst;
