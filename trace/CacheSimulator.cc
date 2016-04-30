@@ -70,7 +70,7 @@ void CacheSimulator::readTrace(std::istream& source)
 
 	for (string line; getline(source, line);)
 	{
-		sscanf_s(line.c_str(), "%u %x", &action, &addr);
+		sscanf(line.c_str(), "%u %x", &action, &addr);
 
 		InstructionSimulation *inst;
 		address *addrInstance = new address(addr);
