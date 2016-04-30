@@ -71,6 +71,12 @@ ConfigParse::ConfigParse(string inputfile)
 
 	for (string line; getline(confstream, line); )
 	{
+		// allow comment
+		if (trim(line)[0] == '#') continue;
+
+		// ignore empty lines (if not parsing cache)
+		if (!parsingCaches && !parsingCache && trim(line) == "") continue;
+
 		if (trim(line).compare("caches") == 0) {
 			parsingCaches = true;
 			continue;
