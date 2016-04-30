@@ -19,6 +19,7 @@ File: Cache.cc
 
 #define DEBUG 1
 #define ADDRESS_SIZE 32
+#define FULL_ASSOC 0
 
 using namespace std;
 
@@ -32,16 +33,19 @@ cache::cache(cacheParameters para)
 	this->params = para;
 	
 	numbBlocks = params.size / params.blockSize;
-	numbSets = numbBlocks / params.associativity;
+	numbSets = para.associativity != FULL_ASSOC ? numbBlocks / params.associativity : 1;
 
 	indexSize = log2(numbSets);
 	offsetSize = log2(params.blockSize);
 	tagSize = (ADDRESS_SIZE - indexSize - offsetSize);
 
 	sets.resize(numbSets);
-	for (int i = 0; i < numbSets; ++i)
+
+
+
+	for (int i = 0; i < numbSets || (i == 0 && numbSets == FULL_ASSOC); ++i)
 	{
-		sets[i] = cacheSet(params.associativity, params.blockSize);
+		sets[i] = cacheSet(params.associativity != FULL_ASSOC?params.associativity:numbBlocks, params.blockSize);
 	}
 }
 
@@ -68,6 +72,10 @@ unsigned int cache::getOffset(address ofAddress) {
 	// offset is offsetSize number of bits at end of address
 	unsigned int mask = (1 << (offsetSize + 1)) - 1;
 	return (ofAddress.getAddr() & mask);
+}
+
+int cache::getAssociativity() { 
+	return params.associativity == FULL_ASSOC? numbBlocks : params.associativity; 
 }
 
 cache::~cache()

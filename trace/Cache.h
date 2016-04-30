@@ -28,7 +28,6 @@ public:
 	bool hasAddress(address add);
 	int getMissPenalty() { return params.missPenalty; }
 	int getHitTime() { return params.hitTime; }
-	int getAssociativity() { return params.associativity; }
 	int getPriority() { return params.priority; }
 	string getName() { return params.name; }
 	cacheParameters::ReplacementPolicy getReplacementPolicy() { return params.replacementPolicy; }
@@ -39,6 +38,7 @@ public:
 	unsigned int getTag(address ofAddress);
 	unsigned int getIndex(address ofAddress);
 	unsigned int getOffset(address ofAddress);
+	int getAssociativity();
 	
 	cacheSet * getCacheSet(address forAddress);
 
