@@ -9,17 +9,31 @@
 class cacheStatistics {
 public:
 	cacheStatistics(cacheArchitecture arch);
-	void incrementCacheHits(int priority);
-	void incrementCacheMisses(int priority);
-	void incrementTime(int timeIncrease);
+	void incrementCacheReadHits(int priority){ cacheReadHits[priority]++; }
+	void incrementCacheReadMisses(int priority){ cacheReadMisses[priority]++; }
+	void incrementCacheWriteHits(int priority){ cacheWriteHits[priority]++; }
+	void incrementCacheWriteMisses(int priority){ cacheWriteMisses[priority]++; }
+	void incrementInstCacheReadHits(int priority) { instructionCacheReadHits++; }
+	void incrementInstCacheReadMisses(int priority) { instructionCacheReadMisses++; }
+	void incrementInstCacheWriteHits(int priority) { instructionCacheWriteHits++; }
+	void incrementInstCacheWriteMisses(int priority) { instructionCacheWriteMisses++; }
+	void incrementTime(int timeIncrease){ totalTime += timeIncrease; }
 	
 	void display();
 
 private:
 	int numbOfCaches;
 	int totalTime;
-	std::vector<int> cacheHits;
-	std::vector<int> cacheMisses;
+	std::vector<int> cacheReadHits;
+	std::vector<int> cacheReadMisses;
+	std::vector<int> cacheWriteHits;
+	std::vector<int> cacheWriteMisses;
+
+	int instructionCacheReadHits;
+	int instructionCacheReadMisses;
+	int instructionCacheWriteHits;
+	int instructionCacheWriteMisses;
+
 
 };
 
