@@ -41,3 +41,8 @@ void cacheStatistics::display()
 
 	std::cout << "-----------------------------------------------\n";
 }
+
+cacheStatistics::~cacheStatistics()
+{
+
+}
