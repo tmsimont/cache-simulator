@@ -4,13 +4,18 @@
 #include <iostream>
 #include <fstream>
 
-cacheStatistics::cacheStatistics(int numbOfCaches)
+cacheStatistics::cacheStatistics(int inNumbOfCaches)
 {
 	totalTime = 0;
+	numbOfCaches = inNumbOfCaches;
 
+	cacheReadHits = vector<int>();
 	cacheReadHits.assign(numbOfCaches, 0);
+	cacheReadMisses = vector<int>();
 	cacheReadMisses.assign(numbOfCaches, 0);
+	cacheWriteHits = vector<int>();
 	cacheWriteHits.assign(numbOfCaches, 0);
+	cacheWriteMisses = vector<int>();
 	cacheWriteMisses.assign(numbOfCaches, 0);
 
 	instructionCacheReadHits = 0;

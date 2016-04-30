@@ -19,6 +19,7 @@
 CacheSimulator::CacheSimulator()
 {
 	architecture = nullptr;
+	statistics = nullptr;
 }
 
 void CacheSimulator::createArchitecture(string inputfile)
