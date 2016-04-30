@@ -109,4 +109,7 @@ CacheSimulator::~CacheSimulator()
 	if (architecture != nullptr) {
 		delete architecture;
 	}
+	if (statistics != nullptr) {
+		delete statistics;
+	}
 }
