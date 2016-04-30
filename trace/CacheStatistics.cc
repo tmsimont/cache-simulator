@@ -4,10 +4,12 @@
 #include <iostream>
 #include <fstream>
 
-cacheStatistics::cacheStatistics(int numbOfCaches)
+cacheStatistics::cacheStatistics(int inNumbOfCaches)
 {
 	totalTime = 0;
+	numbOfCaches = inNumbOfCaches;
 
+<<<<<<< HEAD
 
 	cacheReadHits.resize(numbOfCaches);
 	cacheReadHits.assign(numbOfCaches, 0);
@@ -16,6 +18,15 @@ cacheStatistics::cacheStatistics(int numbOfCaches)
 	cacheWriteHits.resize(numbOfCaches);
 	cacheWriteHits.assign(numbOfCaches, 0);
 	cacheWriteMisses.resize(numbOfCaches);
+=======
+	cacheReadHits = vector<int>();
+	cacheReadHits.assign(numbOfCaches, 0);
+	cacheReadMisses = vector<int>();
+	cacheReadMisses.assign(numbOfCaches, 0);
+	cacheWriteHits = vector<int>();
+	cacheWriteHits.assign(numbOfCaches, 0);
+	cacheWriteMisses = vector<int>();
+>>>>>>> 7ab3eed46947acfd34e1b24adbcc702e7ad79bc5
 	cacheWriteMisses.assign(numbOfCaches, 0);
 
 	instructionCacheReadHits = 0;
