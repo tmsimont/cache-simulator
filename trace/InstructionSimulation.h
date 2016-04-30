@@ -5,6 +5,7 @@
 #include "CacheUpdater.h"
 #include "Cache.h"
 #include "Address.h"
+#include "CacheStatistics.h"
 #include <vector>
 #include <string>
 
@@ -37,10 +38,10 @@ public:
 	void reportEvent(std::string e);
 	vector<CacheEvent> simulate(CacheSearch * finder, cacheArchitecture* arch, address* add, bool verboseOutput);
 	void checkForWriteBack(CacheUpdater * updater);
-
+	void setStatistics(cacheStatistics * statistics) { this->statistics = statistics; }
 	int getTime();
 protected:
-
+	cacheStatistics * statistics;
 	CacheSearch * finder;
 
 	CacheUpdater* getCacheUpdaterAtIndex(int i);

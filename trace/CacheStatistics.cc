@@ -1,13 +1,12 @@
 #include "CacheParameters.h"
-#include "CacheArchitecture.h"
+#include "CacheStatistics.h"
 
 #include <iostream>
 #include <fstream>
 
-cacheStatistics::cacheStatistics(cacheArchitecture arch)
+cacheStatistics::cacheStatistics(int numbOfCaches)
 {
 	totalTime = 0;
-	numbOfCaches = arch.getNumbCaches();
 
 	cacheReadHits.assign(numbOfCaches, 0);
 	cacheReadMisses.assign(numbOfCaches, 0);

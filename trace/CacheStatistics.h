@@ -1,14 +1,11 @@
 #ifndef CACHESTATISTICS_H
 #define CACHESTATISTICS_H
 
-//#include "CacheParameters.h"
-#include "CacheArchitecture.h""
-
 #include <vector>
 
 class cacheStatistics {
 public:
-	cacheStatistics(cacheArchitecture arch);
+	cacheStatistics(int numbOfCaches);
 	void incrementCacheReadHits(int priority){ cacheReadHits[priority]++; }
 	void incrementCacheReadMisses(int priority){ cacheReadMisses[priority]++; }
 	void incrementCacheWriteHits(int priority){ cacheWriteHits[priority]++; }
