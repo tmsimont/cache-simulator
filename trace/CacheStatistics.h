@@ -6,6 +6,7 @@
 class cacheStatistics {
 public:
 	cacheStatistics(int numbOfCaches);
+	~cacheStatistics();
 	void incrementCacheReadHits(int priority){ cacheReadHits[priority]++; }
 	void incrementCacheReadMisses(int priority){ cacheReadMisses[priority]++; }
 	void incrementCacheWriteHits(int priority){ cacheWriteHits[priority]++; }

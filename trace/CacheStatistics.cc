@@ -8,9 +8,14 @@ cacheStatistics::cacheStatistics(int numbOfCaches)
 {
 	totalTime = 0;
 
+
+	cacheReadHits.resize(numbOfCaches);
 	cacheReadHits.assign(numbOfCaches, 0);
+	cacheReadMisses.resize(numbOfCaches);
 	cacheReadMisses.assign(numbOfCaches, 0);
+	cacheWriteHits.resize(numbOfCaches);
 	cacheWriteHits.assign(numbOfCaches, 0);
+	cacheWriteMisses.resize(numbOfCaches);
 	cacheWriteMisses.assign(numbOfCaches, 0);
 
 	instructionCacheReadHits = 0;
@@ -35,4 +40,9 @@ void cacheStatistics::display()
 	std::cout << "                  Write Hits: " << instructionCacheWriteHits << ", Write Misses: " << instructionCacheWriteMisses << endl;
 
 	std::cout << "-----------------------------------------------\n";
+}
+
+cacheStatistics::~cacheStatistics()
+{
+
 }
