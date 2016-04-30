@@ -1,7 +1,7 @@
 #include "InstructionSimulation.h"
 #include <iostream>
 
-vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheArchitecture* arch, address* add)
+vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheArchitecture* arch, address* add, bool verboseOutput)
 {
 	this->finder = finder;
 	this->arch = arch;
@@ -10,6 +10,7 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 	this->currentCache = nullptr;
 	this->events = vector<CacheEvent>();
 	this->time = 0;
+	this->verboseOutput = verboseOutput;
 
 	int i = 0;
 	bool found = false;
@@ -133,7 +134,8 @@ void InstructionSimulation::mainMemoryRead()
 
 void InstructionSimulation::reportEvent(string e)
 {
-	std::cout << currentCache->getName() << " event: " + e << ". during simulate of addr: " << add->getAddr() << std::endl;
+	if(verboseOutput)
+		std::cout << currentCache->getName() << " event: " + e << ". during simulate of addr: " << add->getAddr() << std::endl;
 	// note variables encapsulated in InstructionSimulation instance (see InstructionSimulation.h)
 	// time
 	// previousCache (might be nullptr if coming form main memory)
