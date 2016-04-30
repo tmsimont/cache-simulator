@@ -104,6 +104,10 @@ void CacheSimulator::readTrace(std::istream& source)
 
 }
 
+void CacheSimulator::output() {
+	statistics->display();
+}
+
 CacheSimulator::~CacheSimulator()
 {
 	if (architecture != nullptr) {
