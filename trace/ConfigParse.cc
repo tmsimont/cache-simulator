@@ -148,6 +148,16 @@ ConfigParse::ConfigParse(string inputfile)
 					parsedParms.replacementPolicy = cacheParameters::ReplacementPolicy::RANDOM;
 				}
 			}
+			if (trim(splits[0]).compare("writePolicy") == 0) {
+				if (trim(splits[1]).compare("THROUGH")) {
+					parsedParms.writePolicy = cacheParameters::WritePolicy::THROUGH;
+				}
+				else {
+					parsedParms.writePolicy = cacheParameters::WritePolicy::BACK;
+				}
+				// TODO: support write back
+				parsedParms.writePolicy = cacheParameters::WritePolicy::THROUGH;
+			}
 		}
 	}
 

@@ -94,8 +94,7 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 			writeForward(updater); // updater is tied to the cache being written
 			
 
-			//TODO in future: fully implement write-back in addition to write-through
-			//checkForWriteBack(updater);
+			checkForWriteBack(updater);
 		}
 	}
 
@@ -104,7 +103,7 @@ vector<CacheEvent> InstructionSimulation::simulate(CacheSearch * finder, cacheAr
 
 void InstructionSimulation::checkForWriteBack(CacheUpdater * updater)
 {
-	if (arch->writePolicy == cacheParameters::writePolicy::BACK && updater->evictedDirtyBlock()) {
+	if (arch->writePolicy == cacheParameters::WritePolicy::BACK && updater->evictedDirtyBlock()) {
 		// write through to other caches L(i) to LN to Main Memory
 		for (int j = updater->getCache()->getPriority() + 1; j < arch->getNumbCaches(); ++j) {
 			CacheUpdater *otherCacheUpdater = getCacheUpdaterAtIndex(j);

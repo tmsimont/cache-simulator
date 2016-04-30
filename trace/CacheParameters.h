@@ -23,7 +23,7 @@ public:
 		FIFO
 	};
 
-	enum writePolicy {
+	enum WritePolicy {
 		THROUGH,
 		BACK
 	};
@@ -36,6 +36,7 @@ public:
 	//bool hasWriteBuffer;
 	//bool hasVictimBuffer;
 	ReplacementPolicy replacementPolicy;
+	WritePolicy writePolicy;
 	int missPenalty;
 	int hitTime;
 

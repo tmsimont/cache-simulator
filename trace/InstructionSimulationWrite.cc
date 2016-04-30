@@ -6,12 +6,12 @@ void InstructionSimulationWrite::hitCache(CacheUpdater * updater)
 	updater->hitCache(add, finder->setWhereFound(), finder->blockWhereFound());
 	time += updater->getCache()->getHitTime();
 
-	// todo: check arch write policy and 
-	if (arch->writePolicy == cacheParameters::writePolicy::BACK && false) {
+	if (arch->writePolicy == cacheParameters::WritePolicy::BACK) {
 		// todo: set invalid bit
+		//TODO in future: fully implement write-back in addition to write-through
 		// can use finder->blockWhereFound() and finder->setWhereFound()
 	}
-	else if (arch->writePolicy == cacheParameters::writePolicy::THROUGH || true) { // todo: check write policy, write now unconditional write-through
+	else if (arch->writePolicy == cacheParameters::WritePolicy::THROUGH) {
 		// write through to other caches L(i) to LN to Main Memory
 		for (int j = updater->getCache()->getPriority() + 1; j < arch->getNumbCaches(); ++j) {
 			CacheUpdater *otherCacheUpdater = getCacheUpdaterAtIndex(j);
