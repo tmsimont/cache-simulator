@@ -1,0 +1,28 @@
+1)   instruction cache 		   :  yes/no
+2)   number of caches			   :  1-3
+     (large L2 vs L3)
+3)   different block sizes   : 16 bytes to 64
+4)   different replacements  : 
+5)   associativity				   : 0, 1 and mixed
+  
+----------------------------------------
+
+1)   instruction cache:
+   	 independent of other tests
+    
+2)   number of caches:
+     2 caches with large L2
+  	 3 caches with smaller L2
+
+3)   block size:
+     3 different values independent of other tests
+		 
+4)   replacements:
+     try a mixture?
+		 
+5)   associativity:
+     all the same, L2 different... etc
+		 
+----------------------------------------
+     
+Permutations:
