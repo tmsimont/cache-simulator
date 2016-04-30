@@ -1,3 +1,4 @@
+# Test: number of caches
 # This is similar to c1 and c2 but uses
 # an L2 cache twice the size of c1 and c2 without
 # an L3 cache.

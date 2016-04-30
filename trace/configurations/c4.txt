@@ -1,14 +1,13 @@
-# Test: instruction cache
-# This is the same as c1 but it uses
-# no instruction cache, so instructions are 
-# read into L1
+# Test: Small block size
+# This is the same as the c1.txt baseline but
+# this uses a smaller block size
 
-instructionCache : no
+instructionCache : yes
 caches
   name: L1
     associativity: 1
     size : 1024
-    blockSize : 64
+    blockSize : 16
     missPenalty: 5
     hitTime : 1
     replacementPolicy : PseudoLRU
@@ -16,7 +15,7 @@ caches
   name: L2
     associativity: 4
     size : 524288
-    blockSize : 64
+    blockSize : 16
     missPenalty: 10
     hitTime : 5
     replacementPolicy : PseudoLRU
@@ -24,7 +23,7 @@ caches
   name: L3
     associativity: 8
     size : 8388608
-    blockSize : 64
+    blockSize : 16
     missPenalty: 21
     hitTime : 10
     replacementPolicy : PseudoLRU

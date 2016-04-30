@@ -1,12 +1,10 @@
-# Test: instruction cache
-# This is the same as c1 but it uses
-# no instruction cache, so instructions are 
-# read into L1
+# Test: All 8-way caches
+# Uses 100% direct mapped caches
 
-instructionCache : no
+instructionCache : yes
 caches
   name: L1
-    associativity: 1
+    associativity: 8
     size : 1024
     blockSize : 64
     missPenalty: 5
@@ -14,7 +12,7 @@ caches
     replacementPolicy : PseudoLRU
 
   name: L2
-    associativity: 4
+    associativity: 8
     size : 524288
     blockSize : 64
     missPenalty: 10

@@ -1,9 +1,8 @@
-# Test: instruction cache
-# This is the same as c1 but it uses
-# no instruction cache, so instructions are 
-# read into L1
+# Test: random replacement
+# Same as baseline c1.txt but this uses a random 
+# replacement policy instead of the pseudo LRU
 
-instructionCache : no
+instructionCache : yes
 caches
   name: L1
     associativity: 1
@@ -11,7 +10,7 @@ caches
     blockSize : 64
     missPenalty: 5
     hitTime : 1
-    replacementPolicy : PseudoLRU
+    replacementPolicy : Random
 
   name: L2
     associativity: 4
@@ -19,7 +18,7 @@ caches
     blockSize : 64
     missPenalty: 10
     hitTime : 5
-    replacementPolicy : PseudoLRU
+    replacementPolicy : Random
 
   name: L3
     associativity: 8
@@ -27,5 +26,5 @@ caches
     blockSize : 64
     missPenalty: 21
     hitTime : 10
-    replacementPolicy : PseudoLRU
+    replacementPolicy : Random
 
