@@ -44,7 +44,8 @@ protected:
 	cacheStatistics * statistics;
 	CacheSearch * finder;
 
-	CacheUpdater* getCacheUpdaterAtIndex(int i);
+	virtual CacheUpdater* getCacheUpdaterAtIndex(int i);
+
 
 	// reporting
 	cacheArchitecture* arch;

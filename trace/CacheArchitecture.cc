@@ -76,6 +76,7 @@ int cacheArchitecture::getNumbCaches() {
 void cacheArchitecture::useInstructionCache(cacheParameters instrCacheParam)
 {
 	hasInstructionCache = true;
+  instrCacheParam.name = "I";
 	instructionCache = new cache(instrCacheParam);
 	instructionUpdater = getUpdaterForPolicy(instructionCache->getReplacementPolicy(), instructionCache);
 }

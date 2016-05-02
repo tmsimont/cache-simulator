@@ -3,14 +3,14 @@
 void InstructionSimulationReadInstruction::hitCache(CacheUpdater * updater)
 {
 	reportEvent("instr hit");
-	statistics->incrementInstCacheReadHits();
+	statistics->incrementCacheReadHits(updater->getCache());
 	updater->hitCache(add, finder->setWhereFound(), finder->blockWhereFound());
 	time += updater->getCache()->getHitTime();
 }
 void InstructionSimulationReadInstruction::missCache(CacheUpdater * updater)
 {
 	reportEvent("instr miss");
-	statistics->incrementInstCacheReadMisses();
+	statistics->incrementCacheReadMisses(updater->getCache());
 	time += updater->getCache()->getMissPenalty();
 }
 void InstructionSimulationReadInstruction::writeForward(CacheUpdater * updater)

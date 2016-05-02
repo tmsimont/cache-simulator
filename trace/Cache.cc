@@ -41,12 +41,11 @@ cache::cache(cacheParameters para)
 
 	sets.resize(numbSets);
 
-
-
 	for (int i = 0; i < numbSets || (i == 0 && numbSets == FULL_ASSOC); ++i)
 	{
 		sets[i] = cacheSet(params.associativity != FULL_ASSOC?params.associativity:numbBlocks, params.blockSize);
 	}
+
 }
 
 bool cache::hasAddress(address add) {
