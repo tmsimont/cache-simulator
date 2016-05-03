@@ -1,40 +1,45 @@
 ## Trace
 
-This folder will contain all of the files necessary for working with the actual simulation side, which is going to be C++ source files?
+This folder contain all of the files necessary for working with the actual simulation layer.
 
 Please see the [UML](https://github.com/tmsimont/cache-simulator/tree/master/uml)
 
-### Major classes
+### Compililing
 
-* Trace generation
-* Trace simulation
-    * Trace parsing
-    * read parameters
-    * apply metrics for trace events
-    * record trace events on a timeline
+Tested on GCC 4.8.1:
+```
+g++ -std=c++11 -o trace *.cc *.cpp
+```
+
+This should also compile on Windows
+
+### Running
+
+You'll need some trace files:
+```
+wget https://www.cs.utexas.edu/users/fussell/courses/cs352.fall98/Homework/cc1.din.Z
+wget https://www.cs.utexas.edu/users/fussell/courses/cs352.fall98/Homework/spice.din.Z
+wget https://www.cs.utexas.edu/users/fussell/courses/cs352.fall98/Homework/tex.din.Z
+```
+
+Unzip these files by running the following command:
+
+```
+gunzip *.din.Z
+```
 
 
-### Timeline events for animation
+#### Arguments
+```
+[executable] [configuration] < [trace file]
+```
 
-* New instruction
-* Search L1
-* Find in L1
-* Miss in L1
-* Write in L1
-* Execute write policy from L1 -> L2
-* Cache coherence?
-* Search L2
-* Find in L2
-* Miss in L2
-* Write in L2
-* Execute write policy from L2 -> main memory
-* Update victim buffer (include source of data)
-* Update write buffer (include source of data)
+Optionally you can redirect the output:
+```
+[executable] [configuration] < [trace file] > [ouput file]
+```
 
-### Timeline data
-* Event
-* Parameters for event
-* Time at which event occured
-* Time since last event
+The configuration should be in the format of the c1.txt file in the `/configurations/` directory.
+
 
 

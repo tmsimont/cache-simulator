@@ -1,13 +1,10 @@
 # CSCI 5593 Cache Simulator
 
-The project is split into two major components:
+The project is split into 4 major components:
 
+ * Trace Generation
  * Animation
  * Trace
+ * UML
 
-The animation is a JavaScript/HTML layer that animates output from the trace-driven cache simulator.
-
-The trace-driven cache simulator is a simple simulator that accepts various cache parameters and simulates a cache. The output includes "scripts" that the animation layer can parse and read to generate a visual representation of the simulation.
-
-
-
+Each subfolder in this repository contains its own README with details related to its respective task.
