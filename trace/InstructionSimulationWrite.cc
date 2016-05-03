@@ -18,7 +18,8 @@ void InstructionSimulationWrite::hitCache(CacheUpdater * updater)
 			CacheUpdater *otherCacheUpdater = getCacheUpdaterAtIndex(j);
 			reportEvent("write through to " + otherCacheUpdater->getCache()->getName());
 			otherCacheUpdater->writeToCache(this->add);
-			statistics->incrementCacheWriteHits(otherCacheUpdater->getCache());
+      //TODO : update statistics to show a write-through occurred
+      time += 2;
 		}
 	}
 }
@@ -36,6 +37,7 @@ void InstructionSimulationWrite::writeForward(CacheUpdater * updater)
 	// append events to this->events
 	// todo: get time of write
 	updater->writeToCache(add);
-	statistics->incrementCacheWriteHits(updater->getCache());
+  // TODO : update statistics to show a write from memory occurred
+  time += 2;
 }
 

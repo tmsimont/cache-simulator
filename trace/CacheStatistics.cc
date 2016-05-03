@@ -41,16 +41,12 @@ void cacheStatistics::incrementCacheWriteMisses(cache* c) {
   cacheWriteMisses[c->getName()]++;
 }
 
-void cacheStatistics::display()
+void cacheStatistics::display(std::string c, std::string t)
 {
-	std::cout << "-----------------------------------------------\n";
-	std::cout << "Simulation Statistics\n";
-	std::cout << "Total Time: " << totalTime << std::endl;
-
-  std::cout << "CACHE\tEVENT       \tCOUNT" << std::endl;
 	for (auto &item : cacheReadMisses)
 	{
-		std::cout << item.first
+		std::cout << c << "\t" << t << "\t"
+      << item.first
       << "\t"
       << "READ  MISSES\t"
       << cacheReadMisses[item.first]
@@ -59,7 +55,8 @@ void cacheStatistics::display()
 	}
 	for (auto &item : cacheReadHits)
 	{
-		std::cout << item.first
+		std::cout << c << "\t" << t << "\t"
+      << item.first
       << "\t"
       << "READ  HITS  \t"
       << cacheReadHits[item.first]
@@ -68,7 +65,8 @@ void cacheStatistics::display()
 	}
 	for (auto &item : cacheWriteMisses)
 	{
-		std::cout << item.first
+		std::cout << c << "\t" << t << "\t"
+      << item.first
       << "\t"
       << "WRITE MISSES\t"
       << cacheWriteMisses[item.first]
@@ -77,7 +75,8 @@ void cacheStatistics::display()
 	}
 	for (auto &item : cacheWriteHits)
 	{
-		std::cout << item.first
+		std::cout << c << "\t" << t << "\t"
+      << item.first
       << "\t"
       << "WRITE HITS  \t"
       << cacheWriteHits[item.first]
@@ -85,7 +84,9 @@ void cacheStatistics::display()
       << std::endl;
 	}
 
-	std::cout << "-----------------------------------------------\n";
+  std::cout << c << "\t" << t << "\t";
+	std::cout << "\tTOTAL TIME\t" << totalTime << std::endl;
+
 }
 
 cacheStatistics::~cacheStatistics()

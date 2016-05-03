@@ -11,7 +11,7 @@ public:
 	CacheSimulator();
 	void createArchitecture(string inputfile);
 	void readTrace(std::istream& source);
-	void output();
+	void output(std::string c, std::string t);
 	~CacheSimulator();
 private:
 	cacheArchitecture * architecture;

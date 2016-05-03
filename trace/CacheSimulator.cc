@@ -104,8 +104,8 @@ void CacheSimulator::readTrace(std::istream& source)
 
 }
 
-void CacheSimulator::output() {
-	statistics->display();
+void CacheSimulator::output(std::string cid, std::string tid) {
+	statistics->display(cid, tid);
 }
 
 CacheSimulator::~CacheSimulator()

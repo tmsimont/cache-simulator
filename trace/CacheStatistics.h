@@ -15,7 +15,7 @@ public:
 	void incrementCacheWriteHits(cache* c);
 	void incrementCacheWriteMisses(cache* c);
 	void incrementTime(int timeIncrease){ totalTime += timeIncrease; }	
-	void display();
+	void display(std::string c, std::string t);
 
 private:
 	int numbOfCaches;

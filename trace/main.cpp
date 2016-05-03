@@ -11,11 +11,16 @@ int main(int argc, char**argv)
 		return -1;
 	}
 
+  std::string outConfigID = "";
+  std::string outTraceFile = "-";
+  outConfigID = argv[1];
+  if (argc == 3)
+    outTraceFile = argv[2];
+
 	CacheSimulator sim = CacheSimulator();
 	sim.createArchitecture(argv[1]);
 	sim.readTrace(std::cin);
-	std::cout << "Results" << endl;
-	sim.output();
+	sim.output(outConfigID, outTraceFile);
 
 	return 0;
 }
