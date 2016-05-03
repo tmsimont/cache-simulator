@@ -1,27 +1,27 @@
-bpsh 10 ./trace c1.txt < cc1.din > 1_cc1
-bpsh 10 ./trace c1.txt < spice.din > 1_spice
-bpsh 10 ./trace c1.txt < tex.din > 1_tex
-bpsh 10 ./trace c2.txt < cc1.din > 2_cc1
-bpsh 10 ./trace c2.txt < spice.din > 2_spice
-bpsh 10 ./trace c2.txt < tex.din > 2_tex
-bpsh 10 ./trace c3.txt < cc1.din > 3_cc1
-bpsh 10 ./trace c3.txt < spice.din > 3_spice
-bpsh 10 ./trace c3.txt < tex.din > 3_tex
-bpsh 10 ./trace c4.txt < cc1.din > 4_cc1
-bpsh 10 ./trace c4.txt < spice.din > 4_spice
-bpsh 10 ./trace c4.txt < tex.din > 4_tex
-bpsh 10 ./trace c5.txt < cc1.din > 5_cc1
-bpsh 10 ./trace c5.txt < spice.din > 5_spice
-bpsh 10 ./trace c5.txt < tex.din > 5_tex
-bpsh 10 ./trace c6.txt < cc1.din > 6_cc1
-bpsh 10 ./trace c6.txt < spice.din > 6_spice
-bpsh 10 ./trace c6.txt < tex.din > 6_tex
-bpsh 10 ./trace c7.txt < cc1.din > 7_cc1
-bpsh 10 ./trace c7.txt < spice.din > 7_spice
-bpsh 10 ./trace c7.txt < tex.din > 7_tex
-bpsh 10 ./trace c8.txt < cc1.din > 8_cc1
-bpsh 10 ./trace c8.txt < spice.din > 8_spice
-bpsh 10 ./trace c8.txt < tex.din > 8_tex
-bpsh 10 ./trace c9.txt < cc1.din > 9_cc1
-bpsh 10 ./trace c9.txt < spice.din > 9_spice
-bpsh 10 ./trace c9.txt < tex.din > 9_tex
+bpsh 10 ./trace c1.txt cc1 < cc1.din
+bpsh 10 ./trace c1.txt spice < spice.din
+bpsh 10 ./trace c1.txt tex < tex.din
+bpsh 10 ./trace c2.txt cc1 < cc1.din
+bpsh 10 ./trace c2.txt spice < spice.din
+bpsh 10 ./trace c2.txt tex < tex.din
+bpsh 10 ./trace c3.txt cc1 < cc1.din
+bpsh 10 ./trace c3.txt spice < spice.din
+bpsh 10 ./trace c3.txt tex < tex.din
+bpsh 10 ./trace c4.txt cc1 < cc1.din
+bpsh 10 ./trace c4.txt spice < spice.din
+bpsh 10 ./trace c4.txt tex < tex.din
+bpsh 10 ./trace c5.txt cc1 < cc1.din
+bpsh 10 ./trace c5.txt spice < spice.din
+bpsh 10 ./trace c5.txt tex < tex.din
+bpsh 10 ./trace c6.txt cc1 < cc1.din
+bpsh 10 ./trace c6.txt spice < spice.din
+bpsh 10 ./trace c6.txt tex < tex.din
+bpsh 10 ./trace c7.txt cc1 < cc1.din
+bpsh 10 ./trace c7.txt spice < spice.din
+bpsh 10 ./trace c7.txt tex < tex.din
+bpsh 10 ./trace c8.txt cc1 < cc1.din
+bpsh 10 ./trace c8.txt spice < spice.din
+bpsh 10 ./trace c8.txt tex < tex.din
+bpsh 10 ./trace c9.txt cc1 < cc1.din
+bpsh 10 ./trace c9.txt spice < spice.din
+bpsh 10 ./trace c9.txt tex < tex.din
